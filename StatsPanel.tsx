@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { BarChart3, TrendingUp, Clock, CheckCircle, Package, AlertTriangle } from 'lucide-react';
-import { Order, Role } from '../types';
+import { Order, Role } from '@/types';
 
 interface StatsPanelProps {
   orders: Order[];

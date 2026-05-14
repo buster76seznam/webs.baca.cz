@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Building2, Phone, Mail, MapPin, Wrench } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { PricingType } from '../types';
+import { PricingType } from '@/types';
 
 interface NewOrderModalProps {
   salesUserId: string;

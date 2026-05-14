@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Globe, Camera, Wrench, ChevronDown, AlertTriangle } from 'lucide-react';
-import { Order, OrderStatus, ORDER_STATUSES, STATUS_COLORS } from '../types';
+import { Order, OrderStatus, ORDER_STATUSES, STATUS_COLORS } from '@/types';
 import { supabase } from '@/lib/supabase';
 
 interface OrderCardProps {

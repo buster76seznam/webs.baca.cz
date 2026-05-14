@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, LogOut, RefreshCw } from 'lucide-react';
+import { Plus, LogOut, RefreshCw, Package } from 'lucide-react';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
-import { Order, Role } from '../types';
+import { Order, Role } from '@/types';
 import OrderCard from './OrderCard';
 import NewOrderModal from './NewOrderModal';
 import StatsPanel from './StatsPanel';
