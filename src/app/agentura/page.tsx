@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase, SUFFIX_LENGTH, getRoleByMasterPassword } from '@/lib/supabase';
 import Image from 'next/image';
-import Dashboard from './components/Dashboard';
-import { Role } from './types';
+import Dashboard from '@/components/dashboard/Dashboard';
+import { Role } from '@/types';
 
 type Screen = 'loading' | 'enter_master' | 'new_user_setup' | 'returning_login' | 'dashboard';
 
