@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #7C3AED;
+  --color-brand-light: #A78BFA;
+  --color-brand-dark: #5B21B6;
+  --color-dark-bg: #030303;
+  --color-dark-card: #0A0A0A;
+}
+
+:root {
+  --background: #030303;
+  --foreground: #FFFFFF;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  scroll-behavior: smooth;
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .glass-purple {
+    background: rgba(168, 85, 247, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(168, 85, 247, 0.15);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #FFFFFF 0%, #A855F7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-brand {
+    background: linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-glow {
+    background: radial-gradient(circle at center, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+  }
+
+  /* Mockup browser chrome */
+  .browser-chrome {
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .browser-bar {
+    background: #111;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .browser-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+}
+
+.card-premium {
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  background: rgba(10, 10, 10, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.card-premium:hover {
+  border-color: rgba(168, 85, 247, 0.3);
+  box-shadow: 0 20px 40px -20px rgba(168, 85, 247, 0.4);
+  transform: translateY(-4px);
+  background: rgba(168, 85, 247, 0.02);
+}
+
+/* Comparison table rows */
+.compare-row-we {
+  background: rgba(124, 58, 237, 0.06);
+  border-left: 3px solid #7C3AED;
+}
+
+/* Section spacing – responsive */
+.section-py {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+@media (min-width: 768px) {
+  .section-py {
+    padding-top: 10rem;
+    padding-bottom: 10rem;
+  }
+}

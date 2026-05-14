@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /agentura
+Disallow: /api/
+
+Allow: /
+
+Sitemap: https://webs.baca.cz/sitemap.xml
