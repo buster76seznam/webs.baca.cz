@@ -1,13 +1,16 @@
 'use client';
 
 import { motion } from "framer-motion";
-import { CheckCircle, Zap, ArrowRight, Globe, Shield, Layout, Settings, Mail, Phone, ArrowUpRight, MousePointer2, Rocket, BarChart3 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { CheckCircle, Zap, Globe, Shield, Layout, Settings, Mail, Phone, ArrowUpRight, MousePointer2, Rocket, BarChart3 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import ContactLeadModal from "@/components/ContactLeadModal";
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [logoError, setLogoError] = useState(false);
+  const [leadOpen, setLeadOpen] = useState(false);
+  const openLead = useCallback(() => setLeadOpen(true), []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,9 +29,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#030303] text-white selection:bg-brand selection:text-white antialiased">
+      <ContactLeadModal open={leadOpen} onClose={() => setLeadOpen(false)} />
       {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled ? 'h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-32 bg-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-8 h-full flex items-center justify-between">
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 h-full flex items-center justify-between gap-3 min-w-0">
           <div className="flex items-center gap-6 group cursor-pointer">
             <div className="relative w-14 h-14 overflow-hidden rounded-2xl border-2 border-brand group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
               {!logoError ? (
@@ -60,12 +64,13 @@ export default function Home() {
             ))}
           </div>
 
-          <a 
-            href="mailto:webs.baca@gmail.com"
-            className="bg-brand text-white px-8 py-4 rounded-xl text-xs font-black hover:bg-brand-dark transition-all duration-500 uppercase tracking-widest shadow-[0_0_30px_-5px_rgba(124,58,237,0.5)] hover:shadow-[0_0_40px_0px_rgba(124,58,237,0.6)]"
+          <button
+            type="button"
+            onClick={openLead}
+            className="shrink-0 bg-brand text-white px-4 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 rounded-xl text-[10px] sm:text-xs font-black hover:bg-brand-dark transition-all duration-500 uppercase tracking-widest shadow-[0_0_30px_-5px_rgba(124,58,237,0.5)] hover:shadow-[0_0_40px_0px_rgba(124,58,237,0.6)]"
           >
             Chci návrh
-          </a>
+          </button>
         </div>
       </nav>
 
@@ -111,20 +116,15 @@ export default function Home() {
                 </p>
               </div>
               
-              <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
-                <a 
-                  href="mailto:webs.baca@gmail.com"
-                  className="w-full sm:w-auto bg-white text-black px-16 py-8 rounded-[2rem] text-xl font-black hover:bg-zinc-200 transition-all duration-500 flex items-center justify-center gap-4 group uppercase tracking-tighter shadow-2xl shadow-white/5"
+              <div className="flex justify-center items-center">
+                <button
+                  type="button"
+                  onClick={openLead}
+                  className="w-full max-w-md sm:w-auto bg-white text-black px-8 py-5 sm:px-12 sm:py-6 md:px-16 md:py-8 rounded-[2rem] text-sm sm:text-base md:text-lg font-black hover:bg-zinc-200 transition-all duration-500 flex items-center justify-center gap-3 sm:gap-4 group uppercase tracking-tighter shadow-2xl shadow-white/5"
                 >
                   Chci návrh do hodiny
-                  <ArrowUpRight size={24} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500" />
-                </a>
-                <a 
-                  href="mailto:webs.baca.support@gmail.com"
-                  className="w-full sm:w-auto glass px-16 py-8 rounded-[2rem] text-xl font-bold hover:bg-white/5 transition-all duration-500 flex items-center justify-center gap-3 uppercase tracking-tighter"
-                >
-                  Domluvit hovor
-                </a>
+                  <ArrowUpRight size={22} className="sm:w-6 sm:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500 shrink-0" />
+                </button>
               </div>
             </motion.div>
           </div>
@@ -219,19 +219,20 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <a 
-                    href="mailto:webs.baca@gmail.com"
-                    className="w-full bg-white text-black py-8 rounded-[2rem] font-black text-2xl hover:scale-[1.02] transition-all duration-500 uppercase tracking-tighter shadow-2xl"
+                  <button
+                    type="button"
+                    onClick={openLead}
+                    className="w-full bg-white text-black py-6 sm:py-7 md:py-8 rounded-[2rem] font-black text-lg sm:text-xl md:text-2xl hover:scale-[1.02] transition-all duration-500 uppercase tracking-tighter shadow-2xl"
                   >
                     Začít spolupráci
-                  </a>
+                  </button>
                 </div>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
+                transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] as const }}
                 className="relative hidden lg:block order-1 lg:order-2"
               >
                 <div className="relative aspect-[4/5] w-full max-w-[500px] mx-auto">
@@ -328,22 +329,17 @@ export default function Home() {
             className="max-w-7xl mx-auto bg-brand p-24 md:p-48 rounded-[5rem] text-center relative overflow-hidden group shadow-[0_50px_100px_-20px_rgba(124,58,237,0.4)]"
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.15),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            <div className="relative z-10">
-              <h2 className="text-6xl md:text-[120px] font-black text-white mb-20 tracking-tighter leading-[0.8] uppercase">ZAČNĚTE <br />VYDĚLÁVAT <br />UŽ ZÍTRA.</h2>
-              <div className="flex flex-col md:flex-row gap-10 justify-center">
-                <a 
-                  href="mailto:webs.baca@gmail.com"
-                  className="bg-white text-black px-20 py-10 rounded-[2.5rem] text-2xl font-black hover:scale-105 transition-all duration-500 uppercase tracking-tighter shadow-2xl"
-                >
-                  Chci návrh do hodiny
-                </a>
-                <a 
-                  href="mailto:webs.baca.support@gmail.com"
-                  className="bg-black text-white px-20 py-10 rounded-[2.5rem] text-2xl font-black hover:bg-zinc-900 transition-all duration-500 uppercase tracking-tighter border border-white/10"
-                >
-                  Domluvit hovor
-                </a>
-              </div>
+            <div className="relative z-10 flex flex-col items-center">
+              <button
+                type="button"
+                onClick={openLead}
+                aria-label="Otevřít poptávkový formulář"
+                className="text-4xl sm:text-5xl md:text-7xl lg:text-[120px] font-black text-white tracking-tighter leading-[0.85] sm:leading-[0.8] uppercase text-center hover:opacity-95 active:scale-[0.99] transition-all max-w-[95vw]"
+              >
+                <span className="block">ZAČNĚTE</span>
+                <span className="block">VYDĚLÁVAT</span>
+                <span className="block">UŽ ZÍTRA.</span>
+              </button>
             </div>
           </motion.div>
         </section>
@@ -376,12 +372,12 @@ export default function Home() {
             <div className="lg:col-span-3">
                <h4 className="text-[11px] font-black uppercase tracking-[0.5em] text-brand mb-10">Kontakt</h4>
                <div className="flex flex-col gap-6 text-sm font-bold text-zinc-400">
-                  <a href="mailto:webs.baca@gmail.com" className="hover:text-white transition-all duration-300 flex items-center gap-4 group">
+                  <button type="button" onClick={openLead} className="text-left hover:text-white transition-all duration-300 flex items-center gap-4 group w-full">
                     <div className="w-10 h-10 rounded-xl glass flex items-center justify-center group-hover:bg-brand transition-colors">
                       <Mail size={18} />
                     </div>
                     webs.baca@gmail.com
-                  </a>
+                  </button>
                   <div className="flex items-center gap-4 group">
                     <div className="w-10 h-10 rounded-xl glass flex items-center justify-center group-hover:bg-brand transition-colors">
                       <Phone size={18} />
