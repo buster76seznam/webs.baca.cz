@@ -164,7 +164,7 @@ export default function AgenturaPage() {
     <div className="flex flex-col items-center gap-5 mb-10">
       <div className="relative w-20 h-20 overflow-hidden rounded-3xl border-2 border-[#7C3AED] shadow-2xl shadow-[#7C3AED]/30">
         {!logoError ? (
-          <Image src="/Logo.jpg" alt="Webs Bača" fill className="object-cover" onError={() => setLogoError(true)} priority />
+          <Image src="/Logo.png" alt="Webs Bača" fill className="object-contain p-1 bg-[#1a0b2e]" onError={() => setLogoError(true)} priority />
         ) : (
           <div className="w-full h-full bg-[#7C3AED] flex items-center justify-center">
             <span className="text-white font-black text-3xl">W</span>

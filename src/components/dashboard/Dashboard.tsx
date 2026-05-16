@@ -82,7 +82,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
           <div className="flex items-center gap-4">
             <div className="relative w-9 h-9 overflow-hidden rounded-xl border border-[#7C3AED]/40">
               {!logoError ? (
-                <Image src="/Logo.jpg" alt="Logo" fill className="object-cover" onError={() => setLogoError(true)} />
+                <Image src="/Logo.png" alt="Webs Bača" fill className="object-contain p-1 bg-[#1a0b2e]" onError={() => setLogoError(true)} />
               ) : (
                 <div className="w-full h-full bg-[#7C3AED] flex items-center justify-center">
                   <span className="text-white font-black text-sm">W</span>

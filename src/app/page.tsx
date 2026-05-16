@@ -34,13 +34,13 @@ export default function Home() {
       <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 h-full flex items-center justify-between gap-3 min-w-0">
           <div className="flex items-center gap-6 group cursor-pointer">
-            <div className="relative w-14 h-14 overflow-hidden rounded-2xl border-2 border-brand group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
+            <div className="relative w-14 h-14 overflow-hidden rounded-2xl border-2 border-brand bg-[#1a0b2e] group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
               {!logoError ? (
                 <Image 
                   src="/Logo.png" 
                   alt="Webs Bača Logo" 
                   fill 
-                  className="object-cover transition-transform duration-700 group-hover:scale-115"
+                  className="object-contain p-1 transition-transform duration-700 group-hover:scale-105"
                   onError={() => setLogoError(true)}
                   priority
                 />
@@ -350,9 +350,9 @@ export default function Home() {
           <div className="grid lg:grid-cols-12 gap-20 mb-32">
             <div className="lg:col-span-6">
               <div className="flex items-center gap-6 mb-12 group cursor-pointer">
-                <div className="relative w-16 h-16 overflow-hidden rounded-2xl border-2 border-brand group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
+                <div className="relative w-16 h-16 overflow-hidden rounded-2xl border-2 border-brand bg-[#1a0b2e] group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
                   {!logoError ? (
-                    <Image src="/Logo.png" alt="Logo" fill className="object-cover" onError={() => setLogoError(true)} />
+                    <Image src="/Logo.png" alt="Webs Bača Logo" fill className="object-contain p-1" onError={() => setLogoError(true)} />
                   ) : (
                     <div className="w-full h-full bg-brand flex items-center justify-center">
                       <span className="text-white font-black text-2xl">W</span>
