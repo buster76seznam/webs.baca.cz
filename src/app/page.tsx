@@ -1,16 +1,19 @@
 'use client';
 
 import { motion } from "framer-motion";
-import { CheckCircle, Zap, Globe, Shield, Layout, Settings, Mail, Phone, ArrowUpRight, MousePointer2, Rocket, BarChart3 } from "lucide-react";
+import { CheckCircle, Zap, Globe, Shield, Layout, Settings, Mail, Phone, ArrowUpRight, MousePointer2, Rocket, BarChart3, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import ContactLeadModal from "@/components/ContactLeadModal";
+import SummerStartBanner from "@/components/SummerStartBanner";
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [logoError, setLogoError] = useState(false);
   const [leadOpen, setLeadOpen] = useState(false);
+  const [promoVisible, setPromoVisible] = useState(true);
   const openLead = useCallback(() => setLeadOpen(true), []);
+  const handlePromoVisibility = useCallback((visible: boolean) => setPromoVisible(visible), []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,8 +33,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#030303] text-white selection:bg-brand selection:text-white antialiased">
       <ContactLeadModal open={leadOpen} onClose={() => setLeadOpen(false)} />
+      <SummerStartBanner onCta={openLead} onVisibilityChange={handlePromoVisibility} />
       {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
+      <nav className={`fixed w-full z-50 transition-all duration-700 ${promoVisible ? "top-[3.25rem]" : "top-0"} ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 h-full flex items-center justify-between gap-3 min-w-0">
           <div className="flex items-center gap-6 group cursor-pointer">
             <div className="relative w-14 h-14 overflow-hidden rounded-2xl border-2 border-brand bg-[#1a0b2e] group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
@@ -76,7 +80,7 @@ export default function Home() {
 
       <main>
         {/* Hero Section */}
-        <section className="relative min-h-[110vh] flex items-center justify-center pt-32 px-8 overflow-hidden">
+        <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden ${promoVisible ? "pt-44 sm:pt-48" : "pt-32"}`}>
           {/* Animated Background Glows */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
           <motion.div 
@@ -100,8 +104,18 @@ export default function Home() {
             <motion.div 
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
+              transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] as const }}
             >
+              <button
+                type="button"
+                onClick={openLead}
+                className="mb-8 sm:mb-10 inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl border-2 border-amber-400/90 bg-gradient-to-r from-[#FDE047] via-[#FACC15] to-[#FBBF24] text-[#422006] shadow-[0_0_40px_rgba(250,204,21,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-transform"
+              >
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" aria-hidden />
+                <span className="text-xs sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em]">
+                  Letní start — první měsíc zdarma
+                </span>
+              </button>
               <h1 className="text-7xl md:text-[160px] font-black tracking-tighter mb-12 leading-[0.8] text-balance uppercase">
                 VÁŠ WEB <br />
                 <span className="text-gradient">BEZ LIMITŮ</span>
@@ -197,7 +211,10 @@ export default function Home() {
                     <span className="text-4xl font-black mt-6 mr-4 text-zinc-500 tracking-tighter">CZK</span>
                     <span className="text-[140px] md:text-[180px] font-black leading-none tracking-tighter text-gradient">1700</span>
                   </div>
-                  <div className="text-2xl font-bold text-zinc-500 mb-16 italic">/ měsíčně bez DPH</div>
+                  <div className="text-2xl font-bold text-zinc-500 mb-6 italic">/ měsíčně bez DPH</div>
+                  <p className="mb-10 px-5 py-2.5 rounded-xl border border-amber-400/60 bg-gradient-to-r from-[#FDE047] via-[#FACC15] to-[#FBBF24] text-[#422006] text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] shadow-[0_0_24px_rgba(250,204,21,0.25)]">
+                    Letní start — první měsíc zdarma
+                  </p>
                   
                   <div className="flex justify-center w-full mb-16">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 w-full text-left">
