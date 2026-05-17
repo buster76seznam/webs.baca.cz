@@ -1,4 +1,4 @@
-export type Role = 'Obchodní zástupce' | 'Vývojář';
+export type Role = 'Obchodní zástupce' | 'Vývojář' | 'Správce';
 
 export interface AgenturaUser {
   id: string;
@@ -8,6 +8,7 @@ export interface AgenturaUser {
   ip_address: string;
   created_at: string;
   last_login: string;
+  last_seen?: string | null;
 }
 
 export type OrderStatus =

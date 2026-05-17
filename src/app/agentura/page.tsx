@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { supabase, SUFFIX_LENGTH, getRoleByMasterPassword } from '@/lib/supabase';
 import Image from 'next/image';
 import Dashboard from '@/components/dashboard/Dashboard';
+import AdminDashboard from '@/components/dashboard/AdminDashboard';
 import { Role } from '@/types';
+import { isAdmin } from '@/lib/roles';
 
 type Screen = 'loading' | 'enter_master' | 'new_user_setup' | 'returning_login' | 'dashboard';
 
@@ -180,6 +182,15 @@ export default function AgenturaPage() {
 
   /* ── Dashboard ── */
   if (screen === 'dashboard' && userSession) {
+    if (isAdmin(userSession.role)) {
+      return (
+        <AdminDashboard
+          userId={userSession.id}
+          username={userSession.username}
+          onLogout={handleLogout}
+        />
+      );
+    }
     return (
       <Dashboard
         userId={userSession.id}

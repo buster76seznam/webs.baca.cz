@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
 import { Plus, LogOut, RefreshCw, Package } from 'lucide-react';
+import { useAgenturaPresence } from '@/hooks/useAgenturaPresence';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { Order, Role } from '@/types';
@@ -27,6 +27,8 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
   const [showNewOrder, setShowNewOrder] = useState(false);
   const [logoError, setLogoError] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  useAgenturaPresence(userId);
 
   const fetchOrders = useCallback(async () => {
     setRefreshing(true);

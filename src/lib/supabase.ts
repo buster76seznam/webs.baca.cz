@@ -9,6 +9,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export const MASTER_PASSWORDS: Record<string, string> = {
   'Wb3x9Kp': 'Obchodní zástupce',
   'Rv5mT2n': 'Vývojář',
+  'Sm8vK4x': 'Správce',
 };
 
 // Délka koncovky (2 znaky)

@@ -34,14 +34,14 @@ export default function StatsPanel({ orders, role, userId }: StatsPanelProps) {
     if (role === 'Obchodní zástupce') {
       return orders.filter(o => o.sales_user_id === userId);
     }
-    return orders; // Vývojář vidí vše
+    return orders;
   }, [orders, role, userId]);
 
   const monthOrders = useMemo(() => thisMonthOrders(myOrders), [myOrders]);
   const monthPaid = useMemo(() => monthOrders.filter(o => o.status === 'Platí'), [monthOrders]);
   const avgDays = useMemo(() => avgDaysToComplete(myOrders), [myOrders]);
 
-  const statCards = role === 'Vývojář'
+  const statCards = role === 'Vývojář' || role === 'Správce'
     ? [
         {
           icon: Package,

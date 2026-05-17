@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Globe, Camera, Wrench, ChevronDown, AlertTriangle } from 'lucide-react';
-import { Order, OrderStatus, ORDER_STATUSES, STATUS_COLORS } from '@/types';
+import { Order, OrderStatus, ORDER_STATUSES, STATUS_COLORS, Role } from '@/types';
+import { canChangeOrderStatus } from '@/lib/roles';
 import { supabase } from '@/lib/supabase';
 
 interface OrderCardProps {
   order: Order;
-  viewerRole: 'Obchodní zástupce' | 'Vývojář';
+  viewerRole: Role;
   viewerUserId: string;
   onUpdate: () => void;
 }
@@ -82,7 +83,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
 
         {/* Status badge / dropdown */}
         <div className="relative shrink-0">
-          {viewerRole === 'Vývojář' ? (
+          {canChangeOrderStatus(viewerRole) ? (
             <button
               onClick={() => setStatusOpen(!statusOpen)}
               disabled={updating}
