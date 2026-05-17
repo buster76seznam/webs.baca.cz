@@ -106,17 +106,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] as const }}
             >
-              <button
-                type="button"
-                onClick={openLead}
-                className="mb-4 sm:mb-6 inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl border-2 border-amber-400/90 bg-gradient-to-r from-[#FDE047] via-[#FACC15] to-[#FBBF24] text-[#422006] shadow-[0_0_40px_rgba(250,204,21,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-transform"
-              >
-                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" aria-hidden />
-                <span className="text-xs sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em]">
-                  Letní start — první měsíc zdarma
-                </span>
-              </button>
-              <h1 className="mt-20 sm:mt-24 md:mt-32 lg:mt-40 text-7xl md:text-[160px] font-black tracking-tighter mb-12 leading-[0.8] text-balance uppercase">
+              <h1 className="mt-12 sm:mt-16 md:mt-20 lg:mt-24 text-7xl md:text-[160px] font-black tracking-tighter mb-12 leading-[0.8] text-balance uppercase">
                 VÁŠ WEB <br />
                 <span className="text-gradient">BEZ LIMITŮ</span>
               </h1>
@@ -140,6 +130,17 @@ export default function Home() {
                   <ArrowUpRight size={22} className="sm:w-6 sm:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500 shrink-0" />
                 </button>
               </div>
+
+              <button
+                type="button"
+                onClick={openLead}
+                className="mt-8 sm:mt-10 inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl border-2 border-amber-400/90 bg-gradient-to-r from-[#FDE047] via-[#FACC15] to-[#FBBF24] text-[#422006] shadow-[0_0_40px_rgba(250,204,21,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-transform"
+              >
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" aria-hidden />
+                <span className="text-xs sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em]">
+                  Letní start — první měsíc zdarma
+                </span>
+              </button>
             </motion.div>
           </div>
         </section>
