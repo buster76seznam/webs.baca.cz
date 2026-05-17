@@ -80,7 +80,7 @@ export default function Home() {
 
       <main>
         {/* Hero Section */}
-        <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden ${promoVisible ? "pt-44 sm:pt-48" : "pt-32"}`}>
+        <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden ${promoVisible ? "pt-52 sm:pt-56 md:pt-60" : "pt-36 sm:pt-40"}`}>
           {/* Animated Background Glows */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
           <motion.div 
@@ -109,14 +109,14 @@ export default function Home() {
               <button
                 type="button"
                 onClick={openLead}
-                className="mb-8 sm:mb-10 inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl border-2 border-amber-400/90 bg-gradient-to-r from-[#FDE047] via-[#FACC15] to-[#FBBF24] text-[#422006] shadow-[0_0_40px_rgba(250,204,21,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                className="mb-6 sm:mb-8 inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl border-2 border-amber-400/90 bg-gradient-to-r from-[#FDE047] via-[#FACC15] to-[#FBBF24] text-[#422006] shadow-[0_0_40px_rgba(250,204,21,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-transform"
               >
                 <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" aria-hidden />
                 <span className="text-xs sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em]">
                   Letní start — první měsíc zdarma
                 </span>
               </button>
-              <h1 className="text-7xl md:text-[160px] font-black tracking-tighter mb-12 leading-[0.8] text-balance uppercase">
+              <h1 className="mt-4 sm:mt-8 md:mt-10 text-7xl md:text-[160px] font-black tracking-tighter mb-12 leading-[0.8] text-balance uppercase">
                 VÁŠ WEB <br />
                 <span className="text-gradient">BEZ LIMITŮ</span>
               </h1>

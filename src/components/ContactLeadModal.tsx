@@ -83,7 +83,7 @@ export default function ContactLeadModal({ open, onClose }: ContactLeadModalProp
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-4 sm:p-6 pb-[max(1rem,env(safe-area-inset-bottom))]"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-8"
       role="presentation"
     >
       <button
@@ -97,32 +97,32 @@ export default function ContactLeadModal({ open, onClose }: ContactLeadModalProp
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative flex w-full max-w-xl max-h-[min(88dvh,680px)] flex-col overflow-hidden rounded-[1.75rem] sm:rounded-[2rem] border border-white/10 bg-[#0a0a0a] shadow-2xl shadow-brand/20"
+        className="relative flex w-full max-w-2xl max-h-[min(94dvh,820px)] flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#0a0a0a] shadow-2xl shadow-brand/20"
       >
-        <div className="flex shrink-0 items-start justify-between gap-4 border-b border-white/5 px-6 sm:px-8 pt-6 sm:pt-7 pb-5">
+        <div className="flex shrink-0 items-center justify-between gap-4 border-b border-white/5 px-8 sm:px-10 pt-8 sm:pt-9 pb-6">
           <h2
             id={titleId}
-            className="min-w-0 pr-2 text-sm sm:text-base font-black uppercase tracking-[0.12em] sm:tracking-[0.15em] text-white leading-snug"
+            className="min-w-0 text-base sm:text-lg font-black uppercase tracking-wide text-white leading-tight"
           >
             {status === "sent" ? "Hotovo" : "Nezávazná poptávka"}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-xl p-2.5 text-zinc-500 hover:bg-white/5 hover:text-white transition-colors"
+            className="shrink-0 rounded-xl p-3 text-zinc-500 hover:bg-white/5 hover:text-white transition-colors"
             aria-label="Zavřít"
           >
-            <X size={20} />
+            <X size={22} />
           </button>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 sm:px-8 py-5 sm:py-6 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-8 sm:px-10 py-6 sm:py-8 pb-10">
           {status === "sent" ? (
-            <p className="text-center text-zinc-300 py-10 text-base font-medium leading-relaxed">
+            <p className="text-center text-zinc-300 py-12 text-lg font-medium leading-relaxed">
               Formulář odeslán. Brzy se vám ozveme.
             </p>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
               <input
                 type="text"
                 name="website"
@@ -132,7 +132,7 @@ export default function ContactLeadModal({ open, onClose }: ContactLeadModalProp
                 aria-hidden
               />
               <div>
-                <label htmlFor="cl-name" className="mb-2 block text-[11px] font-black uppercase tracking-widest text-zinc-500">
+                <label htmlFor="cl-name" className="mb-2.5 block text-xs font-bold uppercase tracking-wider text-zinc-400">
                   Jméno
                 </label>
                 <input
@@ -142,11 +142,11 @@ export default function ContactLeadModal({ open, onClose }: ContactLeadModalProp
                   maxLength={120}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3.5 text-base text-white outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                  className="w-full rounded-xl border border-white/10 bg-black/40 px-5 py-4 text-base text-white outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                 />
               </div>
               <div>
-                <label htmlFor="cl-email" className="mb-2 block text-[11px] font-black uppercase tracking-widest text-zinc-500">
+                <label htmlFor="cl-email" className="mb-2.5 block text-xs font-bold uppercase tracking-wider text-zinc-400">
                   E-mail
                 </label>
                 <input
@@ -158,11 +158,11 @@ export default function ContactLeadModal({ open, onClose }: ContactLeadModalProp
                   maxLength={254}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3.5 text-base text-white outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                  className="w-full rounded-xl border border-white/10 bg-black/40 px-5 py-4 text-base text-white outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                 />
               </div>
               <div>
-                <label htmlFor="cl-phone" className="mb-2 block text-[11px] font-black uppercase tracking-widest text-zinc-500">
+                <label htmlFor="cl-phone" className="mb-2.5 block text-xs font-bold uppercase tracking-wider text-zinc-400">
                   Telefon
                 </label>
                 <input
@@ -173,33 +173,33 @@ export default function ContactLeadModal({ open, onClose }: ContactLeadModalProp
                   maxLength={40}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3.5 text-base text-white outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                  className="w-full rounded-xl border border-white/10 bg-black/40 px-5 py-4 text-base text-white outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                 />
               </div>
               <div>
-                <label htmlFor="cl-msg" className="mb-2 block text-[11px] font-black uppercase tracking-widest text-zinc-500">
+                <label htmlFor="cl-msg" className="mb-2.5 block text-xs font-bold uppercase tracking-wider text-zinc-400">
                   Zpráva
                 </label>
                 <textarea
                   id="cl-msg"
                   name="message"
                   required
-                  rows={4}
+                  rows={5}
                   maxLength={8000}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full resize-y rounded-xl border border-white/10 bg-black/40 px-4 py-3.5 text-base text-white outline-none focus:border-brand focus:ring-1 focus:ring-brand min-h-[128px]"
+                  className="w-full resize-y rounded-xl border border-white/10 bg-black/40 px-5 py-4 text-base text-white outline-none focus:border-brand focus:ring-1 focus:ring-brand min-h-[150px]"
                 />
               </div>
               {status === "error" && errorMsg ? (
-                <p className="text-sm text-red-400 font-medium" role="alert">
+                <p className="text-base text-red-400 font-medium" role="alert">
                   {errorMsg}
                 </p>
               ) : null}
               <button
                 type="submit"
                 disabled={status === "sending"}
-                className="mt-1 w-full rounded-xl bg-brand py-4 text-sm font-black uppercase tracking-widest text-white shadow-lg shadow-brand/30 hover:bg-brand-dark transition-colors disabled:opacity-60"
+                className="mt-2 mb-2 w-full rounded-xl bg-brand py-5 text-base font-black uppercase tracking-widest text-white shadow-lg shadow-brand/30 hover:bg-brand-dark transition-colors disabled:opacity-60"
               >
                 {status === "sending" ? "Odesílám…" : "Odeslat"}
               </button>
