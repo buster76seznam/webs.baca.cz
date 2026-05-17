@@ -97,23 +97,23 @@ export default function ContactLeadModal({ open, onClose }: ContactLeadModalProp
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative flex w-full max-w-2xl max-h-[min(94dvh,820px)] flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#0a0a0a] shadow-2xl shadow-brand/20"
+        className="relative flex w-full max-w-3xl max-h-[min(96dvh,880px)] flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#0a0a0a] shadow-2xl shadow-brand/20"
       >
-        <div className="flex shrink-0 items-center justify-between gap-4 border-b border-white/5 px-8 sm:px-10 pt-8 sm:pt-9 pb-6">
-          <h2
-            id={titleId}
-            className="min-w-0 text-base sm:text-lg font-black uppercase tracking-wide text-white leading-tight"
-          >
-            {status === "sent" ? "Hotovo" : "Nezávazná poptávka"}
-          </h2>
+        <div className="relative flex shrink-0 items-center border-b border-white/5 px-6 sm:px-10 pt-9 sm:pt-10 pb-7 min-h-[4.5rem]">
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-xl p-3 text-zinc-500 hover:bg-white/5 hover:text-white transition-colors"
+            className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 rounded-xl p-3 text-zinc-500 hover:bg-white/5 hover:text-white transition-colors z-10"
             aria-label="Zavřít"
           >
             <X size={22} />
           </button>
+          <h2
+            id={titleId}
+            className="w-full text-right pr-2 pl-14 sm:pl-16 text-base sm:text-xl font-black uppercase tracking-wide text-white leading-tight"
+          >
+            {status === "sent" ? "Hotovo" : "Nezávazná poptávka"}
+          </h2>
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-8 sm:px-10 py-6 sm:py-8 pb-10">

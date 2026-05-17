@@ -80,7 +80,7 @@ export default function Home() {
 
       <main>
         {/* Hero Section */}
-        <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden ${promoVisible ? "pt-52 sm:pt-56 md:pt-60" : "pt-36 sm:pt-40"}`}>
+        <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden ${promoVisible ? "pt-56 sm:pt-64 md:pt-72" : "pt-40 sm:pt-44"}`}>
           {/* Animated Background Glows */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
           <motion.div 
@@ -116,7 +116,7 @@ export default function Home() {
                   Letní start — první měsíc zdarma
                 </span>
               </button>
-              <h1 className="mt-4 sm:mt-8 md:mt-10 text-7xl md:text-[160px] font-black tracking-tighter mb-12 leading-[0.8] text-balance uppercase">
+              <h1 className="mt-10 sm:mt-14 md:mt-20 text-7xl md:text-[160px] font-black tracking-tighter mb-12 leading-[0.8] text-balance uppercase">
                 VÁŠ WEB <br />
                 <span className="text-gradient">BEZ LIMITŮ</span>
               </h1>
