@@ -1,12 +1,17 @@
--- Spusťte v Supabase SQL Editoru (jednou), pokud ještě nemáte sloupec last_seen
--- a chcete povolit roli Správce v tabulce uživatelů.
+-- Migrace pro správce hesla a zabezpečení
 
+-- 1. Přidání sloupce pro hashované heslo správce
+ALTER TABLE agentura_users
+  ADD COLUMN IF NOT EXISTS password_hash text;
+
+-- 2. Přidání sloupce pro last_seen (heartbeat)
 ALTER TABLE agentura_users
   ADD COLUMN IF NOT EXISTS last_seen timestamptz;
 
--- Pokud máte CHECK na sloupci role, rozšiřte ho (příklad — upravte podle vašeho schématu):
--- ALTER TABLE agentura_users DROP CONSTRAINT IF EXISTS agentura_users_role_check;
--- ALTER TABLE agentura_users ADD CONSTRAINT agentura_users_role_check
---   CHECK (role IN ('Obchodní zástupce', 'Vývojář', 'Správce'));
+-- 3. Vytvoření indexu pro rychlejší vyhledávání
+CREATE INDEX IF NOT EXISTS idx_agentura_users_ip ON agentura_users(ip_address);
+CREATE INDEX IF NOT EXISTS idx_agentura_users_username ON agentura_users(username);
 
-COMMENT ON COLUMN agentura_users.last_seen IS 'Poslední aktivita v portálu (heartbeat každých 30 s)';
+-- 4. Komentáře k novým sloupcům
+COMMENT ON COLUMN agentura_users.password_hash IS 'SHA-256 hash hesla (master_password + koncovka)';
+COMMENT ON COLUMN agentura_users.last_seen IS 'Poslední aktivita v portálu (heartbeat každých 30s)';

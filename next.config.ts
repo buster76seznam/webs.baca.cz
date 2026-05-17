@@ -8,6 +8,23 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
       },
     ],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 31536000,
+  },
+  react: {
+    strictMode: false,
+  },
+  experimental: {
+    optimizePackageImports: [
+      {
+        name: 'framer-motion',
+        package: 'framer-motion',
+      },
+      {
+        name: 'lucide-react',
+        package: 'lucide-react',
+      },
+    ],
   },
 };
 

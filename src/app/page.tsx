@@ -42,8 +42,9 @@ export default function Home() {
               {!logoError ? (
                 <Image 
                   src="/Logo.png" 
-                  alt="Webs Bača Logo" 
+                  alt="Webs Bača Logo - tvorba webů, hosting a SEO" 
                   fill 
+                  sizes="(max-width: 768px) 56px, 80px"
                   className="object-contain p-1 transition-transform duration-700 group-hover:scale-105"
                   onError={() => setLogoError(true)}
                   priority
@@ -258,9 +259,11 @@ export default function Home() {
                   <div className="relative z-10 w-full h-full rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl">
                     <Image 
                       src="https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=2000&auto=format&fit=crop"
-                      alt="Professional Workspace"
+                      alt="Profesionální pracovní prostředí - Webs Bača tvorba webů" 
                       fill
+                      sizes="(min-width: 1024px) 500px, 100vw"
                       className="object-cover"
+                      loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
                     <div className="absolute bottom-8 left-8 right-8">
@@ -370,7 +373,7 @@ export default function Home() {
               <div className="flex items-center gap-6 mb-12 group cursor-pointer">
                 <div className="relative w-16 h-16 overflow-hidden rounded-2xl border-2 border-brand bg-[#1a0b2e] group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
                   {!logoError ? (
-                    <Image src="/Logo.png" alt="Webs Bača Logo" fill className="object-contain p-1" onError={() => setLogoError(true)} />
+                    <Image src="/Logo.png" alt="Webs Bača Logo - tvorba webů, hosting a SEO" fill sizes="128px" className="object-contain p-1" onError={() => setLogoError(true)} />
                   ) : (
                     <div className="w-full h-full bg-brand flex items-center justify-center">
                       <span className="text-white font-black text-2xl">W</span>

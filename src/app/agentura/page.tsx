@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { supabase, SUFFIX_LENGTH, getRoleByMasterPassword } from '@/lib/supabase';
+import { supabase, SUFFIX_LENGTH, verifyMasterPassword, hashPassword } from '@/lib/supabase';
 import Image from 'next/image';
 import Dashboard from '@/components/dashboard/Dashboard';
 import AdminDashboard from '@/components/dashboard/AdminDashboard';
@@ -74,12 +74,14 @@ export default function AgenturaPage() {
     init();
   }, []);
 
-  const handleMasterSubmit = () => {
+  const handleMasterSubmit = async () => {
     setError('');
-    const role = getRoleByMasterPassword(masterInput.trim());
-    if (!role) { setError('Nesprávné heslo.'); return; }
+    setLoading(true);
+    const role = await verifyMasterPassword(masterInput.trim());
+    if (!role) { setError('Nesprávné heslo.'); setLoading(false); return; }
     setDetectedRole(role);
     setScreen('new_user_setup');
+    setLoading(false);
   };
 
   const handleNewUserSetup = async () => {
@@ -94,9 +96,12 @@ export default function AgenturaPage() {
       .from('agentura_users').select('id').eq('username', username).maybeSingle();
     if (existing) { setError('Toto jméno je již obsazeno.'); setLoading(false); return; }
 
+    const fullPassword = masterInput + suffix;
+    const passwordHash = await hashPassword(fullPassword);
+
     const { data, error: insertError } = await supabase
       .from('agentura_users')
-      .insert({ username, password_suffix: suffix, role: detectedRole, ip_address: clientIp, last_login: new Date().toISOString() })
+      .insert({ username, password_suffix: suffix, password_hash: passwordHash, role: detectedRole, ip_address: clientIp, last_login: new Date().toISOString() })
       .select('id')
       .single();
 
@@ -117,17 +122,22 @@ export default function AgenturaPage() {
 
     const masterPart = fullPassword.slice(0, -SUFFIX_LENGTH);
     const suffixPart = fullPassword.slice(-SUFFIX_LENGTH);
-    const role = getRoleByMasterPassword(masterPart);
+    const role = await verifyMasterPassword(masterPart);
     if (!role) { setError('Nesprávné heslo.'); setLoading(false); return; }
 
     const { data } = await supabase
       .from('agentura_users')
-      .select('id, username, role, password_suffix')
+      .select('id, username, role, password_suffix, password_hash')
       .eq('ip_address', clientIp)
       .eq('password_suffix', suffixPart)
       .maybeSingle();
 
     if (!data) { setError('Nesprávné heslo nebo koncovka.'); setLoading(false); return; }
+
+    if (data.password_hash && role === 'Správce') {
+      const inputHash = await hashPassword(fullPassword);
+      if (inputHash !== data.password_hash) { setError('Nesprávné heslo.'); setLoading(false); return; }
+    }
 
     await supabase.from('agentura_users')
       .update({ last_login: new Date().toISOString() })

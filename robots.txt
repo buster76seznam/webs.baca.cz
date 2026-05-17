@@ -1,7 +1,11 @@
 User-agent: *
+Allow: /
+Allow: /sitemap.xml
 Disallow: /agentura
 Disallow: /api/
-
-Allow: /
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /dashboard/
+Crawl-delay: 1
 
 Sitemap: https://webs.baca.cz/sitemap.xml

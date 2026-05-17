@@ -1,0 +1,10 @@
+# Supabase configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+
+# Encryption key for master passwords
+ENCRYPTION_KEY=your_32_character_encryption_key_here
+
+# Other sensitive data
+API_SECRET_KEY=your_api_secret_key_here
+DATABASE_URL=your_database_url_here
