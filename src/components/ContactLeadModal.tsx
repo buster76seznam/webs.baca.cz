@@ -66,14 +66,42 @@ export default function ContactLeadModal({ open, onClose }: ContactLeadModalProp
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, phone, message, website: "" }),
       });
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+        code?: string;
+        hint?: string;
+        resendMessage?: string;
+        fromUsed?: string;
+        configNote?: string;
+      };
+
       if (!res.ok) {
+        console.error("[Webs Bača / kontaktní formulář] Odeslání selhalo", {
+          httpStatus: res.status,
+          statusText: res.statusText,
+          url: res.url,
+          response: data,
+        });
+        const detail = [
+          data.error,
+          data.code ? `[${data.code}]` : null,
+          data.hint,
+          data.resendMessage,
+          data.configNote,
+          data.fromUsed ? `Odesílatel: ${data.fromUsed}` : null,
+        ]
+          .filter(Boolean)
+          .join(" — ");
         setStatus("error");
-        setErrorMsg(data.error || "Odeslání se nezdařilo");
+        setErrorMsg(detail || "Odeslání se nezdařilo");
         return;
       }
+
+      console.info("[Webs Bača / kontaktní formulář] Odesláno", data);
       setStatus("sent");
-    } catch {
+    } catch (err) {
+      console.error("[Webs Bača / kontaktní formulář] Síťová chyba", err);
       setStatus("error");
       setErrorMsg("Chyba spojení, zkuste to prosím znovu");
     }
