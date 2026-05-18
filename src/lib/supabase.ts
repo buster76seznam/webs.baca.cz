@@ -6,7 +6,6 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // SHA-256 hashovaná univerzální hesla → role
-// Hesla: 'Wb3x9Kp' (Obchodní zástupce), 'Rv5mT2n' (Vývojář), 'Sm8vK4x' (Správce)
 const MASTER_PASSWORD_HASHES: Record<string, string> = {
   'd4f3ea7996fa7c8cfc0ee0f7a3e5f40a251b35fecd577b22ff54df860e8d496c': 'Obchodní zástupce',
   '38ac96b66b940a91ea3f7aee0ceea1d69325b5bfbe52deddf5f304ff9bad7b32': 'Vývojář',

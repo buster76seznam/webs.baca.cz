@@ -12,9 +12,9 @@ This document outlines security practices for the Webs Bača project.
 - Development passwords are stored for debugging purposes only
 
 ### Password List
-- **Obchodní zástupce**: `Wb3x9Kp` → Hashed in production
-- **Vývojář**: `Rv5mT2n` → Hashed in production  
-- **Správce**: `Sm8vK4x` → Hashed in production
+- **Obchodní zástupce**: Hashed in production
+- **Vývojář**: Hashed in production
+- **Správce**: Hashed in production
 
 ### Security Measures
 - ✅ Passwords are never stored in plain text in production
