@@ -82,7 +82,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
       <nav className="sticky top-0 z-40 bg-black/60 backdrop-blur-2xl border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="relative w-9 h-9 overflow-hidden rounded-xl border border-[#7C3AED]/40">
+            <div className="relative w-9 h-9 overflow-hidden rounded-none border border-[#7C3AED]/40">
               {!logoError ? (
                 <Image src="/Logo.png" alt="Webs Bača" fill className="object-contain p-1 bg-[#1a0b2e]" onError={() => setLogoError(true)} />
               ) : (
@@ -99,7 +99,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
 
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+              <div className="w-2 h-2 rounded-none bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
               <div className="flex flex-col">
                 <span className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">{username}</span>
                 <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-tighter leading-none">{role}</span>
@@ -107,7 +107,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
             </div>
             <button
               onClick={onLogout}
-              className="p-2.5 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:border-white/10 transition-all duration-300 text-zinc-400 hover:text-white"
+              className="p-2.5 rounded-none bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:border-white/10 transition-all duration-300 text-zinc-400 hover:text-white"
               title="Odhlásit se"
             >
               <LogOut size={16} />
@@ -130,7 +130,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
           <div className="flex items-center gap-3">
             <button
               onClick={() => fetchOrders()}
-              className={`p-3 rounded-2xl bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-white transition-all duration-500
+              className={`p-3 rounded-none bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-white transition-all duration-500
                 ${refreshing ? 'animate-spin' : ''}`}
             >
               <RefreshCw size={18} />
@@ -138,7 +138,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
             {isSales && (
               <button
                 onClick={() => setShowNewOrder(true)}
-                className="flex items-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-6 py-3.5 rounded-2xl font-black text-sm uppercase tracking-wider transition-all duration-500 shadow-[0_10px_20px_-5px_rgba(124,58,237,0.4)] hover:shadow-[0_15px_30px_-5px_rgba(124,58,237,0.5)] active:scale-95"
+                className="flex items-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-6 py-3.5 rounded-none font-black text-sm uppercase tracking-wider transition-all duration-500 shadow-[0_10px_20px_-5px_rgba(124,58,237,0.4)] hover:shadow-[0_15px_30px_-5px_rgba(124,58,237,0.5)] active:scale-95"
               >
                 <Plus size={18} />
                 Nové zadání
@@ -164,7 +164,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
               />
             ))}
             {orders.length === 0 && (
-              <div className="col-span-full py-32 rounded-[3rem] border border-dashed border-white/5 flex flex-col items-center justify-center text-zinc-600">
+              <div className="col-span-full py-32 rounded-none border border-dashed border-white/5 flex flex-col items-center justify-center text-zinc-600">
                 <Package size={48} className="mb-4 opacity-20" />
                 <p className="text-sm font-bold uppercase tracking-widest italic">Zatím žádné objednávky</p>
               </div>

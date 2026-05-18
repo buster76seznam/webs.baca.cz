@@ -72,7 +72,7 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
     onClose();
   };
 
-  const inputClass = `w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white 
+  const inputClass = `w-full bg-white/[0.03] border border-white/10 rounded-none px-5 py-4 text-white 
     placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-5px_rgba(124,58,237,0.3)] 
     transition-all duration-300 text-sm`;
 
@@ -83,7 +83,7 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
   }) => (
     <button
       onClick={onClick}
-      className={`flex-1 py-4 rounded-2xl font-black text-sm uppercase tracking-wider border transition-all duration-300
+      className={`flex-1 py-4 rounded-none font-black text-sm uppercase tracking-wider border transition-all duration-300
         ${current === value
           ? 'bg-[#7C3AED] border-[#7C3AED] text-white shadow-[0_0_20px_-5px_rgba(124,58,237,0.6)]'
           : 'bg-white/[0.02] border-white/10 text-zinc-500 hover:border-white/20'}`}
@@ -103,7 +103,7 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
         <motion.div
           initial={{ scale: 0.9, y: 20 }}
           animate={{ scale: 1, y: 0 }}
-          className="w-full max-w-xl bg-[#0A0A0A] border border-white/10 rounded-[3rem] overflow-hidden shadow-2xl"
+          className="w-full max-w-xl bg-[#0A0A0A] border border-white/10 rounded-none overflow-hidden shadow-2xl"
         >
           <div className="p-10">
             <div className="flex items-center justify-between mb-10">
@@ -113,13 +113,13 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
                   Krok {step === 'basic' ? '1' : '2'} z 2
                 </p>
               </div>
-              <button onClick={onClose} className="p-3 rounded-2xl hover:bg-white/5 transition-colors">
+              <button onClick={onClose} className="p-3 rounded-none hover:bg-white/5 transition-colors">
                 <X size={20} className="text-zinc-500" />
               </button>
             </div>
 
             {error && (
-              <div className="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold text-center">
+              <div className="mb-6 p-4 rounded-none bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold text-center">
                 {error}
               </div>
             )}
@@ -181,7 +181,7 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
 
                 <button
                   onClick={handleBasicNext}
-                  className="w-full bg-white text-black py-5 rounded-2xl font-black text-sm uppercase tracking-wider hover:bg-zinc-200 transition-all mt-4"
+                  className="w-full bg-white text-black py-5 rounded-none font-black text-sm uppercase tracking-wider hover:bg-zinc-200 transition-all mt-4"
                 >
                   Další krok
                 </button>
@@ -230,14 +230,14 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
                 <div className="flex gap-4 mt-6">
                   <button
                     onClick={() => setStep('basic')}
-                    className="flex-1 border border-white/5 bg-white/[0.02] text-zinc-500 py-5 rounded-2xl font-black text-sm uppercase tracking-wider hover:bg-white/5 transition-all"
+                    className="flex-1 border border-white/5 bg-white/[0.02] text-zinc-500 py-5 rounded-none font-black text-sm uppercase tracking-wider hover:bg-white/5 transition-all"
                   >
                     Zpět
                   </button>
                   <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="flex-[2] bg-[#7C3AED] text-white py-5 rounded-2xl font-black text-sm uppercase tracking-wider hover:bg-[#6D28D9] transition-all shadow-[0_10px_20px_-5px_rgba(124,58,237,0.4)]"
+                    className="flex-[2] bg-[#7C3AED] text-white py-5 rounded-none font-black text-sm uppercase tracking-wider hover:bg-[#6D28D9] transition-all shadow-[0_10px_20px_-5px_rgba(124,58,237,0.4)]"
                   >
                     {loading ? 'Odesílám...' : 'Odeslat zadání'}
                   </button>

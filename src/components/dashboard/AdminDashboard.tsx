@@ -133,7 +133,7 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
       <nav className="sticky top-0 z-40 bg-black/60 backdrop-blur-2xl border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="relative w-9 h-9 overflow-hidden rounded-xl border border-[#7C3AED]/40">
+            <div className="relative w-9 h-9 overflow-hidden rounded-none border border-[#7C3AED]/40">
               {!logoError ? (
                 <Image
                   src="/Logo.png"
@@ -156,7 +156,7 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
 
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+              <span className="w-2 h-2 rounded-none bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
               <div className="flex flex-col">
                 <span className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">{username}</span>
                 <span className="text-[9px] font-bold text-amber-400/80 uppercase tracking-tighter leading-none">
@@ -167,7 +167,7 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
             <button
               type="button"
               onClick={onLogout}
-              className="p-2.5 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] text-zinc-400 hover:text-white"
+              className="p-2.5 rounded-none bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] text-zinc-400 hover:text-white"
               title="Odhlásit se"
             >
               <LogOut size={16} />
@@ -185,7 +185,7 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
               key={id}
               type="button"
               onClick={() => setTab(id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-none text-[10px] font-black uppercase tracking-widest transition-all
                 ${tab === id
                   ? 'bg-[#7C3AED] text-white shadow-[0_8px_20px_-6px_rgba(124,58,237,0.5)]'
                   : 'bg-white/[0.03] border border-white/5 text-zinc-500 hover:text-white hover:border-white/10'
@@ -224,7 +224,7 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
                 <select
                   value={selectedSalesId}
                   onChange={e => setSelectedSalesId(e.target.value)}
-                  className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm font-bold text-white"
+                  className="bg-white/5 border border-white/10 rounded-none px-4 py-3 text-sm font-bold text-white"
                 >
                   {salesUsers.map(u => (
                     <option key={u.id} value={u.id} className="bg-[#111]">
@@ -250,7 +250,7 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
                 <button
                   type="button"
                   onClick={() => void fetchOrders()}
-                  className={`p-3 rounded-2xl bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-white ${refreshing ? 'animate-spin' : ''}`}
+                  className={`p-3 rounded-none bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-white ${refreshing ? 'animate-spin' : ''}`}
                 >
                   <RefreshCw size={18} />
                 </button>
@@ -258,7 +258,7 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
                   <button
                     type="button"
                     onClick={() => setShowNewOrder(true)}
-                    className="flex items-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-6 py-3.5 rounded-2xl font-black text-sm uppercase tracking-wider"
+                    className="flex items-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-6 py-3.5 rounded-none font-black text-sm uppercase tracking-wider"
                   >
                     <Plus size={18} />
                     Nové zadání
@@ -284,7 +284,7 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
                   />
                 ))}
                 {orders.length === 0 && (
-                  <div className="col-span-full py-32 rounded-[3rem] border border-dashed border-white/5 flex flex-col items-center justify-center text-zinc-600">
+                  <div className="col-span-full py-32 rounded-none border border-dashed border-white/5 flex flex-col items-center justify-center text-zinc-600">
                     <Package size={48} className="mb-4 opacity-20" />
                     <p className="text-sm font-bold uppercase tracking-widest italic">Žádné záznamy</p>
                   </div>

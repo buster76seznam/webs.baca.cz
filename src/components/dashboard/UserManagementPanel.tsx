@@ -101,10 +101,10 @@ export default function UserManagementPanel({ currentUserId }: UserManagementPan
       </div>
 
       {error && (
-        <p className="text-red-400 text-xs font-bold p-4 rounded-2xl bg-red-500/10 border border-red-500/20">{error}</p>
+        <p className="text-red-400 text-xs font-bold p-4 rounded-none bg-red-500/10 border border-red-500/20">{error}</p>
       )}
 
-      <div className="overflow-x-auto rounded-[2rem] border border-white/5">
+      <div className="overflow-x-auto rounded-none border border-white/5">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-white/5 text-[10px] font-black uppercase tracking-widest text-zinc-500">
@@ -128,7 +128,7 @@ export default function UserManagementPanel({ currentUserId }: UserManagementPan
                       <input
                         value={edit.username}
                         onChange={e => setEdit({ ...edit, username: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm"
+                        className="w-full bg-white/5 border border-white/10 rounded-none px-3 py-2 text-white text-sm"
                       />
                     ) : (
                       <span className="font-bold">{u.username}</span>
@@ -157,7 +157,7 @@ export default function UserManagementPanel({ currentUserId }: UserManagementPan
                         value={edit.password_suffix}
                         maxLength={2}
                         onChange={e => setEdit({ ...edit, password_suffix: e.target.value.slice(0, 2) })}
-                        className="w-16 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-center"
+                        className="w-16 bg-white/5 border border-white/10 rounded-none px-3 py-2 text-white text-center"
                       />
                     ) : (
                       `••••••${u.password_suffix}`
@@ -170,7 +170,7 @@ export default function UserManagementPanel({ currentUserId }: UserManagementPan
                       }`}
                     >
                       <span
-                        className={`w-1.5 h-1.5 rounded-full ${online ? 'bg-emerald-400' : 'bg-zinc-600'}`}
+                        className={`w-1.5 h-1.5 rounded-none ${online ? 'bg-emerald-400' : 'bg-zinc-600'}`}
                       />
                       {online ? 'Online' : 'Offline'}
                     </span>
@@ -186,7 +186,7 @@ export default function UserManagementPanel({ currentUserId }: UserManagementPan
                             type="button"
                             onClick={() => saveEdit(u.id)}
                             disabled={saving}
-                            className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30"
+                            className="p-2 rounded-none bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30"
                             title="Uložit"
                           >
                             <Save size={16} />
@@ -194,7 +194,7 @@ export default function UserManagementPanel({ currentUserId }: UserManagementPan
                           <button
                             type="button"
                             onClick={() => setEditingId(null)}
-                            className="p-2 rounded-xl bg-white/5 text-zinc-400 hover:text-white"
+                            className="p-2 rounded-none bg-white/5 text-zinc-400 hover:text-white"
                             title="Zrušit"
                           >
                             <X size={16} />
@@ -205,7 +205,7 @@ export default function UserManagementPanel({ currentUserId }: UserManagementPan
                           <button
                             type="button"
                             onClick={() => startEdit(u)}
-                            className="p-2 rounded-xl bg-white/5 text-zinc-400 hover:text-[#A78BFA]"
+                            className="p-2 rounded-none bg-white/5 text-zinc-400 hover:text-[#A78BFA]"
                             title="Upravit"
                           >
                             <Pencil size={16} />
@@ -214,7 +214,7 @@ export default function UserManagementPanel({ currentUserId }: UserManagementPan
                             type="button"
                             onClick={() => deleteUser(u.id, u.username)}
                             disabled={u.id === currentUserId}
-                            className="p-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 disabled:opacity-30"
+                            className="p-2 rounded-none bg-red-500/10 text-red-400 hover:bg-red-500/20 disabled:opacity-30"
                             title="Smazat"
                           >
                             <Trash2 size={16} />

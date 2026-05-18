@@ -43,24 +43,24 @@ export default function AdminTeamStats({ orders, users }: AdminTeamStatsProps) {
         {byUser.map(({ user, total, month, paid }) => (
           <div
             key={user.id}
-            className="p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors"
+            className="p-6 rounded-none bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors"
           >
             <div className="mb-4">
               <p className="font-black text-white">{user.username}</p>
               <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{user.role}</p>
             </div>
             <div className="grid grid-cols-3 gap-3">
-              <div className="text-center p-3 rounded-xl bg-[#7C3AED]/10">
+              <div className="text-center p-3 rounded-none bg-[#7C3AED]/10">
                 <Package size={16} className="mx-auto mb-1 text-[#A78BFA]" />
                 <p className="text-lg font-black">{total}</p>
                 <p className="text-[9px] font-bold text-zinc-500 uppercase">Celkem</p>
               </div>
-              <div className="text-center p-3 rounded-xl bg-blue-500/10">
+              <div className="text-center p-3 rounded-none bg-blue-500/10">
                 <BarChart3 size={16} className="mx-auto mb-1 text-blue-400" />
                 <p className="text-lg font-black">{month}</p>
                 <p className="text-[9px] font-bold text-zinc-500 uppercase">Měsíc</p>
               </div>
-              <div className="text-center p-3 rounded-xl bg-emerald-500/10">
+              <div className="text-center p-3 rounded-none bg-emerald-500/10">
                 <CheckCircle size={16} className="mx-auto mb-1 text-emerald-400" />
                 <p className="text-lg font-black">{paid}</p>
                 <p className="text-[9px] font-bold text-zinc-500 uppercase">Platí</p>

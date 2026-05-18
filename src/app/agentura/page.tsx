@@ -168,13 +168,13 @@ export default function AgenturaPage() {
     transition: { duration: 0.5, ease: 'easeOut' as const },
   };
 
-  const inputClass = `w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white 
+  const inputClass = `w-full bg-white/[0.03] border border-white/10 rounded-none px-5 py-4 text-white 
     placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 
     focus:shadow-[0_0_20px_-5px_rgba(124,58,237,0.3)] transition-all duration-300`;
 
   const Logo = () => (
     <div className="flex flex-col items-center gap-5 mb-10">
-      <div className="relative w-20 h-20 overflow-hidden rounded-3xl border-2 border-[#7C3AED] shadow-2xl shadow-[#7C3AED]/30">
+      <div className="relative w-20 h-20 overflow-hidden rounded-none border-2 border-[#7C3AED] shadow-2xl shadow-[#7C3AED]/30">
         {!logoError ? (
           <Image src="/Logo.png" alt="Webs Bača" fill className="object-contain p-1 bg-[#1a0b2e]" onError={() => setLogoError(true)} priority />
         ) : (
@@ -215,7 +215,7 @@ export default function AgenturaPage() {
   if (screen === 'loading') {
     return (
       <div className="min-h-screen bg-[#030303] flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#7C3AED] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#7C3AED] border-t-transparent rounded-none animate-spin" />
       </div>
     );
   }
@@ -231,7 +231,7 @@ export default function AgenturaPage() {
           {screen === 'enter_master' && (
             <motion.div key="enter_master" {...fadeUp}>
               <Logo />
-              <div className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 shadow-2xl">
+              <div className="bg-[#0A0A0A] border border-white/5 rounded-none p-8 shadow-2xl">
                 <p className="text-zinc-500 text-sm text-center mb-8 font-medium">Zadej přístupové heslo</p>
                 <input
                   type="password"
@@ -245,7 +245,7 @@ export default function AgenturaPage() {
                 {error && <p className="text-red-400 text-xs text-center mb-4 font-bold">{error}</p>}
                 <button
                   onClick={handleMasterSubmit}
-                  className="w-full bg-[#7C3AED] text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-[#5B21B6] transition-all duration-300 shadow-[0_0_30px_-5px_rgba(124,58,237,0.5)]"
+                  className="w-full bg-[#7C3AED] text-white py-4 rounded-none font-black text-sm uppercase tracking-widest hover:bg-[#5B21B6] transition-all duration-300 shadow-[0_0_30px_-5px_rgba(124,58,237,0.5)]"
                 >
                   Vstoupit
                 </button>
@@ -265,8 +265,8 @@ export default function AgenturaPage() {
           {screen === 'new_user_setup' && (
             <motion.div key="new_user_setup" {...fadeUp}>
               <Logo />
-              <div className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 shadow-2xl">
-                <div className="inline-flex items-center justify-center gap-2 bg-[#7C3AED]/10 border border-[#7C3AED]/20 rounded-2xl px-4 py-2 mb-6 w-full">
+              <div className="bg-[#0A0A0A] border border-white/5 rounded-none p-8 shadow-2xl">
+                <div className="inline-flex items-center justify-center gap-2 bg-[#7C3AED]/10 border border-[#7C3AED]/20 rounded-none px-4 py-2 mb-6 w-full">
                   <span className="text-[#A78BFA] font-black text-xs uppercase tracking-widest">{detectedRole}</span>
                 </div>
                 <p className="text-zinc-500 text-sm text-center mb-8 font-medium">
@@ -303,7 +303,7 @@ export default function AgenturaPage() {
           {screen === 'returning_login' && (
             <motion.div key="returning_login" {...fadeUp}>
               <Logo />
-              <div className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 shadow-2xl">
+              <div className="bg-[#0A0A0A] border border-white/5 rounded-none p-8 shadow-2xl">
                 <p className="text-zinc-500 text-sm text-center mb-8 font-medium">Zadej své heslo i s koncovkou</p>
                 <input
                   type="password"

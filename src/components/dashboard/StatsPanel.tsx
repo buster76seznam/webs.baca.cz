@@ -114,11 +114,11 @@ export default function StatsPanel({ orders, role, userId }: StatsPanelProps) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
       {statCards.map((card, i) => (
-        <div key={i} className="bg-white/[0.02] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-white/10 transition-all duration-500">
+        <div key={i} className="bg-white/[0.02] border border-white/5 p-6 rounded-none relative overflow-hidden group hover:border-white/10 transition-all duration-500">
           <div className={`absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity duration-500 ${card.color}`}>
             <card.icon size={80} />
           </div>
-          <div className={`w-10 h-10 rounded-xl ${card.bg} flex items-center justify-center mb-4 ${card.color}`}>
+          <div className={`w-10 h-10 rounded-none ${card.bg} flex items-center justify-center mb-4 ${card.color}`}>
             <card.icon size={20} />
           </div>
           <div className="text-2xl font-black mb-1">{card.value}</div>
