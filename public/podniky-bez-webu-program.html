@@ -116,6 +116,108 @@ select {
 select:focus { outline: none; border-color: var(--accent); }
 select option { background: #1a1a1a; }
 
+/* CUSTOM DROPDOWN */
+.custom-select-wrapper { position: relative; }
+.custom-select {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 11px 14px;
+  font-size: 13px;
+  font-family: 'Space Grotesk', sans-serif;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color .15s;
+}
+.custom-select:hover { border-color: var(--accent-border); }
+.custom-select.open { border-color: var(--accent); }
+.custom-select .arrow { color: var(--muted); font-size: 10px; transition: transform .15s; }
+.custom-select.open .arrow { transform: rotate(180deg); }
+.custom-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  margin-top: 4px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+}
+.custom-dropdown.open { display: block; }
+.dropdown-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--text);
+  transition: background .1s;
+}
+.dropdown-item:hover { background: var(--surface2); }
+.dropdown-item.selected { background: var(--accent-glow); color: var(--accent2); }
+.dropdown-item .menu-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 16px;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.dropdown-item:hover .menu-btn { opacity: 1; }
+.dropdown-item .menu-btn:hover { color: var(--accent2); }
+.hidden-divider {
+  border-top: 2px solid #eab308;
+  margin: 8px 0;
+  position: relative;
+}
+.hidden-divider::after {
+  content: 'Skruté';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--surface);
+  padding: 0 8px;
+  font-size: 10px;
+  color: #eab308;
+  font-family: 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+.context-menu {
+  position: absolute;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 4px 0;
+  min-width: 150px;
+  z-index: 200;
+  display: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+}
+.context-menu.open { display: block; }
+.context-menu-item {
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--text);
+  transition: background .1s;
+}
+.context-menu-item:hover { background: var(--surface3); color: var(--accent2); }
+
 .btn { border: none; border-radius: var(--radius); padding: 11px 20px; font-size: 13px; font-weight: 600; font-family: 'Space Grotesk', sans-serif; cursor: pointer; transition: all .15s; white-space: nowrap; letter-spacing: .02em; }
 .btn-primary { background: var(--accent); color: #fff; }
 .btn-primary:hover { background: #6d28d9; }
@@ -374,48 +476,18 @@ td.eye-cell { text-align: center; padding: 8px 6px; }
     </div>
     <div class="field">
       <label>Zaměření</label>
-      <select id="zamereni">
-        <option value="">— vyberte obor —</option>
-        <option value="solarni panely tepelna cerpadla">Solární panely a tepelná čerpadla</option>
-        <option value="pergoly altany zimni zahrady">Pergoly, altány a zimní zahrady</option>
-        <option value="montaz stinici techniky">Montáž stínící techniky</option>
-        <option value="stavba plotu a bran">Stavba plotů a bran</option>
-        <option value="pokladka zamkove dlazby terasy">Pokládka zámkové dlažby a realizace teras</option>
-        <option value="hydroizolace rekonstrukce plochych strech">Hydroizolace a rekonstrukce plochých střech</option>
-        <option value="strikana izolace">Stříkaná izolace</option>
-        <option value="montaz klimatizaci rekuperace">Montáž klimatizací a rekuperace</option>
-        <option value="tepelna cerpadla solarni systemy FVE">Tepelná čerpadla a solární systémy (FVE)</option>
-        <option value="podlahove vytapeni">Podlahové vytápění</option>
-        <option value="instalace revize hromosvodu">Instalace a revize hromosvodů</option>
-        <option value="chytra elektroinstalace smart home loxone">Chytrá elektroinstalace Smart home Loxone</option>
-        <option value="lite designove podlahy epoxidove sterky">Lité designové podlahy a epoxidové stěrky</option>
-        <option value="designove omitky pohledovy beton">Designové omítky a pohledový beton</option>
-        <option value="rekonstrukce koupelen bytovych jader">Kompletní rekonstrukce koupelen a bytových jader</option>
-        <option value="pokladka velkoformatovych obkladu dlazeb">Pokládka velkoformátových obkladů a dlažeb</option>
-        <option value="montaz sadrokartonu napinanych stropu">Montáž sádrokartonů a napínaných stropů</option>
-        <option value="zemni vykopove prace">Zemní a výkopové práce</option>
-        <option value="jadrove vrtani rezani betonu">Jádrové vrtání a řezání betonu</option>
-        <option value="cisteni renovace fasad strech">Čištění a renovace fasád / střech</option>
-        <option value="vyskove prace horolezecka technika">Výškové práce pomocí horolezecké techniky</option>
-        <option value="vrtani studni studnari">Studnaři — Vrtání studní</option>
-        <option value="realizace zahrad na klic">Realizace zahrad na klíč</option>
-        <option value="automaticke zavlahove systemy">Automatické závlahové systémy</option>
-        <option value="stavba montaz bazenu virivek">Stavba a montáž bazénů — zapuštěných vířivek</option>
-        <option value="autoservis">Autoservisy</option>
-        <option value="instalater">Instalatéři</option>
-        <option value="elektrikar">Elektrikáři</option>
-        <option value="stavebni firma">Stavební firmy</option>
-        <option value="klempit">Klempíři</option>
-        <option value="truhlar">Truhláři / tesaři</option>
-        <option value="malir naterac">Malíři / natěrači</option>
-        <option value="sklenar">Sklenáři</option>
-        <option value="zahradnictvi">Zahradnictví</option>
-        <option value="odpadni hospodarstvi">Odpadní hospodářství</option>
-        <option value="uklidova firma">Úklidové služby</option>
-        <option value="dopravni firma">Dopravní firmy</option>
-        <option value="strojirenstvi">Strojírenství</option>
-        <option value="svarec">Svářeči</option>
-      </select>
+      <div class="custom-select-wrapper">
+        <div class="custom-select" id="zamereniCustom" onclick="toggleDropdown()">
+          <span id="selectedIndustry">— vyberte obor —</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="custom-dropdown" id="industryDropdown">
+          <div class="dropdown-item" data-value="" onclick="selectIndustry('')">— vyberte obor —</div>
+          <div id="industryList"></div>
+          <div class="hidden-divider"></div>
+          <div id="hiddenIndustryList"></div>
+        </div>
+      </div>
     </div>
     <button class="btn btn-primary" id="searchBtn" onclick="startSearch()">Hledat</button>
     <button class="btn btn-crawl" id="crawlBtn" onclick="toggleCrawl()">⚡ Najít vše</button>
@@ -509,6 +581,71 @@ let selectedOpt = null;
 
 const EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
 
+// Industry data
+const INDUSTRIES = [
+  {value: 'solarni panely tepelna cerpadla', label: 'Solární panely a tepelná čerpadla'},
+  {value: 'pergoly altany zimni zahrady', label: 'Pergoly, altány a zimní zahrady'},
+  {value: 'montaz stinici techniky', label: 'Montáž stínící techniky'},
+  {value: 'stavba plotu a bran', label: 'Stavba plotů a bran'},
+  {value: 'pokladka zamkove dlazby terasy', label: 'Pokládka zámkové dlažby a realizace teras'},
+  {value: 'hydroizolace rekonstrukce plochych strech', label: 'Hydroizolace a rekonstrukce plochých střech'},
+  {value: 'strikana izolace', label: 'Stříkaná izolace'},
+  {value: 'montaz klimatizaci rekuperace', label: 'Montáž klimatizací a rekuperace'},
+  {value: 'tepelna cerpadla solarni systemy FVE', label: 'Tepelná čerpadla a solární systémy (FVE)'},
+  {value: 'podlahove vytapeni', label: 'Podlahové vytápění'},
+  {value: 'instalace revize hromosvodu', label: 'Instalace a revize hromosvodů'},
+  {value: 'chytra elektroinstalace smart home loxone', label: 'Chytrá elektroinstalace Smart home Loxone'},
+  {value: 'lite designove podlahy epoxidove sterky', label: 'Lité designové podlahy a epoxidové stěrky'},
+  {value: 'designove omitky pohledovy beton', label: 'Designové omítky a pohledový beton'},
+  {value: 'rekonstrukce koupelen bytovych jader', label: 'Kompletní rekonstrukce koupelen a bytových jader'},
+  {value: 'pokladka velkoformatovych obkladu dlazeb', label: 'Pokládka velkoformátových obkladů a dlažeb'},
+  {value: 'montaz sadrokartonu napinanych stropu', label: 'Montáž sádrokartonů a napínaných stropů'},
+  {value: 'zemni vykopove prace', label: 'Zemní a výkopové práce'},
+  {value: 'jadrove vrtani rezani betonu', label: 'Jádrové vrtání a řezání betonu'},
+  {value: 'cisteni renovace fasad strech', label: 'Čištění a renovace fasád / střech'},
+  {value: 'vyskove prace horolezecka technika', label: 'Výškové práce pomocí horolezecké techniky'},
+  {value: 'vrtani studni studnari', label: 'Studnaři — Vrtání studní'},
+  {value: 'realizace zahrad na klic', label: 'Realizace zahrad na klíč'},
+  {value: 'automaticke zavlahove systemy', label: 'Automatické závlahové systémy'},
+  {value: 'stavba montaz bazenu virivek', label: 'Stavba a montáž bazénů — zapuštěných vířivek'},
+  {value: 'autoservis', label: 'Autoservisy'},
+  {value: 'instalater', label: 'Instalatéři'},
+  {value: 'elektrikar', label: 'Elektrikáři'},
+  {value: 'stavebni firma', label: 'Stavební firmy'},
+  {value: 'klempit', label: 'Klempíři'},
+  {value: 'truhlar', label: 'Truhláři / tesaři'},
+  {value: 'malir naterac', label: 'Malíři / natěrači'},
+  {value: 'sklenar', label: 'Sklenáři'},
+  {value: 'zahradnictvi', label: 'Zahradnictví'},
+  {value: 'odpadni hospodarstvi', label: 'Odpadní hospodářství'},
+  {value: 'uklidova firma', label: 'Úklidové služby'},
+  {value: 'dopravni firma', label: 'Dopravní firmy'},
+  {value: 'strojirenstvi', label: 'Strojírenství'},
+  {value: 'svarec', label: 'Svářeči'},
+  {value: 'vyroba designoveho nabytku truhlarstvi na zakazku', label: 'Výroba designového nábytku / truhlářství na zakázku'},
+  {value: 'kovovyroba brany a schodiste designove zaberadli', label: 'Kovovýroba brány a schodiště / designové zábradlí'},
+  {value: 'kamenne pracovni desky kamenictvi interiery', label: 'Kamenné pracovní desky / kamenictví interiéry'},
+  {value: 'vyroba a montaz saun wellness na klic', label: 'Výroba a montáž saun / wellness na klíč'},
+  {value: 'prumyslove cisteni a odmastovani cisteni hal', label: 'Průmyslové čištění a odmašťování / čištění hal'},
+  {value: 'stehovani stroju stehovani tezkych bremen', label: 'Stěhování strojů / stěhování těžkých břemen'},
+  {value: 'sprava budov facility management', label: 'Správa budov / facility management'},
+  {value: 'ostraha objektu fyzicka ostraha firem', label: 'Ostraha objektů / fyzická ostraha firem'},
+  {value: 'revize elektrospotrebicu a stroju revize elektro B2B', label: 'Revize elektrospotřebičů a strojů / revize elektro B2B'},
+  {value: 'kartonaz a vyroba obalu', label: 'Kartonáž a výroba obalů'},
+  {value: 'detailingove studio cisteni laku a keramicka ochrana', label: 'Detailingové studio / čištění laku a keramická ochrana'},
+  {value: 'polepy aut autofolie a tonovani skel', label: 'Polepy aut / autofólie a tónování skel'},
+  {value: 'renovace veteranu', label: 'Renovace veteránů'},
+  {value: 'pujcovna obytnych vozu pronajem obytaku', label: 'Půjčovna obytných vozů / pronájem obytňáků'},
+  {value: 'rizikove kaceni stromu arboristika', label: 'Rizikové kácení stromů / arboristika'},
+  {value: 'rezovani pazrezu mulcovani pozemku', label: 'Frézování pařezů / mulčování pozemků'},
+  {value: 'lesni prace a tezba dreva', label: 'Lesní práce a těžba dřeva'},
+  {value: 'udrba zeleny pro obce a firmy', label: 'Údržba zeleně pro obce a firmy'}
+];
+
+let selectedIndustryValue = '';
+let industryFavorites = new Set();
+let industryHidden = new Set();
+
 // localStorage
 function getHidden(){try{return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'))}catch{return new Set()}}
 function saveHidden(s){localStorage.setItem(STORAGE_KEY,JSON.stringify([...s]))}
@@ -520,10 +657,102 @@ function hideEntry(id){
 function resetHidden(){if(!getHidden().size)return;saveHidden(new Set());if(allResults.length){rebuildTable();updateStatus();setExports(true)}updateCounter()}
 function updateCounter(){const h=getHidden();const el=document.getElementById('hiddenCounter');if(el)el.textContent=h.size?' ('+h.size+' skrytých)':''}
 
+// Industry dropdown functions
+function loadIndustryPreferences(){
+  try{
+    industryFavorites=new Set(JSON.parse(localStorage.getItem('industry_favorites')||'[]'));
+    industryHidden=new Set(JSON.parse(localStorage.getItem('industry_hidden')||'[]'));
+  }catch{
+    industryFavorites=new Set();
+    industryHidden=new Set();
+  }
+}
+function saveIndustryPreferences(){
+  localStorage.setItem('industry_favorites',JSON.stringify([...industryFavorites]));
+  localStorage.setItem('industry_hidden',JSON.stringify([...industryHidden]));
+}
+function toggleDropdown(){
+  const dropdown=document.getElementById('industryDropdown');
+  const customSelect=document.getElementById('zamereniCustom');
+  dropdown.classList.toggle('open');
+  customSelect.classList.toggle('open');
+  if(dropdown.classList.contains('open'))renderIndustryList();
+}
+function selectIndustry(value){
+  selectedIndustryValue=value;
+  const industry=INDUSTRIES.find(i=>i.value===value);
+  document.getElementById('selectedIndustry').textContent=industry?industry.label:'— vyberte obor —';
+  document.getElementById('industryDropdown').classList.remove('open');
+  document.getElementById('zamereniCustom').classList.remove('open');
+  renderIndustryList();
+}
+function showContextMenu(event,value){
+  event.stopPropagation();
+  const existingMenu=document.querySelector('.context-menu');
+  if(existingMenu)existingMenu.remove();
+  const menu=document.createElement('div');
+  menu.className='context-menu open';
+  menu.style.left=event.pageX+'px';
+  menu.style.top=event.pageY+'px';
+  const isFavorite=industryFavorites.has(value);
+  menu.innerHTML=`
+    <div class="context-menu-item" onclick="toggleFavorite('${value}')">${isFavorite?'Odebrat z oblíbených':'Oblíbené'}</div>
+    <div class="context-menu-item" onclick="hideIndustry('${value}')">Skrýt</div>
+  `;
+  document.body.appendChild(menu);
+  setTimeout(()=>document.addEventListener('click',hideContextMenu),10);
+}
+function hideContextMenu(){
+  const menu=document.querySelector('.context-menu');
+  if(menu)menu.remove();
+  document.removeEventListener('click',hideContextMenu);
+}
+function toggleFavorite(value){
+  if(industryFavorites.has(value)){
+    industryFavorites.delete(value);
+  }else{
+    industryFavorites.add(value);
+    industryHidden.delete(value);
+  }
+  saveIndustryPreferences();
+  renderIndustryList();
+  hideContextMenu();
+}
+function hideIndustry(value){
+  industryHidden.add(value);
+  industryFavorites.delete(value);
+  saveIndustryPreferences();
+  renderIndustryList();
+  hideContextMenu();
+}
+function renderIndustryList(){
+  const list=document.getElementById('industryList');
+  const hiddenList=document.getElementById('hiddenIndustryList');
+  const favorites=INDUSTRIES.filter(i=>industryFavorites.has(i.value));
+  const normal=INDUSTRIES.filter(i=>!industryFavorites.has(i.value)&&!industryHidden.has(i.value));
+  const hidden=INDUSTRIES.filter(i=>industryHidden.has(i.value));
+  list.innerHTML=favorites.map(i=>createDropdownItem(i,true)).join('')+normal.map(i=>createDropdownItem(i,false)).join('');
+  hiddenList.innerHTML=hidden.map(i=>createDropdownItem(i,false)).join('');
+  document.querySelector('.hidden-divider').style.display=hidden.length?'block':'none';
+}
+function createDropdownItem(industry,isFavorite){
+  const isSelected=selectedIndustryValue===industry.value;
+  return `
+    <div class="dropdown-item ${isSelected?'selected':''}" data-value="${industry.value}" onclick="selectIndustry('${industry.value}')">
+      <span>${isFavorite?'⭐ ':''}${industry.label}</span>
+      <button class="menu-btn" onclick="showContextMenu(event,'${industry.value}')">⋮</button>
+    </div>
+  `;
+}
+
+// Initialize
+loadIndustryPreferences();
+renderIndustryList();
+
 // Crawl
 function toggleCrawl(){if(isCrawling){cancelCrawl=true}else{startCrawl()}}
 async function startCrawl(){
-  const kraj=document.getElementById('kraj').value,zam=document.getElementById('zamereni').value;
+  const kraj=document.getElementById('kraj').value,zam=selectedIndustryValue;
   if(!kraj||!zam){setStatus('Vyberte kraj a zaměření.',true);return}
   const newQuery=zam+'|'+kraj;
   const isNewQuery=newQuery!==currentQuery+'|'+currentKraj;
@@ -562,13 +791,13 @@ async function startCrawl(){
   document.getElementById('nextWrap').style.display='none';
   if(!allResults.length){showEmpty('Žádné podniky bez webu nenalezeny.');setStatus('Nenalezeny žádné výsledky.',true)}
   else if(newResultsFound===0&&!isNewQuery){setStatus('Vyčerpán limit firem &middot; <strong>'+totalFound+'</strong> bez webu z '+totalScanned+' prohledaných');setExports(true)}
-  else{const kl=document.getElementById('kraj').selectedOptions[0].text,zl=document.getElementById('zamereni').selectedOptions[0].text;setStatus('Hotovo &middot; <strong>'+totalFound+'</strong> bez webu z '+totalScanned+' prohledaných &middot; '+zl+' &middot; '+kl);setExports(true)}
+  else{const kl=document.getElementById('kraj').selectedOptions[0].text,zl=INDUSTRIES.find(i=>i.value===selectedIndustryValue)?.label||selectedIndustryValue;setStatus('Hotovo &middot; <strong>'+totalFound+'</strong> bez webu z '+totalScanned+' prohledaných &middot; '+zl+' &middot; '+kl);setExports(true)}
   updateCounter();
 }
 
 // Manual
 async function startSearch(){
-  const kraj=document.getElementById('kraj').value,zam=document.getElementById('zamereni').value;
+  const kraj=document.getElementById('kraj').value,zam=selectedIndustryValue;
   if(!kraj||!zam){setStatus('Vyberte kraj a zaměření.',true);return}
   allResults=[];nextPageToken=null;seenIds=new Set();totalFound=0;totalScanned=0;
   currentQuery=zam;currentKraj=kraj;
@@ -634,7 +863,7 @@ function appendRows(rows){
 }
 function updateStatus(){
   const kl=document.getElementById('kraj').selectedOptions[0].text;
-  const zl=document.getElementById('zamereni').selectedOptions[0].text;
+  const zl=INDUSTRIES.find(i=>i.value===selectedIndustryValue)?.label||selectedIndustryValue;
   setStatus('Nalezeno <strong>'+totalFound+'</strong> podniků bez webu &middot; '+zl+' &middot; '+kl);
 }
 function showProgress(label,pct){
@@ -656,7 +885,7 @@ function exportCSV(){
   if(!allResults.length)return;
   const hidden=getHidden(),vis=allResults.filter(r=>!hidden.has(r.id));
   const kl=document.getElementById('kraj').selectedOptions[0].text;
-  const zl=document.getElementById('zamereni').selectedOptions[0].text;
+  const zl=INDUSTRIES.find(i=>i.value===selectedIndustryValue)?.label||selectedIndustryValue;
   const blob=new Blob(['\uFEFF'+'Název podniku;Telefon;Adresa;E-mail\n'+vis.map(r=>'"'+r.name+'";"'+r.phone+'";"'+r.address+'";"'+r.email+'"').join('\n')],{type:'text/csv;charset=utf-8;'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download='podniky_bez_webu_'+zl+'_'+kl+'.csv';a.click();
@@ -667,7 +896,7 @@ function exportPDF(){
   if(!allResults.length)return;
   const hidden=getHidden(),vis=allResults.filter(r=>!hidden.has(r.id));
   const kl=document.getElementById('kraj').selectedOptions[0].text;
-  const zl=document.getElementById('zamereni').selectedOptions[0].text;
+  const zl=INDUSTRIES.find(i=>i.value===selectedIndustryValue)?.label||selectedIndustryValue;
   const w=window.open('','_blank');
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Podniky bez webu</title>
 <style>
@@ -726,7 +955,7 @@ function selectOpt(opt){
     document.getElementById('newSheetName').style.display='block';
     document.getElementById('pickerWrap').style.display='none';
     const kl=document.getElementById('kraj').selectedOptions[0].text;
-    const zl=document.getElementById('zamereni').selectedOptions[0].text;
+    const zl=INDUSTRIES.find(i=>i.value===selectedIndustryValue)?.label||selectedIndustryValue;
     document.getElementById('newSheetName').value='Podniky bez webu — '+zl+' — '+kl;
   }else{
     document.getElementById('newSheetName').style.display='none';
@@ -752,7 +981,7 @@ async function doSheetsExport(){
   const btn=document.getElementById('doExportBtn');btn.disabled=true;btn.textContent='Exportuji…';
   setSheetsMsg('');
   const kl=document.getElementById('kraj').selectedOptions[0].text;
-  const zl=document.getElementById('zamereni').selectedOptions[0].text;
+  const zl=INDUSTRIES.find(i=>i.value===selectedIndustryValue)?.label||selectedIndustryValue;
   const payload={
     action:selectedOpt==='new'?'create':'append',
     title:document.getElementById('newSheetName').value||'Podniky bez webu — '+zl+' — '+kl,
