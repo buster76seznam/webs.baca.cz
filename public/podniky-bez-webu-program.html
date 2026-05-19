@@ -600,11 +600,13 @@ async function fetchBatch(isFirst){
 // API
 async function callPlaces(token){
   const query = currentKraj === 'Celá republika' ? currentQuery + ' Ceska republika' : currentQuery + ' ' + currentKraj + ' Ceska republika';
-  const body={textQuery:query,languageCode:'cs',regionCode:'CZ',maxResultCount:20};
+  const body={textQuery:query,languageCode:'cs',regionCode:'CZ',maxResultCount:60};
   if(token)body.pageToken=token;
   const res=await fetch('https://places.googleapis.com/v1/places:searchText',{method:'POST',headers:{'Content-Type':'application/json','X-Goog-Api-Key':PLACES_API_KEY,'X-Goog-FieldMask':'places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.businessStatus,nextPageToken'},body:JSON.stringify(body)});
   if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'API chyba')}
-  return res.json();
+  const result = res.json();
+  console.log('API response:', result);
+  return result;
 }
 function filterFresh(places){return places.filter(p=>{const id=pid(p);if(seenIds.has(id))return false;seenIds.add(id);return true})}
 function noWeb(p){return !p.websiteUri&&!p.website}
