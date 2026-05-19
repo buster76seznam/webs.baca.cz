@@ -525,16 +525,21 @@ function toggleCrawl(){if(isCrawling){cancelCrawl=true}else{startCrawl()}}
 async function startCrawl(){
   const kraj=document.getElementById('kraj').value,zam=document.getElementById('zamereni').value;
   if(!kraj||!zam){setStatus('Vyberte kraj a zaměření.',true);return}
-  allResults=[];nextPageToken=null;seenIds=new Set();totalFound=0;totalScanned=0;
+  const newQuery=zam+'|'+kraj;
+  const isNewQuery=newQuery!==currentQuery+'|'+currentKraj;
+  if(isNewQuery){
+    allResults=[];nextPageToken=null;seenIds=new Set();totalFound=0;totalScanned=0;
+    document.getElementById('tableBody').innerHTML='';
+  }
   currentQuery=zam;currentKraj=kraj;cancelCrawl=false;isCrawling=true;
-  document.getElementById('tableBody').innerHTML='';
   document.getElementById('nextWrap').style.display='none';
-  setExports(false);updateBadge(0);
+  setExports(false);updateBadge(totalFound);
   document.getElementById('crawlPanel').classList.add('active');
   document.getElementById('searchBtn').disabled=true;
   const cb=document.getElementById('crawlBtn');cb.textContent='■ Zastavit';cb.classList.add('stopping');
-  setStatus('Automatické prohledávání…');
-  let token=null,page=0;
+  setStatus(isNewQuery?'Automatické prohledávání…':'Pokračování v hledání nových firem…');
+  let token=nextPageToken,page=0;
+  let newResultsFound=0;
   try{
     while(true){
       if(cancelCrawl)break;
@@ -542,7 +547,7 @@ async function startCrawl(){
       const fresh=filterFresh((data.places||[]).filter(p=>p.businessStatus!=='CLOSED_PERMANENTLY'));
       totalScanned+=fresh.length;
       const rows=fresh.filter(noWeb).map(toRow);
-      if(rows.length){allResults=allResults.concat(rows);totalFound+=rows.length;appendRows(rows);setExports(true);updateBadge(totalFound)}
+      if(rows.length){allResults=allResults.concat(rows);totalFound+=rows.length;newResultsFound+=rows.length;appendRows(rows);setExports(true);updateBadge(totalFound)}
       document.getElementById('statScanned').textContent=totalScanned;
       document.getElementById('statFound').textContent=totalFound;
       document.getElementById('statPage').textContent=page;
@@ -556,6 +561,7 @@ async function startCrawl(){
   cb.textContent='⚡ Najít vše';cb.classList.remove('stopping');
   document.getElementById('nextWrap').style.display='none';
   if(!allResults.length){showEmpty('Žádné podniky bez webu nenalezeny.');setStatus('Nenalezeny žádné výsledky.',true)}
+  else if(newResultsFound===0&&!isNewQuery){setStatus('Vyčerpán limit firem &middot; <strong>'+totalFound+'</strong> bez webu z '+totalScanned+' prohledaných');setExports(true)}
   else{const kl=document.getElementById('kraj').selectedOptions[0].text,zl=document.getElementById('zamereni').selectedOptions[0].text;setStatus('Hotovo &middot; <strong>'+totalFound+'</strong> bez webu z '+totalScanned+' prohledaných &middot; '+zl+' &middot; '+kl);setExports(true)}
   updateCounter();
 }

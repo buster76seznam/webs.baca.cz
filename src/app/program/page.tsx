@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function ProgramPage() {
   const [password, setPassword] = useState('');
@@ -8,10 +8,18 @@ export default function ProgramPage() {
   const [error, setError] = useState('');
   const CORRECT_PASSWORD = 'Xk7Qm9Pz2R';
 
+  useEffect(() => {
+    const savedAuth = localStorage.getItem('program_authenticated');
+    if (savedAuth === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === CORRECT_PASSWORD) {
       setIsAuthenticated(true);
+      localStorage.setItem('program_authenticated', 'true');
       setError('');
     } else {
       setError('Nesprávné heslo');
