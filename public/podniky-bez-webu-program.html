@@ -355,6 +355,7 @@ td.eye-cell { text-align: center; padding: 8px 6px; }
       <label>Kraj</label>
       <select id="kraj">
         <option value="">— vyberte kraj —</option>
+        <option value="Celá republika">Celá republika</option>
         <option value="Praha">Hlavní město Praha</option>
         <option value="Stredocesky kraj">Středočeský kraj</option>
         <option value="Jihocesky kraj">Jihočeský kraj</option>
@@ -598,7 +599,8 @@ async function fetchBatch(isFirst){
 
 // API
 async function callPlaces(token){
-  const body={textQuery:currentQuery+' '+currentKraj+' Ceska republika',languageCode:'cs',regionCode:'CZ',maxResultCount:20};
+  const query = currentKraj === 'Celá republika' ? currentQuery + ' Ceska republika' : currentQuery + ' ' + currentKraj + ' Ceska republika';
+  const body={textQuery:query,languageCode:'cs',regionCode:'CZ',maxResultCount:20};
   if(token)body.pageToken=token;
   const res=await fetch('https://places.googleapis.com/v1/places:searchText',{method:'POST',headers:{'Content-Type':'application/json','X-Goog-Api-Key':PLACES_API_KEY,'X-Goog-FieldMask':'places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.businessStatus,nextPageToken'},body:JSON.stringify(body)});
   if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'API chyba')}
