@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Podniky bez webu — Webs Bača</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #030303;
+  --surface: #0e0e0e;
+  --surface2: #161616;
+  --surface3: #1f1f1f;
+  --border: #1e1e1e;
+  --border2: #2a2a2a;
+  --text: #f2f0ed;
+  --muted: #666;
+  --muted2: #444;
+  --accent: #7c3aed;
+  --accent2: #9f67ff;
+  --accent-glow: rgba(124,58,237,0.18);
+  --accent-border: rgba(124,58,237,0.35);
+  --danger: #ef4444;
+  --green: #22c55e;
+  --green-border: rgba(34,197,94,0.3);
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem;
+  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,58,237,0.12) 0%, transparent 60%);
+}
+.app { max-width: 980px; margin: 0 auto; }
+
+/* HEADER */
+header { margin-bottom: 3rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.header-left {}
+.header-tag {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-tag::before { content: ''; width: 20px; height: 1px; background: var(--accent2); }
+header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -.5px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+header h1 .purple { color: var(--accent2); }
+header p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: .04em;
+}
+.header-badge {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.header-badge strong { color: var(--accent2); display: block; font-size: 18px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+
+/* FILTERS */
+.filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto auto auto;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  align-items: end;
+}
+.field label {
+  display: block;
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  margin-bottom: 7px;
+}
+select {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 11px 14px;
+  font-size: 13px;
+  font-family: 'Space Grotesk', sans-serif;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  transition: border-color .15s;
+}
+select:focus { outline: none; border-color: var(--accent); }
+select option { background: #1a1a1a; }
+
+.btn { border: none; border-radius: var(--radius); padding: 11px 20px; font-size: 13px; font-weight: 600; font-family: 'Space Grotesk', sans-serif; cursor: pointer; transition: all .15s; white-space: nowrap; letter-spacing: .02em; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #6d28d9; }
+.btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--muted); }
+.btn-ghost:hover { border-color: var(--accent-border); color: var(--accent2); }
+.btn-ghost:disabled { opacity: .35; cursor: not-allowed; }
+.btn-crawl { background: transparent; border: 1px solid var(--accent-border); color: var(--accent2); }
+.btn-crawl:hover { background: var(--accent-glow); }
+.btn-crawl.stopping { border-color: rgba(239,68,68,.4); color: var(--danger); }
+.btn-crawl:disabled { opacity: .4; cursor: not-allowed; }
+
+/* CRAWL PANEL */
+.crawl-panel {
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(124,58,237,.05) 100%);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  display: none;
+}
+.crawl-panel.active { display: block; }
+.crawl-panel-title {
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: var(--accent2);
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.crawl-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.7)} }
+.crawl-stats { display: flex; gap: 2.5rem; margin-bottom: 1.25rem; }
+.crawl-stat label { display: block; font-size: 10px; font-family: 'DM Mono', monospace; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 4px; }
+.crawl-stat value { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1; }
+.crawl-stat value.hi { color: var(--accent2); }
+.shimmer-bar { height: 2px; background: var(--border2); border-radius: 2px; overflow: hidden; }
+.shimmer-fill { height: 100%; width: 35%; background: linear-gradient(90deg, transparent, var(--accent2), transparent); animation: shimmer 1.6s ease-in-out infinite; }
+@keyframes shimmer { 0%{transform:translateX(-300%)} 100%{transform:translateX(400%)} }
+.crawl-hint { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted2); margin-top: 10px; }
+
+/* STATUS BAR */
+.status-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; min-height: 32px; gap: 12px; }
+.status-text { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: .03em; }
+.status-text strong { color: var(--accent2); font-size: 13px; }
+.status-text.err { color: var(--danger); }
+.hidden-counter { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted2); margin-left: 8px; }
+.export-group { display: flex; gap: 6px; flex-shrink: 0; }
+.export-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--muted);
+  padding: 7px 14px;
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.export-btn:hover:not(:disabled) { border-color: var(--accent-border); color: var(--accent2); background: var(--accent-glow); }
+.export-btn:disabled { opacity: .25; cursor: not-allowed; }
+.export-btn.sheets { border-color: var(--green-border); color: var(--green); }
+.export-btn.sheets:hover:not(:disabled) { background: rgba(34,197,94,.06); border-color: rgba(34,197,94,.5); }
+
+/* TABLE */
+.table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+thead { background: var(--surface2); }
+thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  color: var(--muted2);
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-weight: 400;
+  border-bottom: 1px solid var(--border);
+}
+th:nth-child(1){width:26%} th:nth-child(2){width:15%} th:nth-child(3){width:30%} th:nth-child(4){width:22%} th:nth-child(5){width:7%;text-align:center}
+tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--surface2); }
+tbody td { padding: 11px 16px; font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+tbody td.mono { font-family: 'DM Mono', monospace; font-size: 12px; }
+tbody td.dim { color: var(--muted2); font-family: 'DM Mono', monospace; font-size: 12px; }
+.eye-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  width: 28px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  margin: 0 auto;
+  transition: all .15s;
+  color: var(--muted2);
+}
+.eye-btn:hover { border-color: rgba(239,68,68,.4); color: var(--danger); background: rgba(239,68,68,.06); }
+.eye-btn svg { width: 14px; height: 14px; }
+td.eye-cell { text-align: center; padding: 8px 6px; }
+.empty-state { padding: 4rem 1rem; text-align: center; color: var(--muted2); }
+.empty-state .icon { font-size: 28px; margin-bottom: 12px; opacity: .4; }
+.empty-state p { font-size: 12px; font-family: 'DM Mono', monospace; letter-spacing: .04em; }
+.progress-wrap { padding: 3rem 1rem; text-align: center; }
+.progress-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); margin-bottom: 14px; letter-spacing: .06em; text-transform: uppercase; }
+.progress-bar-bg { width: 200px; height: 2px; background: var(--border2); border-radius: 2px; margin: 0 auto; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--accent2); border-radius: 2px; transition: width .3s ease; }
+.next-wrap { padding: 1.25rem; text-align: center; border-top: 1px solid var(--border); }
+.next-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--muted);
+  padding: 10px 28px;
+  font-size: 12px;
+  font-family: 'DM Mono', monospace;
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.next-btn:hover { border-color: var(--accent-border); color: var(--accent2); background: var(--accent-glow); }
+.next-btn:disabled { opacity: .35; cursor: not-allowed; }
+.note { margin-top: 1.25rem; font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted2); padding: 10px 14px; border-left: 2px solid var(--accent-border); letter-spacing: .03em; }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; backdrop-filter: blur(4px); }
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 460px;
+  padding: 1.75rem;
+  position: relative;
+  box-shadow: 0 0 60px rgba(124,58,237,.12);
+}
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .25rem; }
+.modal-tag { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--accent2); text-transform: uppercase; letter-spacing: .14em; }
+.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: -.01em; }
+.modal-close { background: transparent; border: 1px solid var(--border2); border-radius: 6px; color: var(--muted); font-size: 14px; cursor: pointer; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { color: var(--text); border-color: var(--border2); }
+.modal-desc { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; font-family: 'DM Mono', monospace; }
+.modal-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.25rem; }
+.option-card {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 1.1rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all .15s;
+  width: 100%;
+}
+.option-card:hover { border-color: var(--accent-border); background: var(--surface3); }
+.option-card.selected { border-color: var(--accent); background: var(--accent-glow); }
+.option-icon { font-size: 18px; margin-bottom: 8px; }
+.option-label { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.option-desc { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; line-height: 1.5; }
+.picker-wrap { margin-bottom: 1.25rem; display: none; }
+.picker-wrap select { width: 100%; }
+.modal-input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 11px 14px;
+  font-size: 13px;
+  font-family: 'Space Grotesk', sans-serif;
+  margin-bottom: 1.25rem;
+  display: none;
+}
+.modal-input:focus { outline: none; border-color: var(--accent); }
+.modal-btn {
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 13px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  cursor: pointer;
+  transition: background .15s;
+}
+.modal-btn:hover { background: #6d28d9; }
+.modal-btn:disabled { opacity: .4; cursor: not-allowed; }
+.sheets-msg { margin-top: 12px; font-size: 12px; font-family: 'DM Mono', monospace; color: var(--muted); text-align: center; min-height: 18px; }
+.sheets-msg.ok { color: var(--green); }
+.sheets-msg.err { color: var(--danger); }
+
+@media(max-width:700px){
+  header { flex-direction: column; }
+  .filters { grid-template-columns: 1fr 1fr; }
+  th:nth-child(3),td:nth-child(3),th:nth-child(4),td:nth-child(4) { display: none; }
+  th:nth-child(1){width:48%} th:nth-child(2){width:40%} th:nth-child(5){width:12%}
+  .crawl-stats { gap: 1.25rem; }
+  .export-group { flex-wrap: wrap; }
+  .modal-options { grid-template-columns: 1fr; }
+  header h1 { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="header-left">
+      <div class="header-tag">Webs Bača — Nástroje</div>
+      <h1>PODNIKY<br><span class="purple">BEZ WEBU</span></h1>
+      <p>// Google Places API &middot; B2B Lead Generation &middot; Real-time data</p>
+    </div>
+    <div class="header-badge">
+      <strong id="badgeCount">0</strong>
+      nalezeno bez webu
+    </div>
+  </header>
+
+  <div class="filters">
+    <div class="field">
+      <label>Kraj</label>
+      <select id="kraj">
+        <option value="">— vyberte kraj —</option>
+        <option value="Praha">Hlavní město Praha</option>
+        <option value="Stredocesky kraj">Středočeský kraj</option>
+        <option value="Jihocesky kraj">Jihočeský kraj</option>
+        <option value="Plzensky kraj">Plzeňský kraj</option>
+        <option value="Karlovarsky kraj">Karlovarský kraj</option>
+        <option value="Ustecky kraj">Ústecký kraj</option>
+        <option value="Liberecky kraj">Liberecký kraj</option>
+        <option value="Kralovehradecky kraj">Královéhradecký kraj</option>
+        <option value="Pardubicky kraj">Pardubický kraj</option>
+        <option value="Kraj Vysocina">Kraj Vysočina</option>
+        <option value="Jihomoravsky kraj">Jihomoravský kraj</option>
+        <option value="Olomoucky kraj">Olomoucký kraj</option>
+        <option value="Zlinsky kraj">Zlínský kraj</option>
+        <option value="Moravskoslezsky kraj">Moravskoslezský kraj</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Zaměření</label>
+      <select id="zamereni">
+        <option value="">— vyberte obor —</option>
+        <option value="solarni panely tepelna cerpadla">Solární panely a tepelná čerpadla</option>
+        <option value="pergoly altany zimni zahrady">Pergoly, altány a zimní zahrady</option>
+        <option value="montaz stinici techniky">Montáž stínící techniky</option>
+        <option value="stavba plotu a bran">Stavba plotů a bran</option>
+        <option value="pokladka zamkove dlazby terasy">Pokládka zámkové dlažby a realizace teras</option>
+        <option value="hydroizolace rekonstrukce plochych strech">Hydroizolace a rekonstrukce plochých střech</option>
+        <option value="strikana izolace">Stříkaná izolace</option>
+        <option value="montaz klimatizaci rekuperace">Montáž klimatizací a rekuperace</option>
+        <option value="tepelna cerpadla solarni systemy FVE">Tepelná čerpadla a solární systémy (FVE)</option>
+        <option value="podlahove vytapeni">Podlahové vytápění</option>
+        <option value="instalace revize hromosvodu">Instalace a revize hromosvodů</option>
+        <option value="chytra elektroinstalace smart home loxone">Chytrá elektroinstalace Smart home Loxone</option>
+        <option value="lite designove podlahy epoxidove sterky">Lité designové podlahy a epoxidové stěrky</option>
+        <option value="designove omitky pohledovy beton">Designové omítky a pohledový beton</option>
+        <option value="rekonstrukce koupelen bytovych jader">Kompletní rekonstrukce koupelen a bytových jader</option>
+        <option value="pokladka velkoformatovych obkladu dlazeb">Pokládka velkoformátových obkladů a dlažeb</option>
+        <option value="montaz sadrokartonu napinanych stropu">Montáž sádrokartonů a napínaných stropů</option>
+        <option value="zemni vykopove prace">Zemní a výkopové práce</option>
+        <option value="jadrove vrtani rezani betonu">Jádrové vrtání a řezání betonu</option>
+        <option value="cisteni renovace fasad strech">Čištění a renovace fasád / střech</option>
+        <option value="vyskove prace horolezecka technika">Výškové práce pomocí horolezecké techniky</option>
+        <option value="vrtani studni studnari">Studnaři — Vrtání studní</option>
+        <option value="realizace zahrad na klic">Realizace zahrad na klíč</option>
+        <option value="automaticke zavlahove systemy">Automatické závlahové systémy</option>
+        <option value="stavba montaz bazenu virivek">Stavba a montáž bazénů — zapuštěných vířivek</option>
+        <option value="autoservis">Autoservisy</option>
+        <option value="instalater">Instalatéři</option>
+        <option value="elektrikar">Elektrikáři</option>
+        <option value="stavebni firma">Stavební firmy</option>
+        <option value="klempit">Klempíři</option>
+        <option value="truhlar">Truhláři / tesaři</option>
+        <option value="malir naterac">Malíři / natěrači</option>
+        <option value="sklenar">Sklenáři</option>
+        <option value="zahradnictvi">Zahradnictví</option>
+        <option value="odpadni hospodarstvi">Odpadní hospodářství</option>
+        <option value="uklidova firma">Úklidové služby</option>
+        <option value="dopravni firma">Dopravní firmy</option>
+        <option value="strojirenstvi">Strojírenství</option>
+        <option value="svarec">Svářeči</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" id="searchBtn" onclick="startSearch()">Hledat</button>
+    <button class="btn btn-crawl" id="crawlBtn" onclick="toggleCrawl()">⚡ Najít vše</button>
+    <button class="btn btn-ghost" onclick="resetHidden()">↺ Reset</button>
+  </div>
+
+  <div class="crawl-panel" id="crawlPanel">
+    <div class="crawl-panel-title"><div class="crawl-dot"></div>Automatické prohledávání probíhá</div>
+    <div class="crawl-stats">
+      <div class="crawl-stat"><label>Prozkoumáno</label><value id="statScanned">0</value></div>
+      <div class="crawl-stat"><label>Bez webu</label><value id="statFound" class="hi">0</value></div>
+      <div class="crawl-stat"><label>Stránka</label><value id="statPage">0</value></div>
+    </div>
+    <div class="shimmer-bar"><div class="shimmer-fill"></div></div>
+    <div class="crawl-hint">Tabulka se plní průběžně níže &middot; Export dostupný kdykoliv</div>
+  </div>
+
+  <div class="status-bar">
+    <span class="status-text" id="statusText">Vyberte kraj a zaměření.</span>
+    <div class="export-group">
+      <button class="export-btn" id="exportCsvBtn" disabled onclick="exportCSV()">CSV</button>
+      <button class="export-btn" id="exportPdfBtn" disabled onclick="exportPDF()">PDF</button>
+      <button class="export-btn sheets" id="exportSheetsBtn" disabled onclick="openSheetsModal()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" style="vertical-align:-1px;margin-right:5px"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2.2"/><path d="M3 9h18M3 15h18M9 3v18" stroke="currentColor" stroke-width="2.2"/></svg>Sheets
+      </button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Název podniku</th><th>Telefon</th><th>Adresa</th><th>E-mail</th><th></th></tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="5">
+          <div class="empty-state">
+            <div class="icon">◎</div>
+            <p>Výsledky se zobrazí zde po spuštění hledání.</p>
+          </div>
+        </td></tr>
+      </tbody>
+    </table>
+    <div id="nextWrap" style="display:none" class="next-wrap">
+      <button class="next-btn" id="nextBtn" onclick="loadNext()">Načíst další →</button>
+    </div>
+  </div>
+
+  <div class="note">Zobrazuji pouze podniky bez webu dle Google Places API. Žádné výsledky nejsou vymyšleny. ⚡ Najít vše automaticky prochází všechny dostupné stránky výsledků.</div>
+</div>
+
+<!-- Sheets Modal -->
+<div class="modal-overlay" id="sheetsModal" onclick="modalBgClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-tag">Export</span>
+      <button class="modal-close" onclick="closeSheetsModal()">✕</button>
+    </div>
+    <div class="modal-title">Google Sheets</div>
+    <p class="modal-desc">Zvol kam chceš exportovat seznam podniků. Zápis probíhá přes server (Service Account) — žádné přihlášení není potřeba.</p>
+    <div class="modal-options">
+      <button class="option-card" id="optNew" onclick="selectOpt('new')">
+        <div class="option-icon">＋</div>
+        <div class="option-label">Nová tabulka</div>
+        <div class="option-desc">Vytvoří novou Google tabulku a vloží celý seznam</div>
+      </button>
+      <button class="option-card" id="optExisting" onclick="selectOpt('existing')">
+        <div class="option-icon">📋</div>
+        <div class="option-label">Existující tabulka</div>
+        <div class="option-desc">Přidá nový list do vybrané tabulky</div>
+      </button>
+    </div>
+    <div class="picker-wrap" id="pickerWrap">
+      <select id="sheetPicker"><option value="">Načítám...</option></select>
+    </div>
+    <input class="modal-input" id="newSheetName" type="text" placeholder='Název nové tabulky'>
+    <button class="modal-btn" id="doExportBtn" onclick="doSheetsExport()" disabled>Exportovat →</button>
+    <div class="sheets-msg" id="sheetsMsg"></div>
+  </div>
+</div>
+
+<script>
+const PLACES_API_KEY = 'AIzaSyDEffLmm3Q3SuXxvDICYdDUKLTkt_vKTDc';
+const SHEETS_ENDPOINT = '/api/sheets';
+const STORAGE_KEY = 'podniky_hidden_v1';
+
+let allResults = [], nextPageToken = null, seenIds = new Set();
+let totalFound = 0, totalScanned = 0;
+let currentQuery = '', currentKraj = '';
+let isCrawling = false, cancelCrawl = false;
+let selectedOpt = null;
+
+const EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+
+// localStorage
+function getHidden(){try{return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'))}catch{return new Set()}}
+function saveHidden(s){localStorage.setItem(STORAGE_KEY,JSON.stringify([...s]))}
+function hideEntry(id){
+  const h=getHidden();h.add(id);saveHidden(h);
+  const row=document.querySelector('tr[data-id="'+CSS.escape(id)+'"]');
+  if(row){row.style.transition='opacity .22s,transform .22s';row.style.opacity='0';row.style.transform='translateX(10px)';setTimeout(()=>{row.remove();updateCounter()},240)}
+}
+function resetHidden(){if(!getHidden().size)return;saveHidden(new Set());if(allResults.length){rebuildTable();updateStatus();setExports(true)}updateCounter()}
+function updateCounter(){const h=getHidden();const el=document.getElementById('hiddenCounter');if(el)el.textContent=h.size?' ('+h.size+' skrytých)':''}
+
+// Crawl
+function toggleCrawl(){if(isCrawling){cancelCrawl=true}else{startCrawl()}}
+async function startCrawl(){
+  const kraj=document.getElementById('kraj').value,zam=document.getElementById('zamereni').value;
+  if(!kraj||!zam){setStatus('Vyberte kraj a zaměření.',true);return}
+  allResults=[];nextPageToken=null;seenIds=new Set();totalFound=0;totalScanned=0;
+  currentQuery=zam;currentKraj=kraj;cancelCrawl=false;isCrawling=true;
+  document.getElementById('tableBody').innerHTML='';
+  document.getElementById('nextWrap').style.display='none';
+  setExports(false);updateBadge(0);
+  document.getElementById('crawlPanel').classList.add('active');
+  document.getElementById('searchBtn').disabled=true;
+  const cb=document.getElementById('crawlBtn');cb.textContent='■ Zastavit';cb.classList.add('stopping');
+  setStatus('Automatické prohledávání…');
+  let token=null,page=0;
+  try{
+    while(true){
+      if(cancelCrawl)break;
+      const data=await callPlaces(token);page++;
+      const fresh=filterFresh((data.places||[]).filter(p=>p.businessStatus!=='CLOSED_PERMANENTLY'));
+      totalScanned+=fresh.length;
+      const rows=fresh.filter(noWeb).map(toRow);
+      if(rows.length){allResults=allResults.concat(rows);totalFound+=rows.length;appendRows(rows);setExports(true);updateBadge(totalFound)}
+      document.getElementById('statScanned').textContent=totalScanned;
+      document.getElementById('statFound').textContent=totalFound;
+      document.getElementById('statPage').textContent=page;
+      token=data.nextPageToken||null;if(!token)break;
+      await sleep(350);
+    }
+  }catch(e){setStatus('Chyba: '+e.message,true);console.error(e)}
+  isCrawling=false;cancelCrawl=false;
+  document.getElementById('crawlPanel').classList.remove('active');
+  document.getElementById('searchBtn').disabled=false;
+  cb.textContent='⚡ Najít vše';cb.classList.remove('stopping');
+  document.getElementById('nextWrap').style.display='none';
+  if(!allResults.length){showEmpty('Žádné podniky bez webu nenalezeny.');setStatus('Nenalezeny žádné výsledky.',true)}
+  else{const kl=document.getElementById('kraj').selectedOptions[0].text,zl=document.getElementById('zamereni').selectedOptions[0].text;setStatus('Hotovo &middot; <strong>'+totalFound+'</strong> bez webu z '+totalScanned+' prohledaných &middot; '+zl+' &middot; '+kl);setExports(true)}
+  updateCounter();
+}
+
+// Manual
+async function startSearch(){
+  const kraj=document.getElementById('kraj').value,zam=document.getElementById('zamereni').value;
+  if(!kraj||!zam){setStatus('Vyberte kraj a zaměření.',true);return}
+  allResults=[];nextPageToken=null;seenIds=new Set();totalFound=0;totalScanned=0;
+  currentQuery=zam;currentKraj=kraj;
+  setExports(false);updateBadge(0);
+  document.getElementById('nextWrap').style.display='none';
+  document.getElementById('crawlBtn').disabled=true;setSearching(true);
+  showProgress('Hledám podniky…',10);
+  try{await fetchBatch(true)}catch(e){showEmpty('Chyba: '+e.message);setStatus('Chyba: '+e.message,true)}
+  setSearching(false);document.getElementById('crawlBtn').disabled=false;
+}
+async function loadNext(){
+  if(!nextPageToken)return;
+  const nb=document.getElementById('nextBtn');nb.disabled=true;nb.textContent='Načítám…';
+  try{await fetchBatch(false)}catch(e){setStatus('Chyba: '+e.message,true)}
+  nb.disabled=false;nb.textContent='Načíst další →';
+}
+async function fetchBatch(isFirst){
+  let token=isFirst?null:nextPageToken;nextPageToken=null;let collected=[];
+  for(let p=0;p<3;p++){
+    if(isFirst)showProgress('Načítám stránku '+(p+1)+'/3…',15+p*28);
+    const data=await callPlaces(token);
+    collected=collected.concat((data.places||[]).filter(p=>p.businessStatus!=='CLOSED_PERMANENTLY'));
+    token=data.nextPageToken||null;if(!token)break;if(p<2)await sleep(300);
+  }
+  nextPageToken=token;
+  const fresh=filterFresh(collected);totalScanned+=fresh.length;
+  const rows=fresh.filter(noWeb).map(toRow);totalFound+=rows.length;allResults=allResults.concat(rows);
+  if(isFirst){if(!rows.length)showEmpty('Žádné podniky bez webu nenalezeny.');else{document.getElementById('tableBody').innerHTML='';appendRows(rows)}}
+  else appendRows(rows);
+  updateStatus();updateBadge(totalFound);setExports(allResults.length>0);
+  document.getElementById('nextWrap').style.display=(nextPageToken&&allResults.length)?'block':'none';
+  updateCounter();
+}
+
+// API
+async function callPlaces(token){
+  const body={textQuery:currentQuery+' '+currentKraj+' Ceska republika',languageCode:'cs',regionCode:'CZ',maxResultCount:20};
+  if(token)body.pageToken=token;
+  const res=await fetch('https://places.googleapis.com/v1/places:searchText',{method:'POST',headers:{'Content-Type':'application/json','X-Goog-Api-Key':PLACES_API_KEY,'X-Goog-FieldMask':'places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.businessStatus,nextPageToken'},body:JSON.stringify(body)});
+  if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'API chyba')}
+  return res.json();
+}
+function filterFresh(places){return places.filter(p=>{const id=pid(p);if(seenIds.has(id))return false;seenIds.add(id);return true})}
+function noWeb(p){return !p.websiteUri&&!p.website}
+function toRow(p){return{id:pid(p),name:p.displayName?.text||'—',phone:p.nationalPhoneNumber||'—',address:p.formattedAddress||'—',email:'—'}}
+function pid(p){return p.id||((p.displayName?.text||'')+(p.formattedAddress||''))}
+
+// Render
+function rebuildTable(){document.getElementById('tableBody').innerHTML='';appendRows(allResults)}
+function appendRows(rows){
+  const tbody=document.getElementById('tableBody'),hidden=getHidden();
+  const vis=rows.filter(r=>!hidden.has(r.id));if(!vis.length)return;
+  tbody.insertAdjacentHTML('beforeend',vis.map(r=>
+    '<tr data-id="'+esc(r.id)+'"><td title="'+esc(r.name)+'">'+esc(r.name)+'</td>'
+    +'<td class="mono'+(r.phone==='—'?' dim':'')+'">'+esc(r.phone)+'</td>'
+    +'<td title="'+esc(r.address)+'">'+esc(r.address)+'</td>'
+    +'<td class="dim">'+esc(r.email)+'</td>'
+    +'<td class="eye-cell"><button class="eye-btn" title="Skrýt" onclick="hideEntry(\''+esc(r.id)+'\')">'+EYE+'</button></td></tr>'
+  ).join(''));
+}
+function updateStatus(){
+  const kl=document.getElementById('kraj').selectedOptions[0].text;
+  const zl=document.getElementById('zamereni').selectedOptions[0].text;
+  setStatus('Nalezeno <strong>'+totalFound+'</strong> podniků bez webu &middot; '+zl+' &middot; '+kl);
+}
+function showProgress(label,pct){
+  document.getElementById('nextWrap').style.display='none';
+  document.getElementById('tableBody').innerHTML='<tr><td colspan="5"><div class="progress-wrap"><div class="progress-label">'+label+'</div><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:'+pct+'%"></div></div></div></td></tr>';
+}
+function showEmpty(msg){document.getElementById('tableBody').innerHTML='<tr><td colspan="5"><div class="empty-state"><div class="icon">◎</div><p>'+msg+'</p></div></td></tr>'}
+function setStatus(html,isErr){
+  const el=document.getElementById('statusText');
+  el.innerHTML=html+'<span class="hidden-counter" id="hiddenCounter"></span>';
+  el.className='status-text'+(isErr?' err':'');updateCounter();
+}
+function setSearching(on){const b=document.getElementById('searchBtn');b.disabled=on;b.textContent=on?'Hledám…':'Hledat'}
+function setExports(on){['exportCsvBtn','exportPdfBtn','exportSheetsBtn'].forEach(id=>document.getElementById(id).disabled=!on)}
+function updateBadge(n){document.getElementById('badgeCount').textContent=n}
+
+// Export CSV
+function exportCSV(){
+  if(!allResults.length)return;
+  const hidden=getHidden(),vis=allResults.filter(r=>!hidden.has(r.id));
+  const kl=document.getElementById('kraj').selectedOptions[0].text;
+  const zl=document.getElementById('zamereni').selectedOptions[0].text;
+  const blob=new Blob(['\uFEFF'+'Název podniku;Telefon;Adresa;E-mail\n'+vis.map(r=>'"'+r.name+'";"'+r.phone+'";"'+r.address+'";"'+r.email+'"').join('\n')],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='podniky_bez_webu_'+zl+'_'+kl+'.csv';a.click();
+}
+
+// Export PDF
+function exportPDF(){
+  if(!allResults.length)return;
+  const hidden=getHidden(),vis=allResults.filter(r=>!hidden.has(r.id));
+  const kl=document.getElementById('kraj').selectedOptions[0].text;
+  const zl=document.getElementById('zamereni').selectedOptions[0].text;
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Podniky bez webu</title>
+<style>
+  body{font-family:'Segoe UI',Arial,sans-serif;padding:2.5rem;color:#111;background:#fff}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid #7c3aed}
+  h1{font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:-.5px;margin:0}
+  h1 span{color:#7c3aed}
+  .meta{font-size:11px;color:#888;margin-top:4px;font-family:monospace}
+  .badge{background:#7c3aed;color:#fff;border-radius:8px;padding:8px 16px;text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:.1em}
+  .badge strong{display:block;font-size:24px;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{background:#f5f3ff;padding:9px 12px;text-align:left;border-bottom:2px solid #e5e0ff;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#7c3aed}
+  td{padding:8px 12px;border-bottom:1px solid #f0f0f0;color:#333}
+  tr:nth-child(even) td{background:#faf9ff}
+  .footer{margin-top:2rem;font-size:10px;color:#bbb;font-family:monospace;text-align:center}
+  @media print{body{padding:.8cm}@page{margin:.8cm}}
+</style>
+</head><body>
+<div class="top">
+  <div>
+    <h1>PODNIKY <span>BEZ WEBU</span></h1>
+    <div class="meta">Webs Bača &middot; ${zl} &middot; ${kl} &middot; ${new Date().toLocaleDateString('cs-CZ')}</div>
+  </div>
+  <div class="badge"><strong>${vis.length}</strong>podniků</div>
+</div>
+<table>
+  <thead><tr><th>Název podniku</th><th>Telefon</th><th>Adresa</th><th>E-mail</th></tr></thead>
+  <tbody>${vis.map(r=>'<tr><td>'+esc(r.name)+'</td><td>'+esc(r.phone)+'</td><td>'+esc(r.address)+'</td><td>'+esc(r.email)+'</td></tr>').join('')}</tbody>
+</table>
+<div class="footer">Vygenerováno nástrojem Webs Bača &mdash; websbaca.cz &middot; Data: Google Places API &middot; Žádné výsledky nejsou vymyšleny.</div>
+</body></html>`);
+  w.document.close();setTimeout(()=>w.print(),400);
+}
+
+// Sheets Modal
+function openSheetsModal(){
+  if(!allResults.length)return;
+  document.getElementById('sheetsModal').classList.add('open');
+  setSheetsMsg('');document.getElementById('doExportBtn').disabled=true;
+  selectedOpt=null;
+  document.getElementById('optNew').classList.remove('selected');
+  document.getElementById('optExisting').classList.remove('selected');
+  document.getElementById('pickerWrap').style.display='none';
+  document.getElementById('newSheetName').style.display='none';
+}
+function closeSheetsModal(){document.getElementById('sheetsModal').classList.remove('open')}
+function modalBgClick(e){if(e.target.id==='sheetsModal')closeSheetsModal()}
+
+function selectOpt(opt){
+  selectedOpt=opt;
+  document.getElementById('optNew').classList.toggle('selected',opt==='new');
+  document.getElementById('optExisting').classList.toggle('selected',opt==='existing');
+  document.getElementById('doExportBtn').disabled=false;
+  setSheetsMsg('');
+  if(opt==='new'){
+    document.getElementById('newSheetName').style.display='block';
+    document.getElementById('pickerWrap').style.display='none';
+    const kl=document.getElementById('kraj').selectedOptions[0].text;
+    const zl=document.getElementById('zamereni').selectedOptions[0].text;
+    document.getElementById('newSheetName').value='Podniky bez webu — '+zl+' — '+kl;
+  }else{
+    document.getElementById('newSheetName').style.display='none';
+    document.getElementById('pickerWrap').style.display='block';
+    loadSheetsList();
+  }
+}
+
+async function loadSheetsList(){
+  const sp=document.getElementById('sheetPicker');sp.innerHTML='<option>Načítám…</option>';
+  try{
+    const res=await fetch(SHEETS_ENDPOINT+'?action=list');
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    sp.innerHTML=data.sheets.map(s=>'<option value="'+s.id+'">'+esc(s.name)+'</option>').join('');
+  }catch(e){sp.innerHTML='<option>Chyba: '+e.message+'</option>'}
+}
+
+async function doSheetsExport(){
+  if(!selectedOpt)return;
+  const hidden=getHidden(),vis=allResults.filter(r=>!hidden.has(r.id));
+  if(!vis.length){setSheetsMsg('Žádné záznamy k exportu.',true);return}
+  const btn=document.getElementById('doExportBtn');btn.disabled=true;btn.textContent='Exportuji…';
+  setSheetsMsg('');
+  const kl=document.getElementById('kraj').selectedOptions[0].text;
+  const zl=document.getElementById('zamereni').selectedOptions[0].text;
+  const payload={
+    action:selectedOpt==='new'?'create':'append',
+    title:document.getElementById('newSheetName').value||'Podniky bez webu — '+zl+' — '+kl,
+    spreadsheetId:selectedOpt==='existing'?document.getElementById('sheetPicker').value:undefined,
+    sheetLabel:zl+' — '+kl,
+    rows:vis.map(r=>[r.name,r.phone,r.address,r.email])
+  };
+  try{
+    const res=await fetch(SHEETS_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    const link=data.url?'<a href="'+data.url+'" target="_blank" style="color:#22c55e">Otevřít tabulku →</a>':'';
+    setSheetsMsg('✓ Exportováno '+vis.length+' podniků. '+link,false,true);
+  }catch(e){setSheetsMsg('Chyba: '+e.message,true)}
+  btn.disabled=false;btn.textContent='Exportovat →';
+}
+
+function setSheetsMsg(msg,isErr,isOk){
+  const el=document.getElementById('sheetsMsg');
+  el.innerHTML=msg;el.className='sheets-msg'+(isErr?' err':isOk?' ok':'');
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+updateCounter();
+</script>
+</body>
+</html>
