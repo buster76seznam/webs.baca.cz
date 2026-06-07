@@ -229,7 +229,7 @@ export default function MailAdminPanel() {
               <h1 className="text-lg font-black tracking-tighter uppercase">WEBS BAČA — OUTREACH</h1>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Trh:</span>
-                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#7C3AED]/20 text-[#7C3AED] border border-[#7C3AED]/30">CZ</span>
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#7C3AED]/20 text-[#7C3AED] border border-[#7C3AED]/30">USA</span>
               </div>
             </div>
           </div>
@@ -273,15 +273,6 @@ export default function MailAdminPanel() {
           <StatCard icon={Mail} label="Zpracovaných odpovědí" value={stats?.replies || 0} loading={loading} />
           <StatCard icon={FileText} label="Konceptů ke kontrole" value={stats?.drafts || 0} loading={loading} />
         </div>
-
-        {/* Domains Overview */}
-        <section className="bg-[#1a1a1a] border border-white/5 rounded-3xl p-6">
-          <h2 className="text-lg font-black tracking-tight mb-4">Domény</h2>
-          <div className="text-center py-12 text-zinc-500">
-            <Globe className="w-12 h-12 mx-auto mb-4 opacity-30" />
-            <p className="font-medium">Zatím žádné domény</p>
-          </div>
-        </section>
 
         {/* Action Buttons */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
