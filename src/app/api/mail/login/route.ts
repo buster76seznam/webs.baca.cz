@@ -13,22 +13,14 @@ function getClientIp(req: NextRequest): string {
 export async function POST(req: NextRequest) {
   const clientIp = getClientIp(req);
   
-  console.log('[Login] Client IP:', clientIp);
-  console.log('[Login] Allowed IPs:', ALLOWED_IPS);
-  console.log('[Login] Password configured:', !!ADMIN_PASSWORD);
-  
   // IP whitelist check - only enforce if IPs are configured
   if (ALLOWED_IPS.length > 0 && !ALLOWED_IPS.includes(clientIp)) {
-    console.log('[Login] IP not in whitelist');
     return new NextResponse(null, { status: 404 });
   }
 
   try {
     const body = await req.json();
     const { password } = body;
-
-    console.log('[Login] Password provided:', !!password);
-    console.log('[Login] Password match:', password === ADMIN_PASSWORD);
 
     if (password === ADMIN_PASSWORD) {
       const cookieStore = await cookies();
@@ -45,7 +37,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
   } catch (error) {
-    console.error('[Login] Error:', error);
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
 }

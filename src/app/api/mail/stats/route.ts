@@ -13,25 +13,19 @@ function getClientIp(req: NextRequest): string {
 async function checkAuth(req: NextRequest): Promise<boolean> {
   const cookieStore = await cookies();
   const session = cookieStore.get('admin_session');
-  console.log('[Stats] Session cookie:', session?.value);
   return session?.value === 'valid';
 }
 
 export async function GET(req: NextRequest) {
   const clientIp = getClientIp(req);
   
-  console.log('[Stats] Client IP:', clientIp);
-  console.log('[Stats] Allowed IPs:', ALLOWED_IPS);
-  
   // IP whitelist check
   if (ALLOWED_IPS.length > 0 && !ALLOWED_IPS.includes(clientIp)) {
-    console.log('[Stats] IP not in whitelist');
     return new NextResponse(null, { status: 404 });
   }
 
   // Auth check
   const isAuth = await checkAuth(req);
-  console.log('[Stats] Auth check result:', isAuth);
   if (!isAuth) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
