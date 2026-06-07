@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { LogOut, Play, Mail, Users, FileText, AlertCircle, Clock, Globe, Shield, Zap, X } from 'lucide-react';
+import { LogOut, Play, Mail, Users, FileText, AlertCircle, Clock, Globe, Shield, Zap, X, Plus, Edit2, Trash2 } from 'lucide-react';
 
 interface Stats {
   contacted: number;
@@ -28,6 +28,14 @@ interface Reply {
   draft_path: string;
 }
 
+interface Domain {
+  id: string;
+  domain: string;
+  status: 'active' | 'inactive' | 'error';
+  emails_sent: number;
+  last_used: string;
+}
+
 export default function MailAdminPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -35,11 +43,15 @@ export default function MailAdminPanel() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [replies, setReplies] = useState<Reply[]>([]);
+  const [domains, setDomains] = useState<Domain[]>([]);
   const [log, setLog] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [serverOnline, setServerOnline] = useState(true);
+  const [domainModalOpen, setDomainModalOpen] = useState(false);
+  const [editingDomain, setEditingDomain] = useState<Domain | null>(null);
+  const [domainForm, setDomainForm] = useState({ domain: '', status: 'active' as 'active' | 'inactive' | 'error' });
 
   useEffect(() => {
     checkAuth();
@@ -93,28 +105,32 @@ export default function MailAdminPanel() {
     setStats(null);
     setContacts([]);
     setReplies([]);
+    setDomains([]);
     setLog([]);
   };
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [statsRes, contactsRes, repliesRes, logRes] = await Promise.all([
+      const [statsRes, contactsRes, repliesRes, logRes, domainsRes] = await Promise.all([
         fetch('/api/mail/stats'),
         fetch('/api/mail/contacts'),
         fetch('/api/mail/replies'),
         fetch('/api/mail/log'),
+        fetch('/api/mail/domains'),
       ]);
 
       const statsData = await statsRes.json();
       const contactsData = await contactsRes.json();
       const repliesData = await repliesRes.json();
       const logData = await logRes.json();
+      const domainsData = await domainsRes.json();
 
       setStats(statsData);
       setContacts(contactsData.contacts || []);
       setReplies(repliesData.replies || []);
       setLog(logData.log || []);
+      setDomains(domainsData.domains || []);
       setServerOnline(true);
     } catch (error) {
       console.error('Fetch error:', error);
@@ -178,6 +194,76 @@ export default function MailAdminPanel() {
     };
     const config = intentMap[intent] || { color: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30', label: intent };
     return <span className={`px-2 py-1 rounded-md text-xs font-bold border ${config.color}`}>{config.label}</span>;
+  };
+
+  const getDomainStatusBadge = (status: string) => {
+    const statusMap: Record<string, { color: string; label: string }> = {
+      'active': { color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', label: 'Aktivní' },
+      'inactive': { color: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30', label: 'Neaktivní' },
+      'error': { color: 'bg-red-500/20 text-red-400 border-red-500/30', label: 'Chyba' },
+    };
+    const config = statusMap[status] || { color: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30', label: status };
+    return <span className={`px-2 py-1 rounded-md text-xs font-bold border ${config.color}`}>{config.label}</span>;
+  };
+
+  const handleAddDomain = () => {
+    setEditingDomain(null);
+    setDomainForm({ domain: '', status: 'active' });
+    setDomainModalOpen(true);
+  };
+
+  const handleEditDomain = (domain: Domain) => {
+    setEditingDomain(domain);
+    setDomainForm({ domain: domain.domain, status: domain.status });
+    setDomainModalOpen(true);
+  };
+
+  const handleDeleteDomain = async (domainId: string) => {
+    if (!confirm('Opravdu chcete smazat tuto doménu?')) return;
+
+    try {
+      const res = await fetch('/api/mail/domains', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: domainId }),
+      });
+
+      if (res.ok) {
+        setNotification({ type: 'success', message: 'Doména smazána' });
+        fetchData();
+      } else {
+        setNotification({ type: 'error', message: 'Nepodařilo se smazat doménu' });
+      }
+    } catch (error) {
+      setNotification({ type: 'error', message: 'Nepodařilo se smazat doménu' });
+    }
+  };
+
+  const handleDomainSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const method = editingDomain ? 'PUT' : 'POST';
+      const body = editingDomain 
+        ? { ...domainForm, id: editingDomain.id }
+        : domainForm;
+
+      const res = await fetch('/api/mail/domains', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      if (res.ok) {
+        setNotification({ type: 'success', message: editingDomain ? 'Doména upravena' : 'Doména přidána' });
+        setDomainModalOpen(false);
+        fetchData();
+      } else {
+        setNotification({ type: 'error', message: 'Nepodařilo se uložit doménu' });
+      }
+    } catch (error) {
+      setNotification({ type: 'error', message: 'Nepodařilo se uložit doménu' });
+    }
   };
 
   if (!isAuthenticated) {
@@ -273,6 +359,119 @@ export default function MailAdminPanel() {
           <StatCard icon={Mail} label="Zpracovaných odpovědí" value={stats?.replies || 0} loading={loading} />
           <StatCard icon={FileText} label="Konceptů ke kontrole" value={stats?.drafts || 0} loading={loading} />
         </div>
+
+        {/* Domains Overview */}
+        <section className="bg-[#1a1a1a] border border-white/5 rounded-3xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-black tracking-tight">Domény</h2>
+            <button
+              onClick={handleAddDomain}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold text-white bg-[#7C3AED] hover:bg-[#5B21B6] transition-all duration-300"
+            >
+              <Plus className="w-4 h-4" />
+              Přidat doménu
+            </button>
+          </div>
+          {loading ? (
+            <TableSkeleton />
+          ) : domains.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-white/5">
+                    <th className="text-left text-[10px] font-black uppercase tracking-widest text-zinc-600 pb-3">Doména</th>
+                    <th className="text-left text-[10px] font-black uppercase tracking-widest text-zinc-600 pb-3">Stav</th>
+                    <th className="text-left text-[10px] font-black uppercase tracking-widest text-zinc-600 pb-3">Odeslané e-maily</th>
+                    <th className="text-left text-[10px] font-black uppercase tracking-widest text-zinc-600 pb-3">Naposledy použito</th>
+                    <th className="text-right text-[10px] font-black uppercase tracking-widest text-zinc-600 pb-3">Akce</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {domains.map((domain) => (
+                    <tr key={domain.id} className="border-b border-white/5 last:border-0">
+                      <td className="py-3 text-sm font-medium text-white">{domain.domain}</td>
+                      <td className="py-3">{getDomainStatusBadge(domain.status)}</td>
+                      <td className="py-3 text-sm text-zinc-400">{domain.emails_sent}</td>
+                      <td className="py-3 text-sm text-zinc-500">{new Date(domain.last_used).toLocaleString('cs-CZ')}</td>
+                      <td className="py-3 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => handleEditDomain(domain)}
+                            className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-300"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteDomain(domain.id)}
+                            className="p-2 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-12 text-zinc-500">
+              <Globe className="w-12 h-12 mx-auto mb-4 opacity-30" />
+              <p className="font-medium">Zatím žádné domény</p>
+              <p className="text-sm mt-2">Klikněte na "Přidat doménu" pro přidání první domény</p>
+            </div>
+          )}
+        </section>
+
+        {/* Domain Modal */}
+        {domainModalOpen && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-[#1a1a1a] border border-white/5 rounded-3xl p-8 w-full max-w-md">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-black tracking-tight">
+                  {editingDomain ? 'Upravit doménu' : 'Přidat doménu'}
+                </h3>
+                <button
+                  onClick={() => setDomainModalOpen(false)}
+                  className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-300"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <form onSubmit={handleDomainSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2">Doména</label>
+                  <input
+                    type="text"
+                    value={domainForm.domain}
+                    onChange={(e) => setDomainForm({ ...domainForm, domain: e.target.value })}
+                    className="w-full bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 transition-all duration-300 text-sm"
+                    placeholder="example.com"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2">Stav</label>
+                  <select
+                    value={domainForm.status}
+                    onChange={(e) => setDomainForm({ ...domainForm, status: e.target.value as 'active' | 'inactive' | 'error' })}
+                    className="w-full bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white outline-none focus:border-[#7C3AED]/60 transition-all duration-300 text-sm"
+                  >
+                    <option value="active">Aktivní</option>
+                    <option value="inactive">Neaktivní</option>
+                    <option value="error">Chyba</option>
+                  </select>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-[#7C3AED] text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-[#5B21B6] transition-all duration-300"
+                >
+                  {editingDomain ? 'Uložit změny' : 'Přidat doménu'}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
 
         {/* Action Buttons */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
