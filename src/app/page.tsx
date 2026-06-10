@@ -6,6 +6,8 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import ContactLeadModal from "@/components/ContactLeadModal";
 import SummerStartBanner from "@/components/SummerStartBanner";
+import { useCountry } from "@/contexts/CountryContext";
+import { translations } from "@/lib/translations";
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
@@ -14,6 +16,8 @@ export default function Home() {
   const [promoVisible, setPromoVisible] = useState(true);
   const openLead = useCallback(() => setLeadOpen(true), []);
   const handlePromoVisibility = useCallback((visible: boolean) => setPromoVisible(visible), []);
+  const { language, priceDisplay, currency } = useCountry();
+  const t = translations[language];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,7 +68,7 @@ export default function Home() {
           <div className="hidden lg:flex gap-14 text-[11px] font-black uppercase tracking-[0.3em] text-zinc-500">
             {['why', 'pricing', 'process', 'specialization'].map((item) => (
               <a key={item} href={`#${item}`} className="hover:text-brand transition-all duration-300 hover:tracking-[0.4em]">
-                {item === 'why' ? 'Proč my' : item === 'pricing' ? 'Ceník' : item === 'process' ? 'Proces' : 'Specializace'}
+                {item === 'why' ? t.footerWhy : item === 'pricing' ? t.footerPricing : item === 'process' ? t.footerProcess : t.footerSpecialization}
               </a>
             ))}
           </div>
@@ -74,7 +78,7 @@ export default function Home() {
             onClick={openLead}
             className="shrink-0 bg-brand text-white px-4 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 rounded-xl text-[10px] sm:text-xs font-black hover:bg-brand-dark transition-all duration-500 uppercase tracking-widest shadow-[0_0_30px_-5px_rgba(124,58,237,0.5)] hover:shadow-[0_0_40px_0px_rgba(124,58,237,0.6)]"
           >
-            Chci návrh
+            {t.heroCTA}
           </button>
         </div>
       </nav>
@@ -108,16 +112,13 @@ export default function Home() {
               transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] as const }}
             >
               <h1 className="mt-12 sm:mt-16 md:mt-20 lg:mt-24 text-7xl md:text-[160px] font-black tracking-tighter mb-12 leading-[0.8] text-balance uppercase">
-                VÁŠ WEB <br />
-                <span className="text-gradient">BEZ LIMITŮ</span>
+                {t.heroTitle} <br />
+                <span className="text-gradient">{t.heroSubtitle}</span>
               </h1>
               
               <div className="w-full text-center flex flex-col items-center gap-4 mb-20">
                 <p className="text-xl md:text-3xl text-zinc-400 font-medium leading-relaxed">
-                  Drtíme konkurenci rychlostí. První návrh uvidíte do <span className="text-brand font-bold underline decoration-brand/30 underline-offset-8">60 minut</span>.
-                </p>
-                <p className="text-xl md:text-3xl text-zinc-400 font-medium leading-relaxed">
-                  Plně funkční web nasadíme do <span className="text-brand font-bold underline decoration-brand/30 underline-offset-8">24 hodin</span>.
+                  {t.heroDescription}
                 </p>
               </div>
               
@@ -127,7 +128,7 @@ export default function Home() {
                   onClick={openLead}
                   className="w-full max-w-md sm:w-auto bg-white text-black px-8 py-5 sm:px-12 sm:py-6 md:px-16 md:py-8 rounded-[2rem] text-sm sm:text-base md:text-lg font-black hover:bg-zinc-200 transition-all duration-500 flex items-center justify-center gap-3 sm:gap-4 group uppercase tracking-tighter shadow-2xl shadow-white/5"
                 >
-                  Chci návrh do hodiny
+                  {t.heroCTA}
                   <ArrowUpRight size={22} className="sm:w-6 sm:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500 shrink-0" />
                 </button>
               </div>
@@ -151,8 +152,8 @@ export default function Home() {
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" />
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="mb-40 text-left max-w-4xl">
-              <h2 className="text-5xl md:text-[100px] font-black mb-10 tracking-tighter leading-none uppercase">Konec drahých <br /><span className="text-brand italic">výmluv.</span></h2>
-              <p className="text-zinc-500 uppercase tracking-[0.5em] text-sm font-black mb-12">Tradiční agentury vs Webs Bača</p>
+              <h2 className="text-5xl md:text-[100px] font-black mb-10 tracking-tighter leading-none uppercase">{t.whyTitle} <br /><span className="text-brand italic">{t.whySubtitle}</span></h2>
+              <p className="text-zinc-500 uppercase tracking-[0.5em] text-sm font-black mb-12">{t.whyDescription}</p>
               <div className="h-1 w-32 bg-brand shadow-[0_0_20px_rgba(124,58,237,0.8)]" />
             </motion.div>
             
@@ -169,7 +170,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="mt-16 flex flex-wrap items-center gap-10 text-brand font-black text-xs uppercase tracking-[0.3em] relative z-10">
-                  <span className="flex items-center gap-2"><CheckCircle size={14} /> 0 Kč VSTUP</span>
+                  <span className="flex items-center gap-2"><CheckCircle size={14} /> {t.zeroKc} VSTUP</span>
                   <span className="flex items-center gap-2"><CheckCircle size={14} /> 24h DODÁNÍ</span>
                   <div className="h-px flex-1 bg-white/10" />
                 </div>
@@ -195,8 +196,8 @@ export default function Home() {
           
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-40">
-              <h2 className="text-6xl md:text-[140px] font-black mb-10 tracking-tighter leading-none uppercase">MODEL <br /><span className="text-brand">1700.</span></h2>
-              <p className="text-zinc-500 font-black uppercase tracking-[0.6em] text-sm">Jednoduchost v každém detailu</p>
+              <h2 className="text-6xl md:text-[140px] font-black mb-10 tracking-tighter leading-none uppercase">{t.pricingTitle} <br /><span className="text-brand">{t.pricingSubtitle}</span></h2>
+              <p className="text-zinc-500 font-black uppercase tracking-[0.6em] text-sm">{t.pricingDescription}</p>
             </motion.div>
             
             <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -205,15 +206,15 @@ export default function Home() {
                 className="glass-purple p-12 md:p-20 rounded-[3rem] text-center border-brand/20 shadow-[0_0_100px_-20px_rgba(124,58,237,0.15)] relative group order-2 lg:order-1"
               >
                 <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-brand px-10 py-4 rounded-2xl text-white font-black uppercase tracking-[0.4em] text-xs shadow-2xl shadow-brand/50">
-                  Nejoblíbenější volba
+                  {t.pricingPopular}
                 </div>
                 
                 <div className="flex flex-col items-center">
                   <div className="flex items-start justify-center mb-6">
-                    <span className="text-4xl font-black mt-6 mr-4 text-zinc-500 tracking-tighter">CZK</span>
-                    <span className="text-[140px] md:text-[180px] font-black leading-none tracking-tighter text-gradient">1700</span>
+                    <span className="text-4xl font-black mt-6 mr-4 text-zinc-500 tracking-tighter">{currency}</span>
+                    <span className="text-[140px] md:text-[180px] font-black leading-none tracking-tighter text-gradient">{priceDisplay.replace(currency, '').replace('$', '').replace('Kč', '').trim()}</span>
                   </div>
-                  <div className="text-2xl font-bold text-zinc-500 mb-6 italic">/ měsíčně bez DPH</div>
+                  <div className="text-2xl font-bold text-zinc-500 mb-6 italic">{t.pricingPerMonth}</div>
                   <p className="mb-10 px-5 py-2.5 rounded-xl border border-amber-400/60 bg-gradient-to-r from-[#FDE047] via-[#FACC15] to-[#FBBF24] text-[#422006] text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] shadow-[0_0_24px_rgba(250,204,21,0.25)]">
                     Letní start — první měsíc zdarma
                   </p>
@@ -221,12 +222,12 @@ export default function Home() {
                   <div className="flex justify-center w-full mb-16">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 w-full text-left">
                       {[
-                        { icon: Globe, text: "Prémiový Hosting" },
-                        { icon: Shield, text: "SSL Certifikát" },
-                        { icon: Layout, text: "Správa Obsahu" },
-                        { icon: Settings, text: "Technický Servis" },
-                        { icon: Zap, text: "Vysoká Rychlost" },
-                        { icon: CheckCircle, text: "Designové Změny" },
+                        { icon: Globe, text: t.hosting },
+                        { icon: Shield, text: t.ssl },
+                        { icon: Layout, text: t.content },
+                        { icon: Settings, text: t.support },
+                        { icon: Zap, text: t.speed },
+                        { icon: CheckCircle, text: t.revisions },
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-4 group/item">
                           <div className="w-8 h-8 rounded-xl bg-brand/10 flex items-center justify-center group-hover/item:bg-brand group-hover/item:text-white transition-all duration-500 shadow-lg shrink-0">
@@ -243,7 +244,7 @@ export default function Home() {
                     onClick={openLead}
                     className="w-full bg-white text-black py-6 sm:py-7 md:py-8 rounded-[2rem] font-black text-lg sm:text-xl md:text-2xl hover:scale-[1.02] transition-all duration-500 uppercase tracking-tighter shadow-2xl"
                   >
-                    Začít spolupráci
+                    {t.pricingIncludes}
                   </button>
                 </div>
               </motion.div>
@@ -386,12 +387,12 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-zinc-500 text-xl max-w-md leading-relaxed font-medium">
-                Využíváme nejmodernější technologie a AI, abychom vašemu byznysu dodali náskok, který konkurence nedožene.
+                {t.footerDescription}
               </p>
             </div>
             
             <div className="lg:col-span-3">
-               <h4 className="text-[11px] font-black uppercase tracking-[0.5em] text-brand mb-10">Kontakt</h4>
+               <h4 className="text-[11px] font-black uppercase tracking-[0.5em] text-brand mb-10">{t.footerContact}</h4>
                <div className="flex flex-col gap-6 text-sm font-bold text-zinc-400">
                   <button type="button" onClick={openLead} className="text-left hover:text-white transition-all duration-300 flex items-center gap-4 group w-full">
                     <div className="w-10 h-10 rounded-xl glass flex items-center justify-center group-hover:bg-brand transition-colors">
@@ -403,29 +404,29 @@ export default function Home() {
                     <div className="w-10 h-10 rounded-xl glass flex items-center justify-center group-hover:bg-brand transition-colors">
                       <Phone size={18} />
                     </div>
-                    Support 24/7
+                    {t.supportPhone}
                   </div>
                </div>
             </div>
             
             <div className="lg:col-span-3">
-               <h4 className="text-[11px] font-black uppercase tracking-[0.5em] text-brand mb-10">Navigace</h4>
+               <h4 className="text-[11px] font-black uppercase tracking-[0.5em] text-brand mb-10">{t.footerNavigation}</h4>
                <div className="grid grid-cols-2 gap-6 text-sm font-bold text-zinc-400 uppercase tracking-[0.2em]">
-                  <a href="#why" className="hover:text-white transition-all duration-300">Proč my</a>
-                  <a href="#pricing" className="hover:text-white transition-all duration-300">Ceník</a>
-                  <a href="#process" className="hover:text-white transition-all duration-300">Proces</a>
-                  <a href="#specialization" className="hover:text-white transition-all duration-300">Obory</a>
+                  <a href="#why" className="hover:text-white transition-all duration-300">{t.footerWhy}</a>
+                  <a href="#pricing" className="hover:text-white transition-all duration-300">{t.footerPricing}</a>
+                  <a href="#process" className="hover:text-white transition-all duration-300">{t.footerProcess}</a>
+                  <a href="#specialization" className="hover:text-white transition-all duration-300">{t.footerSpecialization}</a>
                </div>
             </div>
           </div>
           
           <div className="pt-20 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-10">
             <div className="text-[11px] text-zinc-600 font-black uppercase tracking-[0.6em]">
-              © 2026 Webs Bača • Vytvořeno s vášní pro efektivitu
+              {t.footerCopyright}
             </div>
             <div className="flex gap-14 text-[11px] text-zinc-600 font-black uppercase tracking-[0.6em]">
-               <span className="hover:text-brand cursor-pointer transition-colors">GDPR</span>
-               <span className="hover:text-brand cursor-pointer transition-colors">VOP</span>
+               <span className="hover:text-brand cursor-pointer transition-colors">{t.footerGDPR}</span>
+               <span className="hover:text-brand cursor-pointer transition-colors">{t.footerVOP}</span>
             </div>
           </div>
         </div>
