@@ -1,11 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Upload, ArrowUpRight, X, Image as ImageIcon } from 'lucide-react';
 import { useCountry } from '@/contexts/CountryContext';
 import { translations } from '@/lib/translations';
-import PhoneInput from 'react-phone-number-input';
+import dynamic from 'next/dynamic';
+
+const PhoneInput = dynamic(() => import('react-phone-number-input'), {
+  ssr: false,
+  loading: () => <div className="w-full h-12 bg-white/[0.03] border border-white/8 rounded-2xl animate-pulse" />,
+});
 import 'react-phone-number-input/style.css';
 
 export default function OrdersPage() {

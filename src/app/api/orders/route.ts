@@ -20,6 +20,25 @@ export async function POST(request: NextRequest) {
     const priceList = formData.get('priceList') as string;
     const workingHours = formData.get('workingHours') as string;
 
+    // Log received data for debugging
+    console.log('Received order data:', {
+      companyName,
+      companyPhone,
+      companyEmail,
+      companyAddress,
+      industry,
+      domain,
+      description,
+      advantage,
+      workingHours,
+    });
+
+    // Validate required fields
+    if (!companyName || !companyPhone || !companyEmail || !companyAddress || !industry || !domain || !description || !advantage || !workingHours) {
+      console.error('Missing required fields:', { companyName, companyPhone, companyEmail, companyAddress, industry, domain, description, advantage, workingHours });
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
     // Upload images
     const imageUrls: string[] = [];
     const imageKeys = Array.from(formData.keys()).filter((key): key is string => typeof key === 'string' && key.startsWith('image_'));
