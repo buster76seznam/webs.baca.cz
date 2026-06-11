@@ -119,6 +119,7 @@ export default function OrdersPage() {
 
       const data = await res.json();
       if (!res.ok) {
+        console.error('API Error:', data);
         setErrorMsg(data.error || (isEnglish ? 'Error submitting.' : 'Chyba při odesílání.'));
         setStatus('error');
         return;

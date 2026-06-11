@@ -96,13 +96,15 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Database error:', error);
-      return NextResponse.json({ error: 'Chyba při ukládání objednávky.' }, { status: 500 });
+      console.error('Database error details:', JSON.stringify(error, null, 2));
+      return NextResponse.json({ error: `Chyba při ukládání objednávky: ${error.message}` }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, order: data }, { status: 200 });
   } catch (error) {
     console.error('Server error:', error);
-    return NextResponse.json({ error: 'Interní chyba serveru.' }, { status: 500 });
+    console.error('Server error details:', JSON.stringify(error, null, 2));
+    return NextResponse.json({ error: `Interní chyba serveru: ${error instanceof Error ? error.message : 'Unknown error'}` }, { status: 500 });
   }
 }
 
