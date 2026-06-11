@@ -14,7 +14,9 @@ export default function Home() {
   const [logoError, setLogoError] = useState(false);
   const [leadOpen, setLeadOpen] = useState(false);
   const [promoVisible, setPromoVisible] = useState(true);
-  const openLead = useCallback(() => setLeadOpen(true), []);
+  const openLead = useCallback(() => {
+    window.location.href = '/orders';
+  }, []);
   const handlePromoVisibility = useCallback((visible: boolean) => setPromoVisible(visible), []);
   const { language, priceDisplay, currency } = useCountry();
   const isEnglish = language === 'en';

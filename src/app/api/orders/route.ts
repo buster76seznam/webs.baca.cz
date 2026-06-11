@@ -46,27 +46,35 @@ export async function POST(request: NextRequest) {
     for (const key of imageKeys) {
       const file = formData.get(key) as File;
       if (file) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-        const filePath = `${fileName}`;
+        try {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+          const filePath = `${fileName}`;
 
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('order-images')
-          .upload(filePath, file);
-
-        if (uploadError) {
-          console.error('Image upload error:', uploadError);
-          continue;
-        }
-
-        if (uploadData) {
-          const { data: publicUrlData } = supabase.storage
+          console.log('Attempting to upload image:', fileName);
+          const { data: uploadData, error: uploadError } = await supabase.storage
             .from('order-images')
-            .getPublicUrl(filePath);
-          
-          if (publicUrlData) {
-            imageUrls.push(publicUrlData.publicUrl);
+            .upload(filePath, file);
+
+          if (uploadError) {
+            console.error('Image upload error:', uploadError);
+            console.error('Image upload error details:', JSON.stringify(uploadError, null, 2));
+            continue;
           }
+
+          if (uploadData) {
+            const { data: publicUrlData } = supabase.storage
+              .from('order-images')
+              .getPublicUrl(filePath);
+            
+            if (publicUrlData) {
+              imageUrls.push(publicUrlData.publicUrl);
+            }
+          }
+        } catch (uploadErr) {
+          console.error('Exception during image upload:', uploadErr);
+          console.error('Exception details:', JSON.stringify(uploadErr, null, 2));
+          continue;
         }
       }
     }
