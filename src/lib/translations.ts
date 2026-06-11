@@ -86,6 +86,7 @@ export const translations = {
     
     // Support
     supportPhone: "+420 721 400 499",
+    supportPhoneMain: "+420 721 400 499",
     
     // Currency
     currency: "Kč",
@@ -187,6 +188,7 @@ export const translations = {
     
     // Support
     supportPhone: "+1 (555) 123-4567",
+    supportPhoneMain: "+420 721 400 499",
     
     // Currency
     currency: "USD",

@@ -404,7 +404,7 @@ export default function Home() {
                     <div className="w-10 h-10 rounded-xl glass flex items-center justify-center group-hover:bg-brand transition-colors">
                       <Phone size={18} />
                     </div>
-                    {t.supportPhone}
+                    {t.supportPhoneMain}
                   </div>
                </div>
             </div>

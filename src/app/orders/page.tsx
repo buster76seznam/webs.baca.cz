@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { Upload, ArrowUpRight, X, Image as ImageIcon } from 'lucide-react';
 import { useCountry } from '@/contexts/CountryContext';
 import { translations } from '@/lib/translations';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 export default function OrdersPage() {
   const { language } = useCountry();
@@ -25,6 +27,8 @@ export default function OrdersPage() {
     description: '',
     advantage: '',
     priceList: '',
+    workingDays: 'mon-fri',
+    workingTime: '9-17',
     workingHours: '',
   });
 
@@ -51,13 +55,38 @@ export default function OrdersPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Format working hours for display
+    let formattedWorkingHours = '';
+    const dayLabels: Record<string, { cs: string; en: string }> = {
+      'mon-fri': { cs: 'Po-Pá', en: 'Mon-Fri' },
+      'mon-sat': { cs: 'Po-So', en: 'Mon-Sat' },
+      'mon-sun': { cs: 'Po-Ne', en: 'Mon-Sun' },
+      'tue-sat': { cs: 'Út-So', en: 'Tue-Sat' },
+      'tue-sun': { cs: 'Út-Ne', en: 'Tue-Sun' },
+    };
+    const timeLabels: Record<string, string> = {
+      '8-16': '8:00-16:00',
+      '9-17': '9:00-17:00',
+      '10-18': '10:00-18:00',
+      '8-17': '8:00-17:00',
+      '9-18': '9:00-18:00',
+    };
+    
+    if (formData.workingTime === 'custom') {
+      formattedWorkingHours = formData.workingHours;
+    } else {
+      const dayLabel = dayLabels[formData.workingDays]?.[language] || formData.workingDays;
+      const timeLabel = timeLabels[formData.workingTime] || formData.workingTime;
+      formattedWorkingHours = `${dayLabel} ${timeLabel}`;
+    }
+    
     // Validation - all fields required except owner section and price list
     if (!formData.companyName.trim() || !formData.companyPhone.trim() || 
         !formData.companyEmail.trim() || !formData.companyAddress.trim() ||
         !formData.industry || !formData.domain.trim() || 
         !formData.description.trim() || !formData.advantage.trim() ||
-        !formData.workingHours.trim()) {
-      setErrorMsg('Vyplňte prosím všechna povinná pole.');
+        !formattedWorkingHours.trim()) {
+      setErrorMsg(isEnglish ? 'Please fill in all required fields.' : 'Vyplňte prosím všechna povinná pole.');
       setStatus('error');
       return;
     }
@@ -68,8 +97,11 @@ export default function OrdersPage() {
     try {
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
-        formDataToSend.append(key, value);
+        if (key !== 'workingHours' || formData.workingTime === 'custom') {
+          formDataToSend.append(key, value);
+        }
       });
+      formDataToSend.append('workingHours', formattedWorkingHours);
       images.forEach((file, index) => {
         formDataToSend.append(`image_${index}`, file);
       });
@@ -90,7 +122,8 @@ export default function OrdersPage() {
       setFormData({
         companyName: '', companyPhone: '', companyEmail: '', companyAddress: '',
         industry: '', ownerName: '', ownerPhone: '', ownerEmail: '',
-        domain: '', description: '', advantage: '', priceList: '', workingHours: '',
+        domain: '', description: '', advantage: '', priceList: '',
+        workingDays: 'mon-fri', workingTime: '9-17', workingHours: '',
       });
       setImages([]);
     } catch {
@@ -138,13 +171,19 @@ export default function OrdersPage() {
               </div>
               <div>
                 <label className={labelClass}>{isEnglish ? 'Phone *' : 'Telefon *'}</label>
-                <input type="tel" name="companyPhone" value={formData.companyPhone} onChange={handleInputChange} placeholder="+420 777 123 456" className={inputClass} required />
+                <PhoneInput
+                  value={formData.companyPhone}
+                  onChange={(value) => setFormData({ ...formData, companyPhone: value || '' })}
+                  placeholder={isEnglish ? 'Enter phone number' : 'Zadejte telefonní číslo'}
+                  className="w-full bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-8px_rgba(124,58,237,0.5)] transition-all duration-300 text-sm [&_input]:bg-transparent [&_input]:text-white [&_input]:placeholder-zinc-700 [&_select]:bg-[#0A0A0A] [&_select]:text-white [&_select]:border-white/10"
+                  required
+                />
               </div>
             </div>
             <div className="grid sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className={labelClass}>{isEnglish ? 'Email *' : 'Email *'}</label>
-                <input type="email" name="companyEmail" value={formData.companyEmail} onChange={handleInputChange} placeholder="info@firma.cz" className={inputClass} required />
+                <input type="email" name="companyEmail" value={formData.companyEmail} onChange={handleInputChange} placeholder={isEnglish ? 'info@company.com' : 'info@firma.cz'} className={inputClass} required />
               </div>
               <div>
                 <label className={labelClass}>{isEnglish ? 'Industry *' : 'Obor *'}</label>
@@ -170,12 +209,17 @@ export default function OrdersPage() {
               </div>
               <div>
                 <label className={labelClass}>{isEnglish ? 'Phone' : 'Telefon'}</label>
-                <input type="tel" name="ownerPhone" value={formData.ownerPhone} onChange={handleInputChange} placeholder="+420 777 123 456" className={inputClass} />
+                <PhoneInput
+                  value={formData.ownerPhone}
+                  onChange={(value) => setFormData({ ...formData, ownerPhone: value || '' })}
+                  placeholder={isEnglish ? 'Enter phone number' : 'Zadejte telefonní číslo'}
+                  className="w-full bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-8px_rgba(124,58,237,0.5)] transition-all duration-300 text-sm [&_input]:bg-transparent [&_input]:text-white [&_input]:placeholder-zinc-700 [&_select]:bg-[#0A0A0A] [&_select]:text-white [&_select]:border-white/10"
+                />
               </div>
             </div>
             <div>
               <label className={labelClass}>{isEnglish ? 'Email' : 'Email'}</label>
-              <input type="email" name="ownerEmail" value={formData.ownerEmail} onChange={handleInputChange} placeholder="jan@firma.cz" className={inputClass} />
+              <input type="email" name="ownerEmail" value={formData.ownerEmail} onChange={handleInputChange} placeholder={isEnglish ? 'jan@company.com' : 'jan@firma.cz'} className={inputClass} />
             </div>
           </motion.div>
 
@@ -210,7 +254,7 @@ export default function OrdersPage() {
 
             <div className="mb-4">
               <label className={labelClass}>{isEnglish ? 'Desired domain *' : 'Jakou doménu chcete *'}</label>
-              <input type="text" name="domain" value={formData.domain} onChange={handleInputChange} placeholder="mojedomena.cz" className={inputClass} required />
+              <input type="text" name="domain" value={formData.domain} onChange={handleInputChange} placeholder={isEnglish ? 'mydomain.com' : 'mojedomena.cz'} className={inputClass} required />
             </div>
 
             <div className="mb-4">
@@ -230,7 +274,50 @@ export default function OrdersPage() {
 
             <div>
               <label className={labelClass}>{isEnglish ? 'Working hours *' : 'Pracovní doba *'}</label>
-              <input type="text" name="workingHours" value={formData.workingHours} onChange={handleInputChange} placeholder="Po-Pá 8:00-17:00" className={inputClass} required />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <select
+                    name="workingDays"
+                    value={formData.workingDays || 'mon-fri'}
+                    onChange={handleInputChange}
+                    className={inputClass}
+                    required
+                  >
+                    <option value="mon-fri">{isEnglish ? 'Monday - Friday' : 'Pondělí - Pátek'}</option>
+                    <option value="mon-sat">{isEnglish ? 'Monday - Saturday' : 'Pondělí - Sobota'}</option>
+                    <option value="mon-sun">{isEnglish ? 'Monday - Sunday' : 'Pondělí - Neděle'}</option>
+                    <option value="tue-sat">{isEnglish ? 'Tuesday - Saturday' : 'Úterý - Sobota'}</option>
+                    <option value="tue-sun">{isEnglish ? 'Tuesday - Sunday' : 'Úterý - Neděle'}</option>
+                  </select>
+                </div>
+                <div>
+                  <select
+                    name="workingTime"
+                    value={formData.workingTime || '9-17'}
+                    onChange={handleInputChange}
+                    className={inputClass}
+                    required
+                  >
+                    <option value="8-16">{isEnglish ? '8:00 - 16:00' : '8:00 - 16:00'}</option>
+                    <option value="9-17">{isEnglish ? '9:00 - 17:00' : '9:00 - 17:00'}</option>
+                    <option value="10-18">{isEnglish ? '10:00 - 18:00' : '10:00 - 18:00'}</option>
+                    <option value="8-17">{isEnglish ? '8:00 - 17:00' : '8:00 - 17:00'}</option>
+                    <option value="9-18">{isEnglish ? '9:00 - 18:00' : '9:00 - 18:00'}</option>
+                    <option value="custom">{isEnglish ? 'Custom hours' : 'Vlastní hodiny'}</option>
+                  </select>
+                </div>
+              </div>
+              {(formData.workingTime === 'custom') && (
+                <input
+                  type="text"
+                  name="workingHours"
+                  value={formData.workingHours}
+                  onChange={handleInputChange}
+                  placeholder={isEnglish ? 'e.g. 8:00-12:00, 13:00-17:00' : 'např. 8:00-12:00, 13:00-17:00'}
+                  className={`${inputClass} mt-4`}
+                  required
+                />
+              )}
             </div>
           </motion.div>
 
