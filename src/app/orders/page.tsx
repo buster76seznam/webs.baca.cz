@@ -114,7 +114,7 @@ export default function OrdersPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        setErrorMsg(data.error || 'Chyba při odesílání.');
+        setErrorMsg(data.error || (isEnglish ? 'Error submitting.' : 'Chyba při odesílání.'));
         setStatus('error');
         return;
       }
@@ -128,7 +128,7 @@ export default function OrdersPage() {
       });
       setImages([]);
     } catch {
-      setErrorMsg('Nepodařilo se odeslat. Zkus to znovu.');
+      setErrorMsg(isEnglish ? 'Failed to submit. Try again.' : 'Nepodařilo se odeslat. Zkus to znovu.');
       setStatus('error');
     }
   };
@@ -168,7 +168,7 @@ export default function OrdersPage() {
             <div className="grid sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className={labelClass}>{isEnglish ? 'Company Name *' : 'Název podniku *'}</label>
-                <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} placeholder={isEnglish ? 'Novák s.r.o.' : 'Novák s.r.o.'} className={inputClass} required />
+                <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} placeholder={isEnglish ? 'Novak s.r.o.' : 'Novák s.r.o.'} className={inputClass} required />
               </div>
               <div>
                 <label className={labelClass}>{isEnglish ? 'Phone *' : 'Telefon *'}</label>
@@ -206,7 +206,7 @@ export default function OrdersPage() {
             <div className="grid sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className={labelClass}>{isEnglish ? 'Full Name' : 'Jméno a příjmení'}</label>
-                <input type="text" name="ownerName" value={formData.ownerName} onChange={handleInputChange} placeholder="Jan Novák" className={inputClass} />
+                <input type="text" name="ownerName" value={formData.ownerName} onChange={handleInputChange} placeholder={isEnglish ? 'Jan Novak' : 'Jan Novák'} className={inputClass} />
               </div>
               <div>
                 <label className={labelClass}>{isEnglish ? 'Phone' : 'Telefon'}</label>

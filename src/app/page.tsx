@@ -17,6 +17,7 @@ export default function Home() {
   const openLead = useCallback(() => setLeadOpen(true), []);
   const handlePromoVisibility = useCallback((visible: boolean) => setPromoVisible(visible), []);
   const { language, priceDisplay, currency } = useCountry();
+  const isEnglish = language === 'en';
   const t = translations[language];
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function Home() {
               {!logoError ? (
                 <Image 
                   src="/Logo.png" 
-                  alt="Webs Bača Logo - tvorba webů, hosting a SEO" 
+                  alt={isEnglish ? "Webs Bača Logo - web design, hosting and SEO" : "Webs Bača Logo - tvorba webů, hosting a SEO"} 
                   fill 
                   sizes="(max-width: 768px) 56px, 80px"
                   className="object-contain p-1 transition-transform duration-700 group-hover:scale-105"
@@ -260,7 +261,7 @@ export default function Home() {
                   <div className="relative z-10 w-full h-full rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl">
                     <Image 
                       src="https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=2000&auto=format&fit=crop"
-                      alt="Profesionální pracovní prostředí - Webs Bača tvorba webů" 
+                      alt={isEnglish ? "Professional work environment - Webs Bača web design" : "Profesionální pracovní prostředí - Webs Bača tvorba webů"} 
                       fill
                       sizes="(min-width: 1024px) 500px, 100vw"
                       className="object-cover"
@@ -355,7 +356,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={openLead}
-                aria-label="Otevřít poptávkový formulář"
+                aria-label={isEnglish ? "Open order form" : "Otevřít poptávkový formulář"}
                 className="text-4xl sm:text-5xl md:text-7xl lg:text-[120px] font-black text-white tracking-tighter leading-[0.85] sm:leading-[0.8] uppercase text-center hover:opacity-95 active:scale-[0.99] transition-all max-w-[95vw]"
               >
                 <span className="block">{t.ctaStart}</span>
@@ -374,7 +375,7 @@ export default function Home() {
               <div className="flex items-center gap-6 mb-12 group cursor-pointer">
                 <div className="relative w-16 h-16 overflow-hidden rounded-2xl border-2 border-brand bg-[#1a0b2e] group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
                   {!logoError ? (
-                    <Image src="/Logo.png" alt="Webs Bača Logo - tvorba webů, hosting a SEO" fill sizes="128px" className="object-contain p-1" onError={() => setLogoError(true)} />
+                    <Image src="/Logo.png" alt={isEnglish ? "Webs Bača Logo - web design, hosting and SEO" : "Webs Bača Logo - tvorba webů, hosting a SEO"} fill sizes="128px" className="object-contain p-1" onError={() => setLogoError(true)} />
                   ) : (
                     <div className="w-full h-full bg-brand flex items-center justify-center">
                       <span className="text-white font-black text-2xl">W</span>
