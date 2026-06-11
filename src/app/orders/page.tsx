@@ -4,18 +4,13 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Upload, ArrowUpRight, X, Image as ImageIcon } from 'lucide-react';
 import { useCountry } from '@/contexts/CountryContext';
-
-const INDUSTRIES = [
-  'Autoservis', 'Stavebnictví', 'Gastro', 'Restaurace', 'Kavárna', 'Hotel',
-  'E-shop', 'Maloobchod', 'Velkoobchod', 'Služby', 'Poradenství',
-  'Zdravotnictví', 'Fitness', 'Krása', 'Vzdělávání', 'Realitní kancelář',
-  'Právní služby', 'IT služby', 'Marketing', 'Design', 'Výroba',
-  'Doprava', 'Zemědělství', 'Jiné'
-];
+import { translations } from '@/lib/translations';
 
 export default function OrdersPage() {
   const { language } = useCountry();
   const isEnglish = language === 'en';
+  const t = translations[language];
+  const industries = t.industries;
   
   const [formData, setFormData] = useState({
     companyName: '',
@@ -104,8 +99,8 @@ export default function OrdersPage() {
     }
   };
 
-  const inputClass = `w-full bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-8px_rgba(124,58,237,0.5)] transition-all duration-300 text-sm`;
-  const labelClass = 'text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 block';
+  const inputClass = `w-full bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-8px_rgba(124,58,237,0.5)] transition-all duration-300 text-sm [&_option]:text-black`;
+  const labelClass = 'text-[10px] font-black uppercase tracking-widest text-white mb-2 block';
 
   if (status === 'success') {
     return (
@@ -121,8 +116,8 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white py-24 px-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-[#030303] text-white py-24 px-6 flex items-center justify-center">
+      <div className="max-w-4xl mx-auto w-full">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-4 uppercase">
             {isEnglish ? 'Website Order' : 'Objednávka webu'}
@@ -155,7 +150,7 @@ export default function OrdersPage() {
                 <label className={labelClass}>{isEnglish ? 'Industry *' : 'Obor *'}</label>
                 <select name="industry" value={formData.industry} onChange={handleInputChange} className={inputClass} required>
                   <option value="">{isEnglish ? 'Select industry' : 'Vyberte obor'}</option>
-                  {INDUSTRIES.map(ind => <option key={ind} value={ind}>{ind}</option>)}
+                  {industries.map(ind => <option key={ind} value={ind}>{ind}</option>)}
                 </select>
               </div>
             </div>
@@ -249,7 +244,7 @@ export default function OrdersPage() {
             <button type="submit" disabled={status === 'loading'} className="w-full bg-brand text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-brand-dark transition-all duration-500 shadow-[0_0_40px_-10px_rgba(124,58,237,0.6)] disabled:opacity-60 flex items-center justify-center gap-3">
               {status === 'loading' ? (<><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />{isEnglish ? 'Sending...' : 'Odesílám...'}</>) : (isEnglish ? <>Submit <ArrowUpRight size={16} /></> : <>Odeslat <ArrowUpRight size={16} /></>)}
             </button>
-            <p className="text-zinc-700 text-xs text-center mt-4 font-medium">{isEnglish ? 'Have special requirements? Write to us at webs.baca@gmail.com' : 'Máte speciální požadavky? Napište nám na webs.baca@gmail.com'}</p>
+            <p className="text-white text-sm text-center mt-4 font-medium">{isEnglish ? 'Have special requirements? Write to us at webs.baca@gmail.com' : 'Máte speciální požadavky? Napište nám na webs.baca@gmail.com'}</p>
           </motion.div>
         </form>
       </div>

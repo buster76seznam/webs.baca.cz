@@ -7,6 +7,7 @@ export const translations = {
     heroDescription: "Návrh do 60 minut. Web spuštěný do 24 hodin. Vše za 1 700 Kč/měsíc – bez vstupního poplatku.",
     heroCTA: "Chci návrh do hodiny",
     heroHowItWorks: "Jak to funguje?",
+    heroPromo: "Letní start — první měsíc zdarma",
     
     // Stats
     statDelivery: "Dodání",
@@ -17,6 +18,11 @@ export const translations = {
     whyTitle: "Konec drahých",
     whySubtitle: "výmluv.",
     whyDescription: "Tradiční agentury vs Webs Bača",
+    whyCard1Title: "RYCHLOST, KTERÁ <br />DRTÍ TRH.",
+    whyCard1Desc: "Zatímco konkurence ještě píše zadání, my už vám posíláme hotový návrh. Do 24 hodin máte web, který začíná vydělávat.",
+    whyCard2Title: "VÝSLEDKY <br />HNED.",
+    whyCard2Desc: "Nezajímá nás \"proces\", zajímá nás váš zisk. Čím dříve web běží, tím dříve máte zákazníky.",
+    delivery24h: "24h DODÁNÍ",
     
     // Pricing
     pricingTitle: "MODEL",
@@ -34,6 +40,10 @@ export const translations = {
     speed: "Vysoká Rychlost",
     revisions: "Designové Změny",
     
+    // Pricing image overlay
+    pricingImageTitle: "PROFESIONÁLNÍ PŘÍSTUP.",
+    pricingImageDesc: "Váš úspěch je naše priorita. Každý detail webu ladíme pro maximální konverze.",
+    
     // Process
     processTitle: "JAK",
     processSubtitle: "DOMINUJEME.",
@@ -48,6 +58,13 @@ export const translations = {
     specTitle: "VAŠE",
     specSubtitle: "SPECIALIZACE.",
     specDescription: "Ověřené postupy pro váš obor",
+    spec1Title: "AUTOSERVISY",
+    spec1Desc: "Lokální SEO, online rezervace a přehledné ceníky. Váš servis bude vidět tam, kde ho lidé hledají.",
+    spec2Title: "STAVEBNICTVÍ",
+    spec2Desc: "Profesionální galerie realizací, které budují důvěru. Reference, které mluví samy za sebe.",
+    spec3Title: "B2B SLUŽBY",
+    spec3Desc: "Lead-gen weby navržené pro konverzi. Změňte návštěvníky v platící klienty.",
+    exploreSolution: "Prozkoumat řešení →",
     
     // CTA
     ctaStart: "ZAČNĚTE",
@@ -73,6 +90,15 @@ export const translations = {
     // Currency
     currency: "Kč",
     zeroKc: "0 Kč",
+    
+    // Industries
+    industries: [
+      'Autoservis', 'Stavebnictví', 'Gastro', 'Restaurace', 'Kavárna', 'Hotel',
+      'E-shop', 'Maloobchod', 'Velkoobchod', 'Služby', 'Poradenství',
+      'Zdravotnictví', 'Fitness', 'Krása', 'Vzdělávání', 'Realitní kancelář',
+      'Právní služby', 'IT služby', 'Marketing', 'Design', 'Výroba',
+      'Doprava', 'Zemědělství', 'Jiné'
+    ],
   },
   en: {
     // Hero
@@ -82,6 +108,7 @@ export const translations = {
     heroDescription: "Design in 60 minutes. Live website in 24 hours. Everything for $150/month – no setup fee.",
     heroCTA: "I want a design in an hour",
     heroHowItWorks: "How it works?",
+    heroPromo: "Summer Start — First Month Free",
     
     // Stats
     statDelivery: "Delivery",
@@ -92,6 +119,11 @@ export const translations = {
     whyTitle: "END OF EXPENSIVE",
     whySubtitle: "EXCUSES.",
     whyDescription: "Traditional agencies vs Webs Bača",
+    whyCard1Title: "SPEED THAT <br />CRUSHES THE MARKET.",
+    whyCard1Desc: "While the competition is still writing the brief, we're already sending you a finished design. Within 24 hours you have a website that starts earning.",
+    whyCard2Title: "RESULTS <br />NOW.",
+    whyCard2Desc: "We don't care about \"process\", we care about your profit. The sooner the website runs, the sooner you have customers.",
+    delivery24h: "24h DELIVERY",
     
     // Pricing
     pricingTitle: "MODEL",
@@ -109,6 +141,10 @@ export const translations = {
     speed: "High Speed",
     revisions: "Design Changes",
     
+    // Pricing image overlay
+    pricingImageTitle: "PROFESSIONAL APPROACH.",
+    pricingImageDesc: "Your success is our priority. We tune every detail of the website for maximum conversions.",
+    
     // Process
     processTitle: "HOW WE",
     processSubtitle: "DOMINATE.",
@@ -123,6 +159,13 @@ export const translations = {
     specTitle: "YOUR",
     specSubtitle: "SPECIALIZATION.",
     specDescription: "Proven practices for your industry",
+    spec1Title: "AUTO SERVICES",
+    spec1Desc: "Local SEO, online booking and clear price lists. Your service will be visible where people look for it.",
+    spec2Title: "CONSTRUCTION",
+    spec2Desc: "Professional project galleries that build trust. References that speak for themselves.",
+    spec3Title: "B2B SERVICES",
+    spec3Desc: "Lead-gen websites designed for conversion. Turn visitors into paying clients.",
+    exploreSolution: "Explore solution →",
     
     // CTA
     ctaStart: "START",
@@ -143,11 +186,20 @@ export const translations = {
     footerVOP: "T&C",
     
     // Support
-    supportPhone: "+420 721 400 499",
+    supportPhone: "+1 (555) 123-4567",
     
     // Currency
     currency: "USD",
     zeroKc: "$0",
+    
+    // Industries
+    industries: [
+      'Auto Service', 'Construction', 'Food Service', 'Restaurant', 'Cafe', 'Hotel',
+      'E-commerce', 'Retail', 'Wholesale', 'Services', 'Consulting',
+      'Healthcare', 'Fitness', 'Beauty', 'Education', 'Real Estate',
+      'Legal Services', 'IT Services', 'Marketing', 'Design', 'Manufacturing',
+      'Transportation', 'Agriculture', 'Other'
+    ],
   },
 };
 

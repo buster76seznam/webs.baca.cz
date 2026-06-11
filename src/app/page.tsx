@@ -140,7 +140,7 @@ export default function Home() {
               >
                 <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" aria-hidden />
                 <span className="text-xs sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em]">
-                  Letní start — první měsíc zdarma
+                  {t.heroPromo}
                 </span>
               </button>
             </motion.div>
@@ -164,14 +164,14 @@ export default function Home() {
                   <div className="w-20 h-20 bg-brand/10 rounded-3xl flex items-center justify-center mb-12 group-hover:bg-brand group-hover:text-white transition-all duration-500 shadow-xl shadow-brand/5">
                     <Rocket size={40} />
                   </div>
-                  <h3 className="text-5xl font-black mb-8 leading-tight tracking-tight uppercase">RYCHLOST, KTERÁ <br />DRTÍ TRH.</h3>
+                  <h3 className="text-5xl font-black mb-8 leading-tight tracking-tight uppercase" dangerouslySetInnerHTML={{ __html: t.whyCard1Title }} />
                   <p className="text-zinc-400 text-xl leading-relaxed max-w-xl font-medium">
-                    Zatímco konkurence ještě píše zadání, my už vám posíláme hotový návrh. Do 24 hodin máte web, který začíná vydělávat.
+                    {t.whyCard1Desc}
                   </p>
                 </div>
                 <div className="mt-16 flex flex-wrap items-center gap-10 text-brand font-black text-xs uppercase tracking-[0.3em] relative z-10">
                   <span className="flex items-center gap-2"><CheckCircle size={14} /> {t.zeroKc} VSTUP</span>
-                  <span className="flex items-center gap-2"><CheckCircle size={14} /> 24h DODÁNÍ</span>
+                  <span className="flex items-center gap-2"><CheckCircle size={14} /> {t.delivery24h}</span>
                   <div className="h-px flex-1 bg-white/10" />
                 </div>
               </motion.div>
@@ -181,8 +181,8 @@ export default function Home() {
                   <div className="w-20 h-20 bg-brand/10 rounded-3xl flex items-center justify-center mb-12 group-hover:bg-brand group-hover:text-white transition-all duration-500 shadow-xl shadow-brand/5">
                     <BarChart3 size={40} />
                   </div>
-                  <h3 className="text-4xl font-black mb-8 leading-tight tracking-tight uppercase">VÝSLEDKY <br />HNED.</h3>
-                  <p className="text-zinc-500 text-lg leading-relaxed font-medium">Nezajímá nás "proces", zajímá nás váš zisk. Čím dříve web běží, tím dříve máte zákazníky.</p>
+                  <h3 className="text-4xl font-black mb-8 leading-tight tracking-tight uppercase" dangerouslySetInnerHTML={{ __html: t.whyCard2Title }} />
+                  <p className="text-zinc-500 text-lg leading-relaxed font-medium">{t.whyCard2Desc}</p>
                 </div>
                 <div className="mt-12 text-zinc-700 font-black italic text-6xl">#1</div>
               </motion.div>
@@ -216,7 +216,7 @@ export default function Home() {
                   </div>
                   <div className="text-2xl font-bold text-zinc-500 mb-6 italic">{t.pricingPerMonth}</div>
                   <p className="mb-10 px-5 py-2.5 rounded-xl border border-amber-400/60 bg-gradient-to-r from-[#FDE047] via-[#FACC15] to-[#FBBF24] text-[#422006] text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] shadow-[0_0_24px_rgba(250,204,21,0.25)]">
-                    Letní start — první měsíc zdarma
+                    {t.heroPromo}
                   </p>
                   
                   <div className="flex justify-center w-full mb-16">
@@ -268,8 +268,8 @@ export default function Home() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
                     <div className="absolute bottom-8 left-8 right-8">
-                       <p className="text-2xl font-black italic tracking-tighter mb-2 text-white">PROFESIONÁLNÍ PŘÍSTUP.</p>
-                       <p className="text-sm font-medium text-zinc-400">Váš úspěch je naše priorita. Každý detail webu ladíme pro maximální konverze.</p>
+                       <p className="text-2xl font-black italic tracking-tighter mb-2 text-white">{t.pricingImageTitle}</p>
+                       <p className="text-sm font-medium text-zinc-400">{t.pricingImageDesc}</p>
                     </div>
                   </div>
                 </div>
@@ -282,14 +282,14 @@ export default function Home() {
         <section id="process" className="py-64 px-8 relative">
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="text-center mb-40">
-               <h2 className="text-6xl md:text-[100px] font-black tracking-tighter uppercase leading-none">JAK <br /><span className="text-brand">DOMINUJEME.</span></h2>
+               <h2 className="text-6xl md:text-[100px] font-black tracking-tighter uppercase leading-none">{t.processTitle} <br /><span className="text-brand">{t.processSubtitle}</span></h2>
             </motion.div>
             
             <div className="grid md:grid-cols-3 gap-16 relative">
               {[
-                { step: "01", title: "BRIEFING", desc: "10 minut nám stačí k pochopení vaší vize a cílů. Žádné zbytečné schůzky." },
-                { step: "02", title: "DESIGN", desc: "Do 60 minut máte v mailu reálný návrh. Vidíte přesně to, co dostanete." },
-                { step: "03", title: "LAUNCH", desc: "Ladíme detaily a do 24 hodin web běží na vaší doméně. Hotovo." },
+                { step: "01", title: t.step1Title, desc: t.step1Desc },
+                { step: "02", title: t.step2Title, desc: t.step2Desc },
+                { step: "03", title: t.step3Title, desc: t.step3Desc },
               ].map((item, i) => (
                 <motion.div 
                   key={i} 
@@ -315,15 +315,15 @@ export default function Home() {
         <section id="specialization" className="py-64 px-8 bg-[#050505]">
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="mb-40 flex flex-col md:flex-row md:items-end justify-between gap-10">
-              <h2 className="text-5xl md:text-[100px] font-black tracking-tighter uppercase leading-none">VAŠE <br /><span className="text-brand">SPECIALIZACE.</span></h2>
-              <p className="text-zinc-500 font-black uppercase tracking-[0.4em] text-xs md:mb-4">Ověřené postupy pro váš obor</p>
+              <h2 className="text-5xl md:text-[100px] font-black tracking-tighter uppercase leading-none">{t.specTitle} <br /><span className="text-brand">{t.specSubtitle}</span></h2>
+              <p className="text-zinc-500 font-black uppercase tracking-[0.4em] text-xs md:mb-4">{t.specDescription}</p>
             </motion.div>
             
             <div className="grid lg:grid-cols-3 gap-px bg-white/5 border border-white/5 rounded-[3rem] overflow-hidden">
               {[
-                { title: "AUTOSERVISY", desc: "Lokální SEO, online rezervace a přehledné ceníky. Váš servis bude vidět tam, kde ho lidé hledají.", icon: Settings },
-                { title: "STAVEBNICTVÍ", desc: "Profesionální galerie realizací, které budují důvěru. Reference, které mluví samy za sebe.", icon: Layout },
-                { title: "B2B SLUŽBY", desc: "Lead-gen weby navržené pro konverzi. Změňte návštěvníky v platící klienty.", icon: MousePointer2 },
+                { title: t.spec1Title, desc: t.spec1Desc, icon: Settings },
+                { title: t.spec2Title, desc: t.spec2Desc, icon: Layout },
+                { title: t.spec3Title, desc: t.spec3Desc, icon: MousePointer2 },
               ].map((item, i) => (
                 <motion.div 
                   key={i} 
@@ -336,7 +336,7 @@ export default function Home() {
                     <p className="text-zinc-500 font-medium leading-relaxed text-xl">{item.desc}</p>
                   </div>
                   <div className="mt-16 text-brand font-black text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    Prozkoumat řešení →
+                    {t.exploreSolution}
                   </div>
                 </motion.div>
               ))}
@@ -358,9 +358,9 @@ export default function Home() {
                 aria-label="Otevřít poptávkový formulář"
                 className="text-4xl sm:text-5xl md:text-7xl lg:text-[120px] font-black text-white tracking-tighter leading-[0.85] sm:leading-[0.8] uppercase text-center hover:opacity-95 active:scale-[0.99] transition-all max-w-[95vw]"
               >
-                <span className="block">ZAČNĚTE</span>
-                <span className="block">VYDĚLÁVAT</span>
-                <span className="block">UŽ ZÍTRA.</span>
+                <span className="block">{t.ctaStart}</span>
+                <span className="block">{t.ctaEarn}</span>
+                <span className="block">{t.ctaTomorrow}</span>
               </button>
             </div>
           </motion.div>
