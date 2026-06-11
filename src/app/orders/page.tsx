@@ -97,7 +97,8 @@ export default function OrdersPage() {
     try {
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
-        if (key !== 'workingHours' || formData.workingTime === 'custom') {
+        // Only send fields that the API expects, exclude workingDays and workingTime
+        if (key !== 'workingDays' && key !== 'workingTime' && (key !== 'workingHours' || formData.workingTime === 'custom')) {
           formDataToSend.append(key, value);
         }
       });
@@ -258,8 +259,8 @@ export default function OrdersPage() {
             </div>
 
             <div className="mb-4">
-              <label className={labelClass}>{isEnglish ? 'What you do *' : 'Co dělají *'}</label>
-              <textarea name="description" value={formData.description} onChange={handleInputChange} placeholder={isEnglish ? 'Describe what your company does...' : 'Popište čím se vaše firma zabývá...'} rows={4} className={`${inputClass} resize-none`} required />
+              <label className={labelClass}>{isEnglish ? 'What do you want *' : 'Co chcete *'}</label>
+              <textarea name="description" value={formData.description} onChange={handleInputChange} placeholder={isEnglish ? 'Describe what you want...' : 'Popište co chcete...'} rows={4} className={`${inputClass} resize-none`} required />
             </div>
 
             <div className="mb-4">
