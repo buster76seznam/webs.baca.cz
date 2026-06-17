@@ -12,10 +12,12 @@ export async function GET(request: NextRequest) {
     
     const countryCode = data.countryCode || 'CZ';
     const isUSA = countryCode === 'US';
+    const isSpain = countryCode === 'ES';
     
     return NextResponse.json({ 
       countryCode, 
       isUSA,
+      isSpain,
       countryName: data.countryName || 'Czech Republic'
     });
   } catch (error) {
@@ -23,6 +25,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ 
       countryCode: 'CZ', 
       isUSA: false,
+      isSpain: false,
       countryName: 'Czech Republic'
     });
   }
