@@ -223,7 +223,7 @@ export default function ProgramPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#030303] flex items-center justify-center px-6">
+      <div className="min-h-screen bg-[#1a1a1a] flex items-center justify-center px-6">
         <div className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12 max-w-md w-full">
           <h1 className="text-2xl font-black mb-2 tracking-tight uppercase">Program</h1>
           <p className="text-zinc-500 text-sm mb-8">Zadejte heslo pro přístup</p>
@@ -251,7 +251,7 @@ export default function ProgramPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white">
+    <div className="min-h-screen bg-[#1a1a1a] text-white">
       {/* Header */}
       <div className="border-b border-white/5 bg-[#0A0A0A] sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">

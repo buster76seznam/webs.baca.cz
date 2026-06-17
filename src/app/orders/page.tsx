@@ -186,7 +186,7 @@ export default function OrdersPage() {
 
   if (status === 'success') {
     return (
-      <div className="min-h-screen bg-[#030303] text-white flex items-center justify-center px-6">
+      <div className="min-h-screen bg-[#1a1a1a] text-white flex items-center justify-center px-6">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-emerald-500/10 border border-emerald-500/20 rounded-3xl p-16 text-center max-w-lg">
           <div className="text-5xl mb-5">✅</div>
           <h3 className="text-2xl font-black mb-2 tracking-tight">{isEnglish ? 'Order Sent!' : 'Objednávka odeslána!'}</h3>
@@ -198,7 +198,7 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white py-24 px-6 flex items-center justify-center">
+    <div className="min-h-screen bg-[#1a1a1a] text-white py-24 px-6 flex items-center justify-center">
       <div className="max-w-4xl mx-auto w-full">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-4 uppercase">
