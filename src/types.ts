@@ -17,7 +17,8 @@ export type OrderStatus =
   | 'Návrh odeslán'
   | 'Čekám na podklady'
   | 'Čekám na smlouvu'
-  | 'Platí';
+  | 'Platí'
+  | 'Vývoj';
 
 export type PricingType = 'dle_domluvy' | 'doda';
 
@@ -64,6 +65,7 @@ export const ORDER_STATUSES: OrderStatus[] = [
   'Čekám na podklady',
   'Čekám na smlouvu',
   'Platí',
+  'Vývoj',
 ];
 
 export const STATUS_COLORS: Record<OrderStatus, string> = {
@@ -73,4 +75,5 @@ export const STATUS_COLORS: Record<OrderStatus, string> = {
   'Čekám na podklady': 'bg-amber-500/20 text-amber-300 border-amber-500/30',
   'Čekám na smlouvu':  'bg-orange-500/20 text-orange-300 border-orange-500/30',
   'Platí':             'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+  'Vývoj':             'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
 };
