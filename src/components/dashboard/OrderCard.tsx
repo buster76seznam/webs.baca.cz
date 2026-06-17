@@ -30,6 +30,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
     daysSince(order.status_updated_at) >= 14;
 
   const handleStatusChange = async (newStatus: OrderStatus) => {
+    console.log('Changing status:', order.id, newStatus);
     setUpdating(true);
     setStatusOpen(false);
     const { error } = await supabase
@@ -41,20 +42,29 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
         updated_at: new Date().toISOString(),
       })
       .eq('id', order.id);
-    if (!error) {
+    if (error) {
+      console.error('Error updating status:', error);
+    } else {
+      console.log('Status updated successfully');
       onUpdate();
     }
     setUpdating(false);
   };
 
   const handleNotesSave = async () => {
+    console.log('Saving notes:', order.id, notes);
     setSavingNotes(true);
-    await supabase
+    const { error } = await supabase
       .from('orders')
       .update({ notes, updated_at: new Date().toISOString() })
       .eq('id', order.id);
+    if (error) {
+      console.error('Error saving notes:', error);
+    } else {
+      console.log('Notes saved successfully');
+      onUpdate();
+    }
     setSavingNotes(false);
-    onUpdate();
   };
 
   const statusColor = STATUS_COLORS[order.status];
