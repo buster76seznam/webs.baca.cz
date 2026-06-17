@@ -38,6 +38,20 @@ export interface Order {
   status: OrderStatus;
   status_updated_at: string;
   developer_id: string | null;
+  // New fields for web orders
+  primary_color?: string | null;
+  secondary_color?: string | null;
+  language?: string | null;
+  facebook_url?: string | null;
+  instagram_url?: string | null;
+  google_maps_url?: string | null;
+  images?: string[] | null;
+  owner_name?: string | null;
+  owner_phone?: string | null;
+  owner_email?: string | null;
+  advantage?: string | null;
+  price_list?: string | null;
+  working_hours?: string | null;
   // joined
   sales_user?: { username: string };
 }

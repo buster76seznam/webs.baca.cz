@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Globe, Camera, Wrench, ChevronDown, AlertTriangle } from 'lucide-react';
+import { Phone, Mail, MapPin, Globe, Camera, Wrench, ChevronDown, AlertTriangle, Palette, Share2, Languages } from 'lucide-react';
 import { Order, OrderStatus, ORDER_STATUSES, STATUS_COLORS, Role } from '@/types';
 import { canChangeOrderStatus } from '@/lib/roles';
 import { supabase } from '@/lib/supabase';
@@ -175,6 +175,140 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
               {order.pricing_type === 'doda' ? 'Dodá klient' : 'Dle domluvy (1700 paušál)'}
             </span>
           </div>
+
+          {/* Design section */}
+          {(order.primary_color || order.secondary_color || order.language) && (
+            <div>
+              <div className="flex items-center gap-2 mb-3 text-[#7C3AED]">
+                <Palette size={14} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Design</span>
+              </div>
+              <div className="space-y-2">
+                {order.primary_color && (
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded border border-white/20" style={{ backgroundColor: order.primary_color }} />
+                    <span className="text-xs text-zinc-400">Primární barva</span>
+                  </div>
+                )}
+                {order.secondary_color && (
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded border border-white/20" style={{ backgroundColor: order.secondary_color }} />
+                    <span className="text-xs text-zinc-400">Sekundární barva</span>
+                  </div>
+                )}
+                {order.language && (
+                  <div className="flex items-center gap-3">
+                    <Languages size={16} className="text-zinc-500" />
+                    <span className="text-xs text-zinc-400">Jazyk: {order.language.toUpperCase()}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Images section */}
+          {order.images && order.images.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-3 text-[#7C3AED]">
+                <Camera size={14} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Nahrané obrázky</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {order.images.map((url, i) => (
+                  <a
+                    key={i}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="aspect-square bg-white/5 border border-white/10 rounded overflow-hidden hover:border-white/20 transition-colors"
+                  >
+                    <img src={url} alt={`Obrázek ${i + 1}`} className="w-full h-full object-cover" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Social media section */}
+          {(order.facebook_url || order.instagram_url || order.google_maps_url) && (
+            <div>
+              <div className="flex items-center gap-2 mb-3 text-[#7C3AED]">
+                <Share2 size={14} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Sociální sítě</span>
+              </div>
+              <div className="space-y-2">
+                {order.facebook_url && (
+                  <a
+                    href={order.facebook_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-zinc-400 hover:text-white transition-colors"
+                  >
+                    Facebook
+                  </a>
+                )}
+                {order.instagram_url && (
+                  <a
+                    href={order.instagram_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-zinc-400 hover:text-white transition-colors"
+                  >
+                    Instagram
+                  </a>
+                )}
+                {order.google_maps_url && (
+                  <a
+                    href={order.google_maps_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-zinc-400 hover:text-white transition-colors"
+                  >
+                    Google Maps
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Owner section */}
+          {(order.owner_name || order.owner_phone || order.owner_email) && (
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Majitel/Jednatel</div>
+              <div className="space-y-1">
+                {order.owner_name && <p className="text-xs text-zinc-300">{order.owner_name}</p>}
+                {order.owner_phone && <p className="text-xs text-zinc-400">{order.owner_phone}</p>}
+                {order.owner_email && <p className="text-xs text-zinc-400">{order.owner_email}</p>}
+              </div>
+            </div>
+          )}
+
+          {/* Additional info */}
+          {(order.advantage || order.price_list || order.working_hours) && (
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Další informace</div>
+              <div className="space-y-2">
+                {order.advantage && (
+                  <div>
+                    <div className="text-[10px] font-bold text-zinc-500 mb-1">Výhoda oproti konkurenci</div>
+                    <p className="text-xs text-zinc-300">{order.advantage}</p>
+                  </div>
+                )}
+                {order.price_list && (
+                  <div>
+                    <div className="text-[10px] font-bold text-zinc-500 mb-1">Ceník</div>
+                    <p className="text-xs text-zinc-300 whitespace-pre-wrap">{order.price_list}</p>
+                  </div>
+                )}
+                {order.working_hours && (
+                  <div>
+                    <div className="text-[10px] font-bold text-zinc-500 mb-1">Pracovní doba</div>
+                    <p className="text-xs text-zinc-300">{order.working_hours}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </motion.div>

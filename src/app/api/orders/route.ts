@@ -94,29 +94,35 @@ export async function POST(request: NextRequest) {
 
     // Insert order into database
     const { data, error } = await supabase
-      .from('web_orders')
+      .from('orders')
       .insert({
         company_name: companyName,
-        company_phone: companyPhone,
-        company_email: companyEmail,
-        company_address: companyAddress,
+        phone: companyPhone,
+        email: companyEmail,
+        address: companyAddress,
         industry,
-        owner_name: ownerName || null,
-        owner_phone: ownerPhone || null,
-        owner_email: ownerEmail || null,
-        domain,
-        description,
-        advantage,
-        price_list: priceList || null,
-        working_hours: workingHours,
-        images: imageUrls,
+        services: description,
+        website_url: domain,
+        pricing_type: 'dle_domluvy',
+        status: 'Čeká ve frontě',
+        status_updated_at: new Date().toISOString(),
+        sales_user_id: null,
+        developer_id: null,
+        updated_at: new Date().toISOString(),
+        // New fields
         primary_color: primaryColor || null,
         secondary_color: secondaryColor || null,
         language: language || null,
         facebook_url: facebookUrl || null,
         instagram_url: instagramUrl || null,
         google_maps_url: googleMapsUrl || null,
-        status: 'čeká',
+        images: imageUrls,
+        owner_name: ownerName || null,
+        owner_phone: ownerPhone || null,
+        owner_email: ownerEmail || null,
+        advantage: advantage || null,
+        price_list: priceList || null,
+        working_hours: workingHours || null,
       })
       .select()
       .single();
