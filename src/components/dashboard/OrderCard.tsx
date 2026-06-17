@@ -137,13 +137,13 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
           )}
 
           {statusOpen && (
-            <div className="absolute right-0 top-full mt-2 w-48 bg-[#111111] border border-white/10 rounded-none overflow-hidden shadow-2xl z-50">
+            <div className="absolute right-0 top-full mt-2 w-48 bg-black border border-white/10 rounded-none overflow-hidden shadow-2xl z-50">
               {ORDER_STATUSES.map(s => (
                 <button
                   key={s}
                   onClick={() => handleStatusChange(s)}
-                  className={`w-full text-left px-5 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition-colors
-                    ${order.status === s ? 'text-[#7C3AED]' : 'text-zinc-200'}`}
+                  className={`w-full text-left px-5 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors
+                    ${order.status === s ? 'text-[#7C3AED]' : 'text-zinc-300'}`}
                 >
                   {s}
                 </button>
