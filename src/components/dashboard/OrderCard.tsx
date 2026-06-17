@@ -33,6 +33,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
     daysSince(order.status_updated_at) >= 14;
 
   const handleStatusChange = async (newStatus: OrderStatus) => {
+    alert(`Changing status to: ${newStatus}`);
     console.log('Changing status:', order.id, newStatus);
     setUpdating(true);
     setStatusOpen(false);
@@ -45,12 +46,15 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
       if (!res.ok) {
         const data = await res.json();
         console.error('Error updating status:', data);
+        alert(`Error updating status: ${JSON.stringify(data)}`);
       } else {
         console.log('Status updated successfully');
+        alert('Status updated successfully');
         onUpdate();
       }
     } catch (error) {
       console.error('Error updating status:', error);
+      alert(`Error updating status: ${error}`);
     }
     setUpdating(false);
   };
