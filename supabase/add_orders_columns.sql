@@ -13,7 +13,8 @@ ADD COLUMN IF NOT EXISTS owner_phone TEXT,
 ADD COLUMN IF NOT EXISTS owner_email TEXT,
 ADD COLUMN IF NOT EXISTS advantage TEXT,
 ADD COLUMN IF NOT EXISTS price_list TEXT,
-ADD COLUMN IF NOT EXISTS working_hours TEXT;
+ADD COLUMN IF NOT EXISTS working_hours TEXT,
+ADD COLUMN IF NOT EXISTS notes TEXT;
 
 -- Komentáře
 COMMENT ON COLUMN orders.primary_color IS 'Primary color for website design';
@@ -29,3 +30,4 @@ COMMENT ON COLUMN orders.owner_email IS 'Owner/Manager email';
 COMMENT ON COLUMN orders.advantage IS 'Advantage over competition';
 COMMENT ON COLUMN orders.price_list IS 'Price list information';
 COMMENT ON COLUMN orders.working_hours IS 'Working hours';
+COMMENT ON COLUMN orders.notes IS 'Admin notes for the order';

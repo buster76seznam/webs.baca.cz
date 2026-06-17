@@ -148,7 +148,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status');
 
     let query = supabase
-      .from('web_orders')
+      .from('orders')
       .select('*')
       .order('created_at', { ascending: false });
 

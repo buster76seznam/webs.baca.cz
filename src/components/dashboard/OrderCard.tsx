@@ -22,6 +22,8 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
   const [statusOpen, setStatusOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [notes, setNotes] = useState(order.notes || '');
+  const [savingNotes, setSavingNotes] = useState(false);
 
   const isUrgent =
     order.status === 'Čekám na podklady' &&
@@ -30,7 +32,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
   const handleStatusChange = async (newStatus: OrderStatus) => {
     setUpdating(true);
     setStatusOpen(false);
-    await supabase
+    const { error } = await supabase
       .from('orders')
       .update({
         status: newStatus,
@@ -39,7 +41,19 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
         updated_at: new Date().toISOString(),
       })
       .eq('id', order.id);
+    if (!error) {
+      onUpdate();
+    }
     setUpdating(false);
+  };
+
+  const handleNotesSave = async () => {
+    setSavingNotes(true);
+    await supabase
+      .from('orders')
+      .update({ notes, updated_at: new Date().toISOString() })
+      .eq('id', order.id);
+    setSavingNotes(false);
     onUpdate();
   };
 
@@ -309,6 +323,22 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
               </div>
             </div>
           )}
+
+          {/* Notes section */}
+          <div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Poznámky</div>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              onBlur={handleNotesSave}
+              disabled={savingNotes}
+              placeholder="Přidejte poznámku..."
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs text-white placeholder-zinc-600 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-8px_rgba(124,58,237,0.5)] transition-all duration-300 resize-none h-20"
+            />
+            {savingNotes && (
+              <p className="text-[10px] text-zinc-500 mt-1">Ukládám...</p>
+            )}
+          </div>
         </div>
       )}
     </motion.div>

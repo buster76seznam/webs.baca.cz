@@ -52,6 +52,7 @@ export interface Order {
   advantage?: string | null;
   price_list?: string | null;
   working_hours?: string | null;
+  notes?: string | null;
   // joined
   sales_user?: { username: string };
 }
