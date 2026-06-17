@@ -10,7 +10,11 @@ export async function PATCH(
     const { id } = await params;
     const { status, developer_id, notes } = await request.json();
 
+    console.log('PATCH request:', { id, status, developer_id, notes });
+    console.log('ORDER_STATUSES:', ORDER_STATUSES);
+
     if (!status || !ORDER_STATUSES.includes(status)) {
+      console.error('Invalid status:', status);
       return NextResponse.json({ error: 'Neplatný status.' }, { status: 400 });
     }
 
