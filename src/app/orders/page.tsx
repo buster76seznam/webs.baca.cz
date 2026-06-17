@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Upload, ArrowUpRight, X, Image as ImageIcon } from 'lucide-react';
+import { Upload, ArrowUpRight, X, Image as ImageIcon, Share2, Camera, MapPin, Search, Palette, Globe } from 'lucide-react';
 import { useCountry } from '@/contexts/CountryContext';
 import { translations } from '@/lib/translations';
 import dynamic from 'next/dynamic';
@@ -35,11 +35,51 @@ export default function OrdersPage() {
     workingDays: 'mon-fri',
     workingTime: '9-17',
     workingHours: '',
+    primaryColor: '#7C3AED',
+    secondaryColor: '#10B981',
+    language: 'cs',
+    facebookUrl: '',
+    instagramUrl: '',
+    googleMapsUrl: '',
   });
 
   const [images, setImages] = useState<File[]>([]);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [languageSearch, setLanguageSearch] = useState('');
+
+  const colorPalette = [
+    '#7C3AED', '#10B981', '#3B82F6', '#EF4444', '#F59E0B', '#EC4899',
+    '#8B5CF6', '#06B6D4', '#84CC16', '#F97316', '#6366F1', '#14B8A6',
+  ];
+
+  const languages = [
+    { code: 'cs', name: 'Čeština', native: 'Čeština' },
+    { code: 'en', name: 'English', native: 'English' },
+    { code: 'de', name: 'German', native: 'Deutsch' },
+    { code: 'sk', name: 'Slovak', native: 'Slovenčina' },
+    { code: 'pl', name: 'Polish', native: 'Polski' },
+    { code: 'fr', name: 'French', native: 'Français' },
+    { code: 'es', name: 'Spanish', native: 'Español' },
+    { code: 'it', name: 'Italian', native: 'Italiano' },
+    { code: 'ru', name: 'Russian', native: 'Русский' },
+    { code: 'uk', name: 'Ukrainian', native: 'Українська' },
+    { code: 'hu', name: 'Hungarian', native: 'Magyar' },
+    { code: 'ro', name: 'Romanian', native: 'Română' },
+    { code: 'nl', name: 'Dutch', native: 'Nederlands' },
+    { code: 'sv', name: 'Swedish', native: 'Svenska' },
+    { code: 'da', name: 'Danish', native: 'Dansk' },
+    { code: 'fi', name: 'Finnish', native: 'Suomi' },
+    { code: 'no', name: 'Norwegian', native: 'Norsk' },
+    { code: 'el', name: 'Greek', native: 'Ελληνικά' },
+    { code: 'tr', name: 'Turkish', native: 'Türkçe' },
+    { code: 'pt', name: 'Portuguese', native: 'Português' },
+  ];
+
+  const filteredLanguages = languages.filter(lang =>
+    lang.name.toLowerCase().includes(languageSearch.toLowerCase()) ||
+    lang.native.toLowerCase().includes(languageSearch.toLowerCase())
+  );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -131,6 +171,8 @@ export default function OrdersPage() {
         industry: '', ownerName: '', ownerPhone: '', ownerEmail: '',
         domain: '', description: '', advantage: '', priceList: '',
         workingDays: 'mon-fri', workingTime: '9-17', workingHours: '',
+        primaryColor: '#7C3AED', secondaryColor: '#10B981', language: 'cs',
+        facebookUrl: '', instagramUrl: '', googleMapsUrl: '',
       });
       setImages([]);
     } catch {
@@ -325,6 +367,146 @@ export default function OrdersPage() {
                   required
                 />
               )}
+            </div>
+          </motion.div>
+
+          {/* Design */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12">
+            <h2 className="text-xl font-black mb-6 text-brand uppercase tracking-wider">{isEnglish ? 'Design' : 'Design'}</h2>
+            
+            <div className="mb-6">
+              <label className={labelClass}>{isEnglish ? 'Primary Color' : 'Primární barva'}</label>
+              <div className="flex flex-wrap gap-3">
+                {colorPalette.map(color => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, primaryColor: color })}
+                    className={`w-12 h-12 rounded-xl border-2 transition-all ${
+                      formData.primaryColor === color 
+                        ? 'border-white scale-110 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)]' 
+                        : 'border-white/10 hover:border-white/30'
+                    }`}
+                    style={{ backgroundColor: color }}
+                  >
+                    {formData.primaryColor === color && (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <div className="w-4 h-4 bg-white rounded-full" />
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <label className={labelClass}>{isEnglish ? 'Secondary Color' : 'Sekundární barva'}</label>
+              <div className="flex flex-wrap gap-3">
+                {colorPalette.map(color => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, secondaryColor: color })}
+                    className={`w-12 h-12 rounded-xl border-2 transition-all ${
+                      formData.secondaryColor === color 
+                        ? 'border-white scale-110 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)]' 
+                        : 'border-white/10 hover:border-white/30'
+                    }`}
+                    style={{ backgroundColor: color }}
+                  >
+                    {formData.secondaryColor === color && (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <div className="w-4 h-4 bg-white rounded-full" />
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className={labelClass}>{isEnglish ? 'Website Language' : 'Jazyk webu'}</label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
+                  <Search size={18} />
+                </div>
+                <input
+                  type="text"
+                  value={languageSearch}
+                  onChange={(e) => setLanguageSearch(e.target.value)}
+                  placeholder={isEnglish ? 'Search language...' : 'Hledat jazyk...'}
+                  className={`${inputClass} pl-12`}
+                />
+              </div>
+              <div className="mt-3 max-h-48 overflow-y-auto bg-[#0A0A0A] border border-white/5 rounded-2xl">
+                {filteredLanguages.map(lang => (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => {
+                      setFormData({ ...formData, language: lang.code });
+                      setLanguageSearch('');
+                    }}
+                    className={`w-full px-5 py-3 text-left flex items-center justify-between hover:bg-white/[0.03] transition-colors ${
+                      formData.language === lang.code ? 'bg-white/[0.05]' : ''
+                    }`}
+                  >
+                    <span className="text-white text-sm">{lang.native}</span>
+                    {formData.language === lang.code && (
+                      <div className="w-4 h-4 bg-brand rounded-full" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Social Media */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12">
+            <h2 className="text-xl font-black mb-6 text-zinc-400 uppercase tracking-wider">{isEnglish ? 'Social Media' : 'Sociální sítě'} <span className="text-zinc-600 normal-case">({isEnglish ? '(optional)' : '(nepovinné)'})</span></h2>
+            
+            <div className="space-y-4">
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
+                  <Share2 size={18} />
+                </div>
+                <input
+                  type="url"
+                  name="facebookUrl"
+                  value={formData.facebookUrl}
+                  onChange={handleInputChange}
+                  placeholder="https://facebook.com/yourpage"
+                  className={`${inputClass} pl-12`}
+                />
+              </div>
+              
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
+                  <Camera size={18} />
+                </div>
+                <input
+                  type="url"
+                  name="instagramUrl"
+                  value={formData.instagramUrl}
+                  onChange={handleInputChange}
+                  placeholder="https://instagram.com/yourprofile"
+                  className={`${inputClass} pl-12`}
+                />
+              </div>
+              
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
+                  <MapPin size={18} />
+                </div>
+                <input
+                  type="url"
+                  name="googleMapsUrl"
+                  value={formData.googleMapsUrl}
+                  onChange={handleInputChange}
+                  placeholder="https://maps.google.com/..."
+                  className={`${inputClass} pl-12`}
+                />
+              </div>
             </div>
           </motion.div>
 

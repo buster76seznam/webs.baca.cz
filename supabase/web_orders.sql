@@ -17,6 +17,12 @@ CREATE TABLE IF NOT EXISTS web_orders (
   working_hours TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'čeká' CHECK (status IN ('čeká', 'vývoj', 'dokončená')),
   images TEXT[] DEFAULT ARRAY[]::TEXT[],
+  primary_color TEXT,
+  secondary_color TEXT,
+  language TEXT,
+  facebook_url TEXT,
+  instagram_url TEXT,
+  google_maps_url TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

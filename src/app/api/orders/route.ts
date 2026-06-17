@@ -19,6 +19,12 @@ export async function POST(request: NextRequest) {
     const advantage = formData.get('advantage') as string;
     const priceList = formData.get('priceList') as string;
     const workingHours = formData.get('workingHours') as string;
+    const primaryColor = formData.get('primaryColor') as string;
+    const secondaryColor = formData.get('secondaryColor') as string;
+    const language = formData.get('language') as string;
+    const facebookUrl = formData.get('facebookUrl') as string;
+    const instagramUrl = formData.get('instagramUrl') as string;
+    const googleMapsUrl = formData.get('googleMapsUrl') as string;
 
     // Log received data for debugging
     console.log('Received order data:', {
@@ -39,44 +45,51 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Upload images
+    // Upload images (optional - continue even if upload fails)
     const imageUrls: string[] = [];
     const imageKeys = Array.from(formData.keys()).filter((key): key is string => typeof key === 'string' && key.startsWith('image_'));
     
-    for (const key of imageKeys) {
-      const file = formData.get(key) as File;
-      if (file) {
-        try {
-          const fileExt = file.name.split('.').pop();
-          const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-          const filePath = `${fileName}`;
+    try {
+      for (const key of imageKeys) {
+        const file = formData.get(key) as File;
+        if (file) {
+          try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+            const filePath = `${fileName}`;
 
-          console.log('Attempting to upload image:', fileName);
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('order-images')
-            .upload(filePath, file);
+            console.log('Attempting to upload image:', fileName);
+            const { data: uploadData, error: uploadError } = await supabase.storage
+              .from('order-images')
+              .upload(filePath, file);
 
-          if (uploadError) {
-            console.error('Image upload error:', uploadError);
-            console.error('Image upload error details:', JSON.stringify(uploadError, null, 2));
+            if (uploadError) {
+              console.error('Image upload error:', uploadError);
+              console.error('Image upload error details:', JSON.stringify(uploadError, null, 2));
+              // Continue with order creation even if image upload fails
+              continue;
+            }
+
+            if (uploadData) {
+              const { data: publicUrlData } = supabase.storage
+                .from('order-images')
+                .getPublicUrl(filePath);
+              
+              if (publicUrlData) {
+                imageUrls.push(publicUrlData.publicUrl);
+              }
+            }
+          } catch (uploadErr) {
+            console.error('Exception during image upload:', uploadErr);
+            console.error('Exception details:', JSON.stringify(uploadErr, null, 2));
+            // Continue with order creation even if image upload fails
             continue;
           }
-
-          if (uploadData) {
-            const { data: publicUrlData } = supabase.storage
-              .from('order-images')
-              .getPublicUrl(filePath);
-            
-            if (publicUrlData) {
-              imageUrls.push(publicUrlData.publicUrl);
-            }
-          }
-        } catch (uploadErr) {
-          console.error('Exception during image upload:', uploadErr);
-          console.error('Exception details:', JSON.stringify(uploadErr, null, 2));
-          continue;
         }
       }
+    } catch (storageErr) {
+      console.error('Storage bucket error:', storageErr);
+      // Continue with order creation even if storage bucket doesn't exist
     }
 
     // Insert order into database
@@ -97,6 +110,12 @@ export async function POST(request: NextRequest) {
         price_list: priceList || null,
         working_hours: workingHours,
         images: imageUrls,
+        primary_color: primaryColor || null,
+        secondary_color: secondaryColor || null,
+        language: language || null,
+        facebook_url: facebookUrl || null,
+        instagram_url: instagramUrl || null,
+        google_maps_url: googleMapsUrl || null,
         status: 'čeká',
       })
       .select()
