@@ -93,9 +93,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert order into database
-    const { data, error } = await supabase
-      .from('orders')
-      .insert({
+    const insertData = {
         company_name: companyName,
         phone: companyPhone,
         email: companyEmail,
@@ -123,7 +121,13 @@ export async function POST(request: NextRequest) {
         advantage: advantage || null,
         price_list: priceList || null,
         working_hours: workingHours || null,
-      })
+      };
+
+    console.log('Inserting order data:', insertData);
+
+    const { data, error } = await supabase
+      .from('orders')
+      .insert(insertData)
       .select()
       .single();
 
