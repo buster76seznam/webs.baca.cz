@@ -81,6 +81,52 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
     setSavingNotes(false);
   };
 
+  const handleDelete = async (permanent = false) => {
+    if (!confirm(permanent ? 'Opravdu chcete trvale smazat tuto objednávku? Tato akce je nevratná.' : 'Opravdu chcete přesunout tuto objednávku do koše?')) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/orders/${order.id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ permanent }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        console.error('Error deleting order:', data);
+        alert(`Chyba při mazání: ${data.error}`);
+      } else {
+        alert(permanent ? 'Objednávka byla trvale smazána.' : 'Objednávka byla přesunuta do koše.');
+        onUpdate();
+      }
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      alert('Chyba při mazání objednávky.');
+    }
+  };
+
+  const handleRestore = async () => {
+    try {
+      const res = await fetch(`/api/orders/${order.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'restore' }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        console.error('Error restoring order:', data);
+        alert(`Chyba při obnově: ${data.error}`);
+      } else {
+        alert('Objednávka byla obnovena z koše.');
+        onUpdate();
+      }
+    } catch (error) {
+      console.error('Error restoring order:', error);
+      alert('Chyba při obnově objednávky.');
+    }
+  };
+
   const statusColor = STATUS_COLORS[order.status];
 
   return (
@@ -157,15 +203,15 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
       <div className="px-6 pb-6 space-y-3">
         <div className="flex items-center gap-3 text-zinc-400">
           <Phone size={14} className="shrink-0" />
-          <span className="text-xs font-bold">{order.phone}</span>
+          <span className="text-xs font-bold">{order.phone || 'Není uvedeno'}</span>
         </div>
         <div className="flex items-center gap-3 text-zinc-400">
           <Mail size={14} className="shrink-0" />
-          <span className="text-xs font-bold truncate">{order.email}</span>
+          <span className="text-xs font-bold truncate">{order.email || 'Není uvedeno'}</span>
         </div>
         <div className="flex items-center gap-3 text-zinc-400">
           <MapPin size={14} className="shrink-0" />
-          <span className="text-xs font-bold truncate">{order.address}</span>
+          <span className="text-xs font-bold truncate">{order.address || 'Není uvedeno'}</span>
         </div>
       </div>
 
@@ -361,6 +407,33 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
             />
             {savingNotes && (
               <p className="text-[10px] text-zinc-500 mt-1">Ukládám...</p>
+            )}
+          </div>
+
+          {/* Delete/Restore section */}
+          <div className="flex gap-2 pt-4 border-t border-white/5">
+            {order.deleted_at ? (
+              <button
+                onClick={handleRestore}
+                className="flex-1 py-2 px-4 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded text-xs font-black uppercase tracking-wider hover:bg-emerald-500/30 transition-colors"
+              >
+                Obnovit z koše
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => handleDelete(false)}
+                  className="flex-1 py-2 px-4 bg-red-500/20 text-red-300 border border-red-500/30 rounded text-xs font-black uppercase tracking-wider hover:bg-red-500/30 transition-colors"
+                >
+                  Smazat
+                </button>
+                <button
+                  onClick={() => handleDelete(true)}
+                  className="py-2 px-4 bg-zinc-500/20 text-zinc-300 border border-zinc-500/30 rounded text-xs font-black uppercase tracking-wider hover:bg-zinc-500/30 transition-colors"
+                >
+                  Trvale smazat
+                </button>
+              </>
             )}
           </div>
         </div>

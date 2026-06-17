@@ -74,3 +74,74 @@ export async function GET(
     return NextResponse.json({ error: 'Interní chyba serveru.' }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const { permanent } = await request.json();
+
+    if (permanent) {
+      // Permanent delete
+      const { error } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Database error:', error);
+        return NextResponse.json({ error: 'Chyba při mazání objednávky.' }, { status: 500 });
+      }
+
+      return NextResponse.json({ success: true }, { status: 200 });
+    } else {
+      // Soft delete
+      const { error } = await supabase
+        .from('orders')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Database error:', error);
+        return NextResponse.json({ error: 'Chyba při přesunu objednávky do koše.' }, { status: 500 });
+      }
+
+      return NextResponse.json({ success: true }, { status: 200 });
+    }
+  } catch (error) {
+    console.error('Server error:', error);
+    return NextResponse.json({ error: 'Interní chyba serveru.' }, { status: 500 });
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const { action } = await request.json();
+
+    if (action === 'restore') {
+      // Restore from trash
+      const { error } = await supabase
+        .from('orders')
+        .update({ deleted_at: null })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Database error:', error);
+        return NextResponse.json({ error: 'Chyba při obnově objednávky.' }, { status: 500 });
+      }
+
+      return NextResponse.json({ success: true }, { status: 200 });
+    }
+
+    return NextResponse.json({ error: 'Neplatná akce.' }, { status: 400 });
+  } catch (error) {
+    console.error('Server error:', error);
+    return NextResponse.json({ error: 'Interní chyba serveru.' }, { status: 500 });
+  }
+}

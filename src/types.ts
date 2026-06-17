@@ -57,6 +57,7 @@ export interface Order {
   price_list?: string | null;
   working_hours?: string | null;
   notes?: string | null;
+  deleted_at?: string | null;
   // joined
   sales_user?: { username: string };
 }

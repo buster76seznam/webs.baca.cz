@@ -14,7 +14,8 @@ ADD COLUMN IF NOT EXISTS owner_email TEXT,
 ADD COLUMN IF NOT EXISTS advantage TEXT,
 ADD COLUMN IF NOT EXISTS price_list TEXT,
 ADD COLUMN IF NOT EXISTS working_hours TEXT,
-ADD COLUMN IF NOT EXISTS notes TEXT;
+ADD COLUMN IF NOT EXISTS notes TEXT,
+ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 
 -- Komentáře
 COMMENT ON COLUMN orders.primary_color IS 'Primary color for website design';
@@ -31,3 +32,4 @@ COMMENT ON COLUMN orders.advantage IS 'Advantage over competition';
 COMMENT ON COLUMN orders.price_list IS 'Price list information';
 COMMENT ON COLUMN orders.working_hours IS 'Working hours';
 COMMENT ON COLUMN orders.notes IS 'Admin notes for the order';
+COMMENT ON COLUMN orders.deleted_at IS 'Timestamp for soft delete (null = not deleted, set = deleted)';
