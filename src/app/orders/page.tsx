@@ -102,12 +102,12 @@ export default function OrdersPage() {
     
     // Format working hours for display
     let formattedWorkingHours = '';
-    const dayLabels: Record<string, { cs: string; en: string }> = {
-      'mon-fri': { cs: 'Po-Pá', en: 'Mon-Fri' },
-      'mon-sat': { cs: 'Po-So', en: 'Mon-Sat' },
-      'mon-sun': { cs: 'Po-Ne', en: 'Mon-Sun' },
-      'tue-sat': { cs: 'Út-So', en: 'Tue-Sat' },
-      'tue-sun': { cs: 'Út-Ne', en: 'Tue-Sun' },
+    const dayLabels: Record<string, { cs: string; en: string; es: string; de: string; fr: string; it: string; pl: string; nl: string; pt: string }> = {
+      'mon-fri': { cs: 'Po-Pá', en: 'Mon-Fri', es: 'Lun-Vie', de: 'Mo-Fr', fr: 'Lun-Ven', it: 'Lun-Ven', pl: 'Pon-Pt', nl: 'Ma-Vr', pt: 'Seg-Sex' },
+      'mon-sat': { cs: 'Po-So', en: 'Mon-Sat', es: 'Lun-Sáb', de: 'Mo-Sa', fr: 'Lun-Sam', it: 'Lun-Sab', pl: 'Pon-Sob', nl: 'Ma-Za', pt: 'Seg-Sáb' },
+      'mon-sun': { cs: 'Po-Ne', en: 'Mon-Sun', es: 'Lun-Dom', de: 'Mo-So', fr: 'Lun-Dim', it: 'Lun-Dom', pl: 'Pon-Niedz', nl: 'Ma-Zo', pt: 'Seg-Dom' },
+      'tue-sat': { cs: 'Út-So', en: 'Tue-Sat', es: 'Mar-Sáb', de: 'Di-Sa', fr: 'Mar-Sam', it: 'Mar-Sab', pl: 'Wt-Sob', nl: 'Di-Za', pt: 'Ter-Sáb' },
+      'tue-sun': { cs: 'Út-Ne', en: 'Tue-Sun', es: 'Mar-Dom', de: 'Di-So', fr: 'Mar-Dim', it: 'Mar-Dom', pl: 'Wt-Niedz', nl: 'Di-Zo', pt: 'Ter-Dom' },
     };
     const timeLabels: Record<string, string> = {
       '8-16': '8:00-16:00',
