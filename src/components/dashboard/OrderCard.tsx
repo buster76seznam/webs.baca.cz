@@ -129,7 +129,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                   key={s}
                   onClick={() => handleStatusChange(s)}
                   className={`w-full text-left px-5 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition-colors
-                    ${order.status === s ? 'text-[#7C3AED]' : 'text-zinc-500'}`}
+                    ${order.status === s ? 'text-[#7C3AED]' : 'text-zinc-300'}`}
                 >
                   {s}
                 </button>

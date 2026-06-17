@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/supabase';
+import { ORDER_STATUSES } from '@/types';
 
 export async function PATCH(
   request: NextRequest,
@@ -7,15 +8,29 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    const { status } = await request.json();
+    const { status, developer_id, notes } = await request.json();
 
-    if (!status || !['čeká', 'vývoj', 'dokončená'].includes(status)) {
+    if (!status || !ORDER_STATUSES.includes(status)) {
       return NextResponse.json({ error: 'Neplatný status.' }, { status: 400 });
     }
 
+    const updateData: any = {
+      status,
+      status_updated_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    if (developer_id) {
+      updateData.developer_id = developer_id;
+    }
+
+    if (notes !== undefined) {
+      updateData.notes = notes;
+    }
+
     const { data, error } = await supabase
-      .from('web_orders')
-      .update({ status })
+      .from('orders')
+      .update(updateData)
       .eq('id', id)
       .select()
       .single();
@@ -39,7 +54,7 @@ export async function GET(
   try {
     const { id } = await params;
     const { data, error } = await supabase
-      .from('web_orders')
+      .from('orders')
       .select('*')
       .eq('id', id)
       .single();
