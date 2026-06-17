@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Image as ImageIcon, Clock, CheckCircle, X, LogOut } from 'lucide-react';
+import { Search, Image as ImageIcon, Clock, CheckCircle, X, LogOut, Play, Mail, Server, Activity, Users, FileText, AlertCircle } from 'lucide-react';
 
 const CORRECT_PASSWORD = 'Kx9Pm2Qz7R';
 
@@ -35,6 +35,21 @@ export default function ProgramPage() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'čeká' | 'vývoj' | 'dokončená'>('all');
   const [loading, setLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [activeTab, setActiveTab] = useState<'orders' | 'outreach'>('orders');
+
+  // Outreach state
+  const [stats, setStats] = useState({ contacted: 0, blacklisted: 0, replies: 0, drafts: 0 });
+  const [domains, setDomains] = useState<any[]>([]);
+  const [contacts, setContacts] = useState<any[]>([]);
+  const [replies, setReplies] = useState<any[]>([]);
+  const [log, setLog] = useState<string[]>([]);
+  const [loadingStats, setLoadingStats] = useState(false);
+  const [loadingDomains, setLoadingDomains] = useState(false);
+  const [loadingContacts, setLoadingContacts] = useState(false);
+  const [loadingReplies, setLoadingReplies] = useState(false);
+  const [loadingLog, setLoadingLog] = useState(false);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
   useEffect(() => {
     const savedAuth = localStorage.getItem('program_authenticated');
@@ -43,6 +58,23 @@ export default function ProgramPage() {
       fetchOrders();
     }
   }, []);
+
+  // Fetch outreach data when outreach tab is active
+  useEffect(() => {
+    if (activeTab === 'outreach' && isAuthenticated) {
+      fetchOutreachData();
+    }
+  }, [activeTab, isAuthenticated]);
+
+  // Auto-refresh log every 30 seconds
+  useEffect(() => {
+    if (activeTab === 'outreach' && isAuthenticated) {
+      const interval = setInterval(() => {
+        fetchLog();
+      }, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [activeTab, isAuthenticated]);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -75,6 +107,95 @@ export default function ProgramPage() {
     localStorage.removeItem('program_authenticated');
     setPassword('');
     setOrders([]);
+    setActiveTab('orders');
+  };
+
+  const fetchOutreachData = async () => {
+    setLoadingStats(true);
+    setLoadingDomains(true);
+    setLoadingContacts(true);
+    setLoadingReplies(true);
+    setLoadingLog(true);
+
+    try {
+      const [statsRes, domainsRes, contactsRes, repliesRes, logRes] = await Promise.all([
+        fetch('/api/mail/stats'),
+        fetch('/api/mail/domains'),
+        fetch('/api/mail/contacts'),
+        fetch('/api/mail/replies'),
+        fetch('/api/mail/log'),
+      ]);
+
+      if (statsRes.ok) {
+        const statsData = await statsRes.json();
+        setStats(statsData);
+      }
+
+      if (domainsRes.ok) {
+        const domainsData = await domainsRes.json();
+        setDomains(domainsData.domains || []);
+      }
+
+      if (contactsRes.ok) {
+        const contactsData = await contactsRes.json();
+        setContacts(contactsData.contacts || []);
+      }
+
+      if (repliesRes.ok) {
+        const repliesData = await repliesRes.json();
+        setReplies(repliesData.replies || []);
+      }
+
+      if (logRes.ok) {
+        const logData = await logRes.json();
+        setLog(logData.log || []);
+      }
+    } catch (err) {
+      console.error('Error fetching outreach data:', err);
+    } finally {
+      setLoadingStats(false);
+      setLoadingDomains(false);
+      setLoadingContacts(false);
+      setLoadingReplies(false);
+      setLoadingLog(false);
+    }
+  };
+
+  const fetchLog = async () => {
+    try {
+      const res = await fetch('/api/mail/log');
+      if (res.ok) {
+        const data = await res.json();
+        setLog(data.log || []);
+      }
+    } catch (err) {
+      console.error('Error fetching log:', err);
+    }
+  };
+
+  const handleRunAction = async (action: 'outreach' | 'replies') => {
+    setActionLoading(action);
+    try {
+      const res = await fetch('/api/mail/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      });
+
+      if (res.ok) {
+        setNotification({ type: 'success', message: `${action === 'outreach' ? 'Outreach' : 'Zpracování odpovědí'} úspěšně spuštěno` });
+        // Refresh data after a delay
+        setTimeout(() => fetchOutreachData(), 2000);
+      } else {
+        setNotification({ type: 'error', message: 'Chyba při spouštění akce' });
+      }
+    } catch (err) {
+      console.error('Error running action:', err);
+      setNotification({ type: 'error', message: 'Chyba při spouštění akce' });
+    } finally {
+      setActionLoading(null);
+      setTimeout(() => setNotification(null), 3000);
+    }
   };
 
   const handleStatusChange = async (orderId: string, newStatus: 'čeká' | 'vývoj' | 'dokončená') => {
@@ -134,7 +255,31 @@ export default function ProgramPage() {
       {/* Header */}
       <div className="border-b border-white/5 bg-[#0A0A0A] sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-black uppercase tracking-tight">Objednávky</h1>
+          <div className="flex items-center gap-6">
+            <h1 className="text-xl font-black uppercase tracking-tight">Program</h1>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setActiveTab('orders')}
+                className={`px-4 py-2 rounded-xl text-sm font-black uppercase transition-all ${
+                  activeTab === 'orders'
+                    ? 'bg-brand text-white'
+                    : 'bg-white/5 text-zinc-500 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                Objednávky
+              </button>
+              <button
+                onClick={() => setActiveTab('outreach')}
+                className={`px-4 py-2 rounded-xl text-sm font-black uppercase transition-all ${
+                  activeTab === 'outreach'
+                    ? 'bg-brand text-white'
+                    : 'bg-white/5 text-zinc-500 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                Přehled domén
+              </button>
+            </div>
+          </div>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm font-bold"
@@ -145,80 +290,327 @@ export default function ProgramPage() {
         </div>
       </div>
 
-      {/* Search and Filter */}
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={18} />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Hledat podle názvu podniku..."
-              className="w-full bg-white/[0.03] border border-white/8 rounded-2xl pl-12 pr-5 py-4 text-white placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 transition-all duration-300 text-sm"
-            />
-          </div>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as any)}
-            className="bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white outline-none focus:border-[#7C3AED]/60 transition-all duration-300 text-sm"
-          >
-            <option value="all">Všechny statusy</option>
-            <option value="čeká">Čeká</option>
-            <option value="vývoj">Vývoj</option>
-            <option value="dokončená">Dokončená</option>
-          </select>
+      {notification && (
+        <div className={`fixed top-20 right-6 px-6 py-4 rounded-2xl text-sm font-black z-50 ${
+          notification.type === 'success' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'
+        }`}>
+          {notification.message}
         </div>
-      </div>
+      )}
 
-      {/* Orders List */}
-      <div className="max-w-7xl mx-auto px-6 pb-12">
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-zinc-500 mt-4">Načítání...</p>
-          </div>
-        ) : filteredOrders.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-zinc-500">Žádné objednávky</p>
-          </div>
-        ) : (
-          <div className="grid gap-4">
-            {filteredOrders.map((order) => (
-              <motion.div
-                key={order.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-6 hover:border-brand/20 transition-all duration-300 cursor-pointer"
-                onClick={() => setSelectedOrder(order)}
+      {/* Orders Tab */}
+      {activeTab === 'orders' && (
+        <>
+          {/* Search and Filter */}
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={18} />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Hledat podle názvu podniku..."
+                  className="w-full bg-white/[0.03] border border-white/8 rounded-2xl pl-12 pr-5 py-4 text-white placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 transition-all duration-300 text-sm"
+                />
+              </div>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as any)}
+                className="bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white outline-none focus:border-[#7C3AED]/60 transition-all duration-300 text-sm"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-black">{order.company_name}</h3>
-                      <span className={`px-3 py-1 rounded-full text-xs font-black uppercase ${
-                        order.status === 'čeká' ? 'bg-amber-500/10 text-amber-400' :
-                        order.status === 'vývoj' ? 'bg-blue-500/10 text-blue-400' :
-                        'bg-emerald-500/10 text-emerald-400'
-                      }`}>
-                        {order.status}
-                      </span>
-                    </div>
-                    <p className="text-zinc-500 text-sm mb-2">{order.industry}</p>
-                    <p className="text-zinc-600 text-xs">{new Date(order.created_at).toLocaleDateString('cs-CZ')}</p>
-                  </div>
-                  {order.images.length > 0 && (
-                    <div className="flex items-center gap-2 text-zinc-500">
-                      <ImageIcon size={16} />
-                      <span className="text-xs">{order.images.length}</span>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+                <option value="all">Všechny statusy</option>
+                <option value="čeká">Čeká</option>
+                <option value="vývoj">Vývoj</option>
+                <option value="dokončená">Dokončená</option>
+              </select>
+            </div>
           </div>
-        )}
-      </div>
+
+          {/* Orders List */}
+          <div className="max-w-7xl mx-auto px-6 pb-12">
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin mx-auto" />
+                <p className="text-zinc-500 mt-4">Načítání...</p>
+              </div>
+            ) : filteredOrders.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-zinc-500">Žádné objednávky</p>
+              </div>
+            ) : (
+              <div className="grid gap-4">
+                {filteredOrders.map((order) => (
+                  <motion.div
+                    key={order.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-6 hover:border-brand/20 transition-all duration-300 cursor-pointer"
+                    onClick={() => setSelectedOrder(order)}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-lg font-black">{order.company_name}</h3>
+                          <span className={`px-3 py-1 rounded-full text-xs font-black uppercase ${
+                            order.status === 'čeká' ? 'bg-amber-500/10 text-amber-400' :
+                            order.status === 'vývoj' ? 'bg-blue-500/10 text-blue-400' :
+                            'bg-emerald-500/10 text-emerald-400'
+                          }`}>
+                            {order.status}
+                          </span>
+                        </div>
+                        <p className="text-zinc-500 text-sm mb-2">{order.industry}</p>
+                        <p className="text-zinc-600 text-xs">{new Date(order.created_at).toLocaleDateString('cs-CZ')}</p>
+                      </div>
+                      {order.images.length > 0 && (
+                        <div className="flex items-center gap-2 text-zinc-500">
+                          <ImageIcon size={16} />
+                          <span className="text-xs">{order.images.length}</span>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* Outreach Tab */}
+      {activeTab === 'outreach' && (
+        <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Users className="text-brand" size={20} />
+                <span className="text-zinc-500 text-xs font-black uppercase">Kontaktováno</span>
+              </div>
+              <p className="text-3xl font-black">{loadingStats ? '-' : stats.contacted}</p>
+            </div>
+            <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <AlertCircle className="text-red-400" size={20} />
+                <span className="text-zinc-500 text-xs font-black uppercase">Blacklist</span>
+              </div>
+              <p className="text-3xl font-black">{loadingStats ? '-' : stats.blacklisted}</p>
+            </div>
+            <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Mail className="text-blue-400" size={20} />
+                <span className="text-zinc-500 text-xs font-black uppercase">Odpovědi</span>
+              </div>
+              <p className="text-3xl font-black">{loadingStats ? '-' : stats.replies}</p>
+            </div>
+            <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <FileText className="text-amber-400" size={20} />
+                <span className="text-zinc-500 text-xs font-black uppercase">Koncepty</span>
+              </div>
+              <p className="text-3xl font-black">{loadingStats ? '-' : stats.drafts}</p>
+            </div>
+          </div>
+
+          {/* Domain Overview */}
+          <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
+            <h2 className="text-lg font-black mb-4 flex items-center gap-2">
+              <Server size={20} className="text-brand" />
+              Přehled domén
+            </h2>
+            {loadingDomains ? (
+              <div className="text-center py-8">
+                <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin mx-auto" />
+              </div>
+            ) : domains.length === 0 ? (
+              <div className="text-center py-8 text-zinc-500">Zatím žádné domény</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-left text-zinc-500 text-xs font-black uppercase">
+                      <th className="pb-3">Doména</th>
+                      <th className="pb-3">Stav</th>
+                      <th className="pb-3">Odesláno celkem</th>
+                      <th className="pb-3">Dnes odesláno</th>
+                      <th className="pb-3">Deliverability %</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sm">
+                    {domains.map((domain, i) => (
+                      <tr key={i} className="border-t border-white/5">
+                        <td className="py-3 font-medium">{domain.domain}</td>
+                        <td className="py-3">
+                          <span className={`px-2 py-1 rounded-lg text-xs font-black uppercase ${
+                            domain.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' :
+                            domain.status === 'warming' ? 'bg-amber-500/10 text-amber-400' :
+                            'bg-zinc-500/10 text-zinc-400'
+                          }`}>
+                            {domain.status === 'active' ? 'Aktivní' : domain.status === 'warming' ? 'Warming' : 'Pozastaveno'}
+                          </span>
+                        </td>
+                        <td className="py-3 text-zinc-400">{domain.total_sent || 0}</td>
+                        <td className="py-3 text-zinc-400">{domain.today_sent || 0}</td>
+                        <td className="py-3 text-zinc-400">{domain.deliverability || 0}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-4">
+            <button
+              onClick={() => handleRunAction('outreach')}
+              disabled={actionLoading === 'outreach'}
+              className="flex-1 bg-brand hover:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-500 shadow-[0_0_40px_-10px_rgba(124,58,237,0.6)] flex items-center justify-center gap-2"
+            >
+              {actionLoading === 'outreach' ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  <Play size={18} />
+                  Spustit Outreach
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => handleRunAction('replies')}
+              disabled={actionLoading === 'replies'}
+              className="flex-1 bg-white/5 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-500 border border-white/10 flex items-center justify-center gap-2"
+            >
+              {actionLoading === 'replies' ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  <Mail size={18} />
+                  Zpracovat odpovědi
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Log Viewer */}
+          <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
+            <h2 className="text-lg font-black mb-4 flex items-center gap-2">
+              <Activity size={20} className="text-brand" />
+              Poslední log
+            </h2>
+            <div className="bg-[#050505] rounded-xl p-4 font-mono text-xs text-emerald-400 h-64 overflow-y-auto">
+              {loadingLog ? (
+                <div className="text-center py-8 text-zinc-500">Načítání...</div>
+              ) : log.length === 0 ? (
+                <div className="text-center py-8 text-zinc-500">Žádné logy</div>
+              ) : (
+                log.map((line, i) => (
+                  <div key={i} className="whitespace-pre-wrap">{line}</div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Last Contacts */}
+          <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
+            <h2 className="text-lg font-black mb-4 flex items-center gap-2">
+              <Users size={20} className="text-brand" />
+              Poslední kontakty
+            </h2>
+            {loadingContacts ? (
+              <div className="text-center py-8">
+                <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin mx-auto" />
+              </div>
+            ) : contacts.length === 0 ? (
+              <div className="text-center py-8 text-zinc-500">Žádné kontakty</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-left text-zinc-500 text-xs font-black uppercase">
+                      <th className="pb-3">Email</th>
+                      <th className="pb-3">Firma</th>
+                      <th className="pb-3">Stav</th>
+                      <th className="pb-3">Čas</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sm">
+                    {contacts.map((contact, i) => (
+                      <tr key={i} className="border-t border-white/5">
+                        <td className="py-3">{contact.email}</td>
+                        <td className="py-3 text-zinc-400">{contact.company_name}</td>
+                        <td className="py-3">
+                          <span className={`px-2 py-1 rounded-lg text-xs font-black uppercase ${
+                            contact.sequence_status === 'sent' ? 'bg-emerald-500/10 text-emerald-400' :
+                            contact.sequence_status === 'error' ? 'bg-red-500/10 text-red-400' :
+                            'bg-zinc-500/10 text-zinc-400'
+                          }`}>
+                            {contact.sequence_status === 'sent' ? 'Odesláno' : contact.sequence_status === 'error' ? 'Chyba' : 'Čeká'}
+                          </span>
+                        </td>
+                        <td className="py-3 text-zinc-400">
+                          {contact.processed_at ? new Date(contact.processed_at).toLocaleString('cs-CZ') : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Last Replies */}
+          <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
+            <h2 className="text-lg font-black mb-4 flex items-center gap-2">
+              <Mail size={20} className="text-brand" />
+              Zpracované odpovědi
+            </h2>
+            {loadingReplies ? (
+              <div className="text-center py-8">
+                <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin mx-auto" />
+              </div>
+            ) : replies.length === 0 ? (
+              <div className="text-center py-8 text-zinc-500">Žádné odpovědi</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-left text-zinc-500 text-xs font-black uppercase">
+                      <th className="pb-3">Email</th>
+                      <th className="pb-3">Záměr</th>
+                      <th className="pb-3">Koncept</th>
+                      <th className="pb-3">Čas</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sm">
+                    {replies.map((reply, i) => (
+                      <tr key={i} className="border-t border-white/5">
+                        <td className="py-3">{reply.sender_email}</td>
+                        <td className="py-3">
+                          <span className={`px-2 py-1 rounded-lg text-xs font-black uppercase ${
+                            reply.intent === 'ZÁJEM' ? 'bg-blue-500/10 text-blue-400' :
+                            reply.intent === 'DOTAZ' ? 'bg-amber-500/10 text-amber-400' :
+                            'bg-red-500/10 text-red-400'
+                          }`}>
+                            {reply.intent}
+                          </span>
+                        </td>
+                        <td className="py-3 text-zinc-400">
+                          {reply.draft_saved ? '✓' : '-'}
+                        </td>
+                        <td className="py-3 text-zinc-400">
+                          {reply.timestamp ? new Date(reply.timestamp).toLocaleString('cs-CZ') : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Order Detail Modal */}
       <AnimatePresence>
