@@ -25,6 +25,9 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
   const [notes, setNotes] = useState(order.notes || '');
   const [savingNotes, setSavingNotes] = useState(false);
 
+  // Debug: log order data
+  console.log('Order data:', order);
+
   const isUrgent =
     order.status === 'Čekám na podklady' &&
     daysSince(order.status_updated_at) >= 14;
@@ -33,20 +36,21 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
     console.log('Changing status:', order.id, newStatus);
     setUpdating(true);
     setStatusOpen(false);
-    const { error } = await supabase
-      .from('orders')
-      .update({
-        status: newStatus,
-        status_updated_at: new Date().toISOString(),
-        developer_id: viewerUserId,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', order.id);
-    if (error) {
+    try {
+      const res = await fetch(`/api/orders/${order.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus, developer_id: viewerUserId }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        console.error('Error updating status:', data);
+      } else {
+        console.log('Status updated successfully');
+        onUpdate();
+      }
+    } catch (error) {
       console.error('Error updating status:', error);
-    } else {
-      console.log('Status updated successfully');
-      onUpdate();
     }
     setUpdating(false);
   };
@@ -54,15 +58,21 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
   const handleNotesSave = async () => {
     console.log('Saving notes:', order.id, notes);
     setSavingNotes(true);
-    const { error } = await supabase
-      .from('orders')
-      .update({ notes, updated_at: new Date().toISOString() })
-      .eq('id', order.id);
-    if (error) {
+    try {
+      const res = await fetch(`/api/orders/${order.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        console.error('Error saving notes:', data);
+      } else {
+        console.log('Notes saved successfully');
+        onUpdate();
+      }
+    } catch (error) {
       console.error('Error saving notes:', error);
-    } else {
-      console.log('Notes saved successfully');
-      onUpdate();
     }
     setSavingNotes(false);
   };
@@ -129,7 +139,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                   key={s}
                   onClick={() => handleStatusChange(s)}
                   className={`w-full text-left px-5 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition-colors
-                    ${order.status === s ? 'text-[#7C3AED]' : 'text-zinc-300'}`}
+                    ${order.status === s ? 'text-[#7C3AED]' : 'text-zinc-400'}`}
                 >
                   {s}
                 </button>
