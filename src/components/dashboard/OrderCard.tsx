@@ -27,6 +27,28 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
 
   // Debug: log order data
   console.log('Order data:', order);
+  console.log('Order fields:', {
+    phone: order.phone,
+    email: order.email,
+    address: order.address,
+    website_url: order.website_url,
+    services: order.services,
+    primary_color: order.primary_color,
+    secondary_color: order.secondary_color,
+    language: order.language,
+    facebook_url: order.facebook_url,
+    instagram_url: order.instagram_url,
+    google_maps_url: order.google_maps_url,
+    images: order.images,
+    owner_name: order.owner_name,
+    owner_phone: order.owner_phone,
+    owner_email: order.owner_email,
+    advantage: order.advantage,
+    price_list: order.price_list,
+    working_hours: order.working_hours,
+    notes: order.notes,
+    deleted_at: order.deleted_at,
+  });
 
   const isUrgent =
     order.status === 'Čekám na podklady' &&
