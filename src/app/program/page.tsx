@@ -24,6 +24,7 @@ interface Order {
   status: 'čeká' | 'vývoj' | 'dokončená';
   images: string[];
   created_at: string;
+  deleted_at: string | null;
 }
 
 export default function ProgramPage() {
@@ -50,6 +51,11 @@ export default function ProgramPage() {
   const [loadingLog, setLoadingLog] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+
+  const showNotification = (type: 'success' | 'error', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   useEffect(() => {
     const savedAuth = localStorage.getItem('program_authenticated');
@@ -206,12 +212,63 @@ export default function ProgramPage() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        setOrders(orders.map(order => 
+        setOrders(orders.map(order =>
           order.id === orderId ? { ...order, status: newStatus } : order
         ));
       }
     } catch (err) {
       console.error('Error updating status:', err);
+    }
+  };
+
+  const handleDelete = async (orderId: string, permanent = false) => {
+    if (!confirm(permanent ? 'Opravdu chcete trvale smazat tuto objednávku? Tato akce je nevratná.' : 'Opravdu chcete přesunout tuto objednávku do koše?')) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/orders/${orderId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ permanent }),
+      });
+      if (res.ok) {
+        if (permanent) {
+          setOrders(orders.filter(order => order.id !== orderId));
+          setSelectedOrder(null);
+        } else {
+          setOrders(orders.map(order =>
+            order.id === orderId ? { ...order, deleted_at: new Date().toISOString() } : order
+          ));
+        }
+        showNotification('success', permanent ? 'Objednávka byla trvale smazána.' : 'Objednávka byla přesunuta do koše.');
+      } else {
+        showNotification('error', 'Chyba při mazání objednávky.');
+      }
+    } catch (err) {
+      console.error('Error deleting order:', err);
+      showNotification('error', 'Chyba při mazání objednávky.');
+    }
+  };
+
+  const handleRestore = async (orderId: string) => {
+    try {
+      const res = await fetch(`/api/orders/${orderId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'restore' }),
+      });
+      if (res.ok) {
+        setOrders(orders.map(order =>
+          order.id === orderId ? { ...order, deleted_at: null } : order
+        ));
+        showNotification('success', 'Objednávka byla obnovena z koše.');
+      } else {
+        showNotification('error', 'Chyba při obnově objednávky.');
+      }
+    } catch (err) {
+      console.error('Error restoring order:', err);
+      showNotification('error', 'Chyba při obnově objednávky.');
     }
   };
 
@@ -750,6 +807,33 @@ export default function ProgramPage() {
                   <p className="text-zinc-600 text-xs">
                     Vytvořeno: {new Date(selectedOrder.created_at).toLocaleString('cs-CZ')}
                   </p>
+                </div>
+
+                {/* Delete/Restore Actions */}
+                <div className="pt-4 border-t border-white/5">
+                  {selectedOrder.deleted_at ? (
+                    <button
+                      onClick={() => handleRestore(selectedOrder.id)}
+                      className="w-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-emerald-500/30 transition-all"
+                    >
+                      Obnovit z koše
+                    </button>
+                  ) : (
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => handleDelete(selectedOrder.id, false)}
+                        className="flex-1 bg-red-500/20 text-red-300 border border-red-500/30 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-red-500/30 transition-all"
+                      >
+                        Smazat
+                      </button>
+                      <button
+                        onClick={() => handleDelete(selectedOrder.id, true)}
+                        className="bg-zinc-500/20 text-zinc-300 border border-zinc-500/30 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-zinc-500/30 transition-all px-6"
+                      >
+                        Trvale smazat
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
