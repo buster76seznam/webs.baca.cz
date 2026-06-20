@@ -11,17 +11,7 @@ export interface AgenturaUser {
   last_seen?: string | null;
 }
 
-export type OrderStatus =
-  | 'Čeká ve frontě'
-  | 'Vytváří se'
-  | 'Návrh odeslán'
-  | 'Čekám na podklady'
-  | 'Čekám na smlouvu'
-  | 'Platí'
-  | 'Vývoj'
-  | 'vývoj'
-  | 'Dokončená'
-  | 'dokončená';
+export type OrderStatus = 'čeká' | 'vývoj' | 'dokončená';
 
 export type PricingType = 'dle_domluvy' | 'doda';
 
@@ -63,27 +53,13 @@ export interface Order {
 }
 
 export const ORDER_STATUSES: OrderStatus[] = [
-  'Čeká ve frontě',
-  'Vytváří se',
-  'Návrh odeslán',
-  'Čekám na podklady',
-  'Čekám na smlouvu',
-  'Platí',
-  'Vývoj',
+  'čeká',
   'vývoj',
-  'Dokončená',
   'dokončená',
 ];
 
 export const STATUS_COLORS: Record<OrderStatus, string> = {
-  'Čeká ve frontě':    'bg-zinc-700/40 text-zinc-300 border-zinc-600/30',
-  'Vytváří se':        'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  'Návrh odeslán':     'bg-purple-500/20 text-purple-300 border-purple-500/30',
-  'Čekám na podklady': 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-  'Čekám na smlouvu':  'bg-orange-500/20 text-orange-300 border-orange-500/30',
-  'Platí':             'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-  'Vývoj':             'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
-  'vývoj':             'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
-  'Dokončená':         'bg-green-500/20 text-green-300 border-green-500/30',
-  'dokončená':         'bg-green-500/20 text-green-300 border-green-500/30',
+  'čeká': 'bg-amber-500/10 text-amber-400',
+  'vývoj': 'bg-blue-500/10 text-blue-400',
+  'dokončená': 'bg-emerald-500/10 text-emerald-400',
 };

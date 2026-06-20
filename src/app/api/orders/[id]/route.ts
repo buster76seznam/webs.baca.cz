@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/supabase';
-import { ORDER_STATUSES } from '@/types';
 
 export async function PATCH(
   request: NextRequest,
