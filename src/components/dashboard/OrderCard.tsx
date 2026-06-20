@@ -51,7 +51,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
   });
 
   const isUrgent =
-    order.status === '─Źek├í' &&
+    order.status === 'čeká' &&
     order.status_updated_at &&
     daysSince(order.status_updated_at) >= 14;
 
