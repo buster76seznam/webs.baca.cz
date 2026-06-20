@@ -7,19 +7,19 @@ export async function POST(request: NextRequest) {
 
     const insertData = {
       company_name: formData.get('companyName'),
-      phone: formData.get('companyPhone'),
-      email: formData.get('companyEmail'),
-      address: formData.get('companyAddress'),
+      company_phone: formData.get('companyPhone'),
+      company_email: formData.get('companyEmail'),
+      company_address: formData.get('companyAddress'),
       industry: formData.get('industry'),
       owner_name: formData.get('ownerName') || null,
       owner_phone: formData.get('ownerPhone') || null,
       owner_email: formData.get('ownerEmail') || null,
-      website_url: formData.get('domain'),
-      services: formData.get('description'),
+      domain: formData.get('domain'),
+      description: formData.get('description'),
       advantage: formData.get('advantage'),
       price_list: formData.get('priceList') || null,
       working_hours: formData.get('workingHours'),
-      status: 'Čeká ve frontě',
+      status: 'čeká',
       images: [],
       primary_color: formData.get('primaryColor') || null,
       secondary_color: formData.get('secondaryColor') || null,
@@ -85,21 +85,7 @@ export async function GET(request: NextRequest) {
 
     console.log('GET success:', data?.length, 'orders');
 
-    // Map old field names to new field names for frontend
-    const mappedOrders = (data || []).map(order => ({
-      ...order,
-      company_phone: order.phone,
-      company_email: order.email,
-      company_address: order.address,
-      description: order.services,
-      domain: order.website_url,
-      status: order.status === 'Čeká ve frontě' ? 'čeká' :
-             order.status === 'Ve vývoji' ? 'vývoj' :
-             order.status === 'Dokončeno' ? 'dokončená' :
-             order.status?.toLowerCase() || 'čeká',
-    }));
-
-    return NextResponse.json({ orders: mappedOrders }, { status: 200 });
+    return NextResponse.json({ orders: data || [] }, { status: 200 });
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });

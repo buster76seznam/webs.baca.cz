@@ -51,7 +51,8 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
   });
 
   const isUrgent =
-    order.status === 'Čekám na podklady' &&
+    order.status === 'čeká' &&
+    order.status_updated_at &&
     daysSince(order.status_updated_at) >= 14;
 
   const handleStatusChange = async (newStatus: OrderStatus) => {
