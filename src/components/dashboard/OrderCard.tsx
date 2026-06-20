@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -51,7 +51,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
   });
 
   const isUrgent =
-    order.status === 'čeká' &&
+    order.status === '─Źek├í' &&
     order.status_updated_at &&
     daysSince(order.status_updated_at) >= 14;
 
@@ -105,7 +105,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
   };
 
   const handleDelete = async (permanent = false) => {
-    if (!confirm(permanent ? 'Opravdu chcete trvale smazat tuto objednávku? Tato akce je nevratná.' : 'Opravdu chcete přesunout tuto objednávku do koše?')) {
+    if (!confirm(permanent ? 'Opravdu chcete trvale smazat tuto objedn├ívku? Tato akce je nevratn├í.' : 'Opravdu chcete p┼Öesunout tuto objedn├ívku do ko┼íe?')) {
       return;
     }
 
@@ -118,14 +118,14 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
       if (!res.ok) {
         const data = await res.json();
         console.error('Error deleting order:', data);
-        alert(`Chyba při mazání: ${data.error}`);
+        alert(`Chyba p┼Öi maz├ín├ş: ${data.error}`);
       } else {
-        alert(permanent ? 'Objednávka byla trvale smazána.' : 'Objednávka byla přesunuta do koše.');
+        alert(permanent ? 'Objedn├ívka byla trvale smaz├ína.' : 'Objedn├ívka byla p┼Öesunuta do ko┼íe.');
         onUpdate();
       }
     } catch (error) {
       console.error('Error deleting order:', error);
-      alert('Chyba při mazání objednávky.');
+      alert('Chyba p┼Öi maz├ín├ş objedn├ívky.');
     }
   };
 
@@ -139,14 +139,14 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
       if (!res.ok) {
         const data = await res.json();
         console.error('Error restoring order:', data);
-        alert(`Chyba při obnově: ${data.error}`);
+        alert(`Chyba p┼Öi obnov─Ť: ${data.error}`);
       } else {
-        alert('Objednávka byla obnovena z koše.');
+        alert('Objedn├ívka byla obnovena z ko┼íe.');
         onUpdate();
       }
     } catch (error) {
       console.error('Error restoring order:', error);
-      alert('Chyba při obnově objednávky.');
+      alert('Chyba p┼Öi obnov─Ť objedn├ívky.');
     }
   };
 
@@ -168,7 +168,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
         <div className="flex items-center gap-3 px-6 py-3 bg-amber-500/10 border-b border-amber-500/20">
           <AlertTriangle size={14} className="text-amber-400 shrink-0" />
           <p className="text-amber-300 text-xs font-black uppercase tracking-wider">
-            Čeká na podklady již {daysSince(order.status_updated_at)} dní — kontaktuj klienta s upomínkou!
+            ─îek├í na podklady ji┼ż {daysSince(order.status_updated_at)} dn├ş ÔÇö kontaktuj klienta s upom├şnkou!
           </p>
         </div>
       )}
@@ -183,8 +183,8 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
             </span>
           </div>
           <p className="text-zinc-600 text-xs font-bold">
-            Zadáno {new Date(order.created_at).toLocaleDateString('cs-CZ')}
-            {order.sales_user && ` • ${order.sales_user.username}`}
+            Zad├íno {new Date(order.created_at).toLocaleDateString('cs-CZ')}
+            {order.sales_user && ` ÔÇó ${order.sales_user.username}`}
           </p>
         </div>
 
@@ -226,15 +226,15 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
       <div className="px-6 pb-6 space-y-3">
         <div className="flex items-center gap-3 text-zinc-400">
           <Phone size={14} className="shrink-0" />
-          <span className="text-xs font-bold">{order.phone || 'Není uvedeno'}</span>
+          <span className="text-xs font-bold">{order.phone || 'Nen├ş uvedeno'}</span>
         </div>
         <div className="flex items-center gap-3 text-zinc-400">
           <Mail size={14} className="shrink-0" />
-          <span className="text-xs font-bold truncate">{order.email || 'Není uvedeno'}</span>
+          <span className="text-xs font-bold truncate">{order.email || 'Nen├ş uvedeno'}</span>
         </div>
         <div className="flex items-center gap-3 text-zinc-400">
           <MapPin size={14} className="shrink-0" />
-          <span className="text-xs font-bold truncate">{order.address || 'Není uvedeno'}</span>
+          <span className="text-xs font-bold truncate">{order.address || 'Nen├ş uvedeno'}</span>
         </div>
       </div>
 
@@ -243,7 +243,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
         onClick={() => setExpanded(!expanded)}
         className="w-full py-4 border-t border-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 hover:text-[#7C3AED] hover:bg-white/[0.02] transition-all"
       >
-        {expanded ? 'Zavřít detaily' : 'Zobrazit detaily projektu'}
+        {expanded ? 'Zav┼Ö├şt detaily' : 'Zobrazit detaily projektu'}
       </button>
 
       {/* Expanded details */}
@@ -252,7 +252,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
           <div>
             <div className="flex items-center gap-2 mb-3 text-[#7C3AED]">
               <Wrench size={14} />
-              <span className="text-[10px] font-black uppercase tracking-widest">Služby a zaměření</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Slu┼żby a zam─Ť┼Öen├ş</span>
             </div>
             <p className="text-sm text-zinc-300 leading-relaxed">{order.services}</p>
           </div>
@@ -264,22 +264,22 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                 <span className="text-[10px] font-black uppercase tracking-widest">Fotky</span>
               </div>
               <span className={`text-xs font-bold ${order.has_photos ? 'text-emerald-400' : 'text-zinc-500'}`}>
-                {order.has_photos ? 'K dispozici' : 'Nemá / zajistíme'}
+                {order.has_photos ? 'K dispozici' : 'Nem├í / zajist├şme'}
               </span>
             </div>
             <div>
               <div className="flex items-center gap-2 mb-2 text-zinc-500">
                 <Globe size={14} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Doména</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Dom├ęna</span>
               </div>
               <span className="text-xs font-bold text-zinc-300">{order.website_url}</span>
             </div>
           </div>
 
           <div>
-            <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Ceník na webu</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Cen├şk na webu</div>
             <span className="text-xs font-bold px-3 py-1.5 rounded-none bg-white/5 border border-white/10 text-zinc-300">
-              {order.pricing_type === 'doda' ? 'Dodá klient' : 'Dle domluvy (1700 paušál)'}
+              {order.pricing_type === 'doda' ? 'Dod├í klient' : 'Dle domluvy (1700 pau┼í├íl)'}
             </span>
           </div>
 
@@ -294,13 +294,13 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                 {order.primary_color && (
                   <div className="flex items-center gap-3">
                     <div className="w-6 h-6 rounded border border-white/20" style={{ backgroundColor: order.primary_color }} />
-                    <span className="text-xs text-zinc-400">Primární barva</span>
+                    <span className="text-xs text-zinc-400">Prim├írn├ş barva</span>
                   </div>
                 )}
                 {order.secondary_color && (
                   <div className="flex items-center gap-3">
                     <div className="w-6 h-6 rounded border border-white/20" style={{ backgroundColor: order.secondary_color }} />
-                    <span className="text-xs text-zinc-400">Sekundární barva</span>
+                    <span className="text-xs text-zinc-400">Sekund├írn├ş barva</span>
                   </div>
                 )}
                 {order.language && (
@@ -318,7 +318,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
             <div>
               <div className="flex items-center gap-2 mb-3 text-[#7C3AED]">
                 <Camera size={14} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Nahrané obrázky</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Nahran├ę obr├ízky</span>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {order.images.map((url, i) => (
@@ -329,7 +329,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                     rel="noopener noreferrer"
                     className="aspect-square bg-white/5 border border-white/10 rounded overflow-hidden hover:border-white/20 transition-colors"
                   >
-                    <img src={url} alt={`Obrázek ${i + 1}`} className="w-full h-full object-cover" />
+                    <img src={url} alt={`Obr├ízek ${i + 1}`} className="w-full h-full object-cover" />
                   </a>
                 ))}
               </div>
@@ -341,7 +341,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
             <div>
               <div className="flex items-center gap-2 mb-3 text-[#7C3AED]">
                 <Share2 size={14} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Sociální sítě</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Soci├íln├ş s├şt─Ť</span>
               </div>
               <div className="space-y-2">
                 {order.facebook_url && (
@@ -393,23 +393,23 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
           {/* Additional info */}
           {(order.advantage || order.price_list || order.working_hours) && (
             <div>
-              <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Další informace</div>
+              <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Dal┼í├ş informace</div>
               <div className="space-y-2">
                 {order.advantage && (
                   <div>
-                    <div className="text-[10px] font-bold text-zinc-500 mb-1">Výhoda oproti konkurenci</div>
+                    <div className="text-[10px] font-bold text-zinc-500 mb-1">V├Żhoda oproti konkurenci</div>
                     <p className="text-xs text-zinc-300">{order.advantage}</p>
                   </div>
                 )}
                 {order.price_list && (
                   <div>
-                    <div className="text-[10px] font-bold text-zinc-500 mb-1">Ceník</div>
+                    <div className="text-[10px] font-bold text-zinc-500 mb-1">Cen├şk</div>
                     <p className="text-xs text-zinc-300 whitespace-pre-wrap">{order.price_list}</p>
                   </div>
                 )}
                 {order.working_hours && (
                   <div>
-                    <div className="text-[10px] font-bold text-zinc-500 mb-1">Pracovní doba</div>
+                    <div className="text-[10px] font-bold text-zinc-500 mb-1">Pracovn├ş doba</div>
                     <p className="text-xs text-zinc-300">{order.working_hours}</p>
                   </div>
                 )}
@@ -419,17 +419,17 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
 
           {/* Notes section */}
           <div>
-            <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Poznámky</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Pozn├ímky</div>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               onBlur={handleNotesSave}
               disabled={savingNotes}
-              placeholder="Přidejte poznámku..."
+              placeholder="P┼Öidejte pozn├ímku..."
               className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs text-white placeholder-zinc-600 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-8px_rgba(124,58,237,0.5)] transition-all duration-300 resize-none h-20"
             />
             {savingNotes && (
-              <p className="text-[10px] text-zinc-500 mt-1">Ukládám...</p>
+              <p className="text-[10px] text-zinc-500 mt-1">Ukl├íd├ím...</p>
             )}
           </div>
 
@@ -440,7 +440,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                 onClick={handleRestore}
                 className="flex-1 py-2 px-4 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded text-xs font-black uppercase tracking-wider hover:bg-emerald-500/30 transition-colors"
               >
-                Obnovit z koše
+                Obnovit z ko┼íe
               </button>
             ) : (
               <>
