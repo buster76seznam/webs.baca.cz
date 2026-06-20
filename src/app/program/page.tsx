@@ -36,7 +36,7 @@ export default function ProgramPage() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'čeká' | 'vývoj' | 'dokončená'>('all');
   const [loading, setLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [activeTab, setActiveTab] = useState<'orders' | 'outreach'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'trash' | 'outreach'>('orders');
 
   // Outreach state
   const [stats, setStats] = useState({ contacted: 0, blacklisted: 0, replies: 0, drafts: 0 });
@@ -65,6 +65,13 @@ export default function ProgramPage() {
     }
   }, []);
 
+  // Refetch orders when switching between orders and trash tabs
+  useEffect(() => {
+    if (isAuthenticated && (activeTab === 'orders' || activeTab === 'trash')) {
+      fetchOrders();
+    }
+  }, [activeTab, isAuthenticated]);
+
   // Fetch outreach data when outreach tab is active
   useEffect(() => {
     if (activeTab === 'outreach' && isAuthenticated) {
@@ -85,7 +92,8 @@ export default function ProgramPage() {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/orders');
+      const trashParam = activeTab === 'trash' ? 'trash=true' : '';
+      const res = await fetch(`/api/orders?${trashParam}`);
       const data = await res.json();
       if (res.ok) {
         setOrders(data.orders || []);
@@ -326,6 +334,16 @@ export default function ProgramPage() {
                 Objednávky
               </button>
               <button
+                onClick={() => setActiveTab('trash')}
+                className={`px-4 py-2 rounded-xl text-sm font-black uppercase transition-all ${
+                  activeTab === 'trash'
+                    ? 'bg-brand text-white'
+                    : 'bg-white/5 text-zinc-500 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                Koš
+              </button>
+              <button
                 onClick={() => setActiveTab('outreach')}
                 className={`px-4 py-2 rounded-xl text-sm font-black uppercase transition-all ${
                   activeTab === 'outreach'
@@ -426,6 +444,64 @@ export default function ProgramPage() {
                           <span className="text-xs">{order.images.length}</span>
                         </div>
                       )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* Trash Tab */}
+      {activeTab === 'trash' && (
+        <>
+          {/* Search */}
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={18} />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Hledat v koši..."
+                className="w-full bg-white/[0.03] border border-white/8 rounded-2xl pl-12 pr-5 py-4 text-white placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 transition-all duration-300 text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Trash List */}
+          <div className="max-w-7xl mx-auto px-6 pb-12">
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin mx-auto" />
+                <p className="text-zinc-500 mt-4">Načítání...</p>
+              </div>
+            ) : filteredOrders.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-zinc-500">Koš je prázdný</p>
+              </div>
+            ) : (
+              <div className="grid gap-4">
+                {filteredOrders.map((order) => (
+                  <motion.div
+                    key={order.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-[#0A0A0A] border border-red-500/20 rounded-3xl p-6 hover:border-red-500/30 transition-all duration-300 cursor-pointer"
+                    onClick={() => setSelectedOrder(order)}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-lg font-black text-zinc-400">{order.company_name}</h3>
+                          <span className="px-3 py-1 rounded-full text-xs font-black uppercase bg-red-500/10 text-red-400">
+                            Smazáno
+                          </span>
+                        </div>
+                        <p className="text-zinc-500 text-sm mb-2">{order.industry}</p>
+                        <p className="text-zinc-600 text-xs">Smazáno: {order.deleted_at ? new Date(order.deleted_at).toLocaleDateString('cs-CZ') : '-'}</p>
+                      </div>
                     </div>
                   </motion.div>
                 ))}

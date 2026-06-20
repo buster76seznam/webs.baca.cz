@@ -95,18 +95,13 @@ export async function POST(request: NextRequest) {
     // Insert order into database
     const insertData = {
         company_name: companyName,
-        phone: companyPhone,
-        email: companyEmail,
-        address: companyAddress,
+        company_phone: companyPhone,
+        company_email: companyEmail,
+        company_address: companyAddress,
         industry,
-        services: description,
-        website_url: domain,
-        pricing_type: 'dle_domluvy',
-        status: 'Čeká ve frontě',
-        status_updated_at: new Date().toISOString(),
-        sales_user_id: null,
-        developer_id: null,
-        updated_at: new Date().toISOString(),
+        description: description,
+        domain: domain,
+        status: 'čeká',
         // New fields
         primary_color: primaryColor || null,
         secondary_color: secondaryColor || null,
@@ -126,7 +121,7 @@ export async function POST(request: NextRequest) {
     console.log('Inserting order data:', insertData);
 
     const { data, error } = await supabase
-      .from('orders')
+      .from('web_orders')
       .insert(insertData)
       .select()
       .single();
@@ -150,9 +145,10 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const search = searchParams.get('search');
     const status = searchParams.get('status');
+    const trash = searchParams.get('trash');
 
     let query = supabase
-      .from('orders')
+      .from('web_orders')
       .select('*')
       .order('created_at', { ascending: false });
 
@@ -164,6 +160,13 @@ export async function GET(request: NextRequest) {
       query = query.eq('status', status);
     }
 
+    // Filter by trash status
+    if (trash === 'true') {
+      query = query.not('deleted_at', 'is', null);
+    } else {
+      query = query.is('deleted_at', null);
+    }
+
     const { data, error } = await query;
 
     if (error) {
@@ -171,22 +174,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Chyba při načítání objednávek.' }, { status: 500 });
     }
 
-    // Map database field names to match program page's Order interface
-    const mappedOrders = data.map(order => ({
-      ...order,
-      company_phone: order.phone,
-      company_email: order.email,
-      company_address: order.address,
-      description: order.services,
-      domain: order.website_url,
-      // Normalize status values
-      status: order.status === 'Čeká ve frontě' ? 'čeká' :
-             order.status === 'Ve vývoji' ? 'vývoj' :
-             order.status === 'Dokončeno' ? 'dokončená' :
-             order.status?.toLowerCase() || 'čeká',
-    }));
-
-    return NextResponse.json({ orders: mappedOrders }, { status: 200 });
+    return NextResponse.json({ orders: data }, { status: 200 });
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json({ error: 'Interní chyba serveru.' }, { status: 500 });

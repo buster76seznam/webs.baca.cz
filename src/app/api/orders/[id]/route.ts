@@ -20,8 +20,6 @@ export async function PATCH(
 
     const updateData: any = {
       status,
-      status_updated_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
     };
 
     if (developer_id) {
@@ -33,7 +31,7 @@ export async function PATCH(
     }
 
     const { data, error } = await supabase
-      .from('orders')
+      .from('web_orders')
       .update(updateData)
       .eq('id', id)
       .select()
@@ -58,7 +56,7 @@ export async function GET(
   try {
     const { id } = await params;
     const { data, error } = await supabase
-      .from('orders')
+      .from('web_orders')
       .select('*')
       .eq('id', id)
       .single();
@@ -68,22 +66,7 @@ export async function GET(
       return NextResponse.json({ error: 'Chyba při načítání objednávky.' }, { status: 500 });
     }
 
-    // Map database field names to match program page's Order interface
-    const mappedOrder = {
-      ...data,
-      company_phone: data.phone,
-      company_email: data.email,
-      company_address: data.address,
-      description: data.services,
-      domain: data.website_url,
-      // Normalize status values
-      status: data.status === 'Čeká ve frontě' ? 'čeká' :
-             data.status === 'Ve vývoji' ? 'vývoj' :
-             data.status === 'Dokončeno' ? 'dokončená' :
-             data.status?.toLowerCase() || 'čeká',
-    };
-
-    return NextResponse.json({ order: mappedOrder }, { status: 200 });
+    return NextResponse.json({ order: data }, { status: 200 });
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json({ error: 'Interní chyba serveru.' }, { status: 500 });
@@ -101,7 +84,7 @@ export async function DELETE(
     if (permanent) {
       // Permanent delete
       const { error } = await supabase
-        .from('orders')
+        .from('web_orders')
         .delete()
         .eq('id', id);
 
@@ -114,7 +97,7 @@ export async function DELETE(
     } else {
       // Soft delete
       const { error } = await supabase
-        .from('orders')
+        .from('web_orders')
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id);
 
@@ -142,7 +125,7 @@ export async function PUT(
     if (action === 'restore') {
       // Restore from trash
       const { error } = await supabase
-        .from('orders')
+        .from('web_orders')
         .update({ deleted_at: null })
         .eq('id', id);
 
