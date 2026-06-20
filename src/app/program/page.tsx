@@ -95,8 +95,11 @@ export default function ProgramPage() {
       const trashParam = activeTab === 'trash' ? 'trash=true' : '';
       const res = await fetch(`/api/orders?${trashParam}`);
       const data = await res.json();
+      console.log('Fetched orders:', data);
       if (res.ok) {
         setOrders(data.orders || []);
+      } else {
+        console.error('Fetch error:', data.error);
       }
     } catch (err) {
       console.error('Error fetching orders:', err);
@@ -219,13 +222,19 @@ export default function ProgramPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       });
+      const data = await res.json();
+      console.log('Status change response:', data);
       if (res.ok) {
         setOrders(orders.map(order =>
           order.id === orderId ? { ...order, status: newStatus } : order
         ));
+        showNotification('success', 'Status byl změněn.');
+      } else {
+        showNotification('error', data.error || 'Chyba při změně statusu.');
       }
     } catch (err) {
       console.error('Error updating status:', err);
+      showNotification('error', 'Chyba při změně statusu.');
     }
   };
 
@@ -240,18 +249,18 @@ export default function ProgramPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ permanent }),
       });
+      const data = await res.json();
+      console.log('Delete response:', data);
       if (res.ok) {
         if (permanent) {
           setOrders(orders.filter(order => order.id !== orderId));
           setSelectedOrder(null);
         } else {
-          setOrders(orders.map(order =>
-            order.id === orderId ? { ...order, deleted_at: new Date().toISOString() } : order
-          ));
+          await fetchOrders(); // Refetch to get updated data
         }
         showNotification('success', permanent ? 'Objednávka byla trvale smazána.' : 'Objednávka byla přesunuta do koše.');
       } else {
-        showNotification('error', 'Chyba při mazání objednávky.');
+        showNotification('error', data.error || 'Chyba při mazání objednávky.');
       }
     } catch (err) {
       console.error('Error deleting order:', err);
@@ -266,13 +275,13 @@ export default function ProgramPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'restore' }),
       });
+      const data = await res.json();
+      console.log('Restore response:', data);
       if (res.ok) {
-        setOrders(orders.map(order =>
-          order.id === orderId ? { ...order, deleted_at: null } : order
-        ));
+        await fetchOrders(); // Refetch to get updated data
         showNotification('success', 'Objednávka byla obnovena z koše.');
       } else {
-        showNotification('error', 'Chyba při obnově objednávky.');
+        showNotification('error', data.error || 'Chyba při obnově objednávky.');
       }
     } catch (err) {
       console.error('Error restoring order:', err);
