@@ -7,9 +7,9 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    const { status, developer_id, notes } = await request.json();
+    const { status } = await request.json();
 
-    console.log('PATCH request:', { id, status, developer_id, notes });
+    console.log('PATCH request:', { id, status });
 
     const updateData: any = {
       status,
