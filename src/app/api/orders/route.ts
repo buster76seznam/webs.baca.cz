@@ -95,13 +95,18 @@ export async function POST(request: NextRequest) {
     // Insert order into database
     const insertData = {
         company_name: companyName,
-        company_phone: companyPhone,
-        company_email: companyEmail,
-        company_address: companyAddress,
+        phone: companyPhone,
+        email: companyEmail,
+        address: companyAddress,
         industry,
-        description: description,
-        domain: domain,
-        status: 'čeká',
+        services: description,
+        website_url: domain,
+        pricing_type: 'dle_domluvy',
+        status: 'Čeká ve frontě',
+        status_updated_at: new Date().toISOString(),
+        sales_user_id: null,
+        developer_id: null,
+        updated_at: new Date().toISOString(),
         // New fields
         primary_color: primaryColor || null,
         secondary_color: secondaryColor || null,
@@ -121,7 +126,7 @@ export async function POST(request: NextRequest) {
     console.log('Inserting order data:', insertData);
 
     const { data, error } = await supabase
-      .from('web_orders')
+      .from('orders')
       .insert(insertData)
       .select()
       .single();
@@ -148,7 +153,7 @@ export async function GET(request: NextRequest) {
     const trash = searchParams.get('trash');
 
     let query = supabase
-      .from('web_orders')
+      .from('orders')
       .select('*')
       .order('created_at', { ascending: false });
 
@@ -174,7 +179,22 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Chyba při načítání objednávek.' }, { status: 500 });
     }
 
-    return NextResponse.json({ orders: data }, { status: 200 });
+    // Map database field names to match program page's Order interface
+    const mappedOrders = data.map(order => ({
+      ...order,
+      company_phone: order.phone,
+      company_email: order.email,
+      company_address: order.address,
+      description: order.services,
+      domain: order.website_url,
+      // Normalize status values
+      status: order.status === 'Čeká ve frontě' ? 'čeká' :
+             order.status === 'Ve vývoji' ? 'vývoj' :
+             order.status === 'Dokončeno' ? 'dokončená' :
+             order.status?.toLowerCase() || 'čeká',
+    }));
+
+    return NextResponse.json({ orders: mappedOrders }, { status: 200 });
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json({ error: 'Interní chyba serveru.' }, { status: 500 });
