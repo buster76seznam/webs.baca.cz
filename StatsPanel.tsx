@@ -11,7 +11,7 @@ interface StatsPanelProps {
 }
 
 function avgDaysToComplete(orders: Order[]): string {
-  const completed = orders.filter(o => o.status === 'Platí');
+  const completed = orders.filter(o => o.status === 'dokončená');
   if (!completed.length) return '—';
   const total = completed.reduce((sum, o) => {
     const created = new Date(o.created_at).getTime();
@@ -38,8 +38,8 @@ export default function StatsPanel({ orders, role, userId }: StatsPanelProps) {
   }, [orders, role, userId]);
 
   const monthOrders = useMemo(() => thisMonthOrders(myOrders), [myOrders]);
-  const monthPaid = useMemo(() => monthOrders.filter(o => o.status === 'Platí'), [monthOrders]);
-  const waitingPodklady = useMemo(() => myOrders.filter(o => o.status === 'Čekám na podklady'), [myOrders]);
+  const monthPaid = useMemo(() => monthOrders.filter(o => o.status === 'dokončená'), [monthOrders]);
+  const waitingPodklady = useMemo(() => myOrders.filter(o => o.status === 'čeká'), [myOrders]);
   const avgDays = useMemo(() => avgDaysToComplete(myOrders), [myOrders]);
 
   const statCards = role === 'Vývojář'
@@ -97,7 +97,7 @@ export default function StatsPanel({ orders, role, userId }: StatsPanelProps) {
         {
           icon: CheckCircle,
           label: 'Platí',
-          value: myOrders.filter(o => o.status === 'Platí').length.toString(),
+          value: myOrders.filter(o => o.status === 'dokončená').length.toString(),
           sub: 'dokončených webů',
           color: 'text-emerald-400',
           bg: 'bg-emerald-500/10',
