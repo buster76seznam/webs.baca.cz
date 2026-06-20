@@ -95,32 +95,26 @@ export async function POST(request: NextRequest) {
     // Insert order into database
     const insertData = {
         company_name: companyName,
-        phone: companyPhone,
-        email: companyEmail,
-        address: companyAddress,
+        company_phone: companyPhone,
+        company_email: companyEmail,
+        company_address: companyAddress,
         industry,
-        services: description,
-        website_url: domain,
-        pricing_type: 'dle_domluvy',
-        status: 'Čeká ve frontě',
-        status_updated_at: new Date().toISOString(),
-        sales_user_id: null,
-        developer_id: null,
-        updated_at: new Date().toISOString(),
-        // New fields
+        owner_name: ownerName || null,
+        owner_phone: ownerPhone || null,
+        owner_email: ownerEmail || null,
+        domain,
+        description,
+        advantage,
+        price_list: priceList || null,
+        working_hours: workingHours,
+        status: 'čeká',
+        images: imageUrls,
         primary_color: primaryColor || null,
         secondary_color: secondaryColor || null,
         language: language || null,
         facebook_url: facebookUrl || null,
         instagram_url: instagramUrl || null,
         google_maps_url: googleMapsUrl || null,
-        images: imageUrls,
-        owner_name: ownerName || null,
-        owner_phone: ownerPhone || null,
-        owner_email: ownerEmail || null,
-        advantage: advantage || null,
-        price_list: priceList || null,
-        working_hours: workingHours || null,
       };
 
     console.log('Inserting order data:', insertData);
@@ -179,22 +173,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Chyba při načítání objednávek.' }, { status: 500 });
     }
 
-    // Map database field names to match program page's Order interface
-    const mappedOrders = data.map(order => ({
-      ...order,
-      company_phone: order.phone,
-      company_email: order.email,
-      company_address: order.address,
-      description: order.services,
-      domain: order.website_url,
-      // Normalize status values
-      status: order.status === 'Čeká ve frontě' ? 'čeká' :
-             order.status === 'Ve vývoji' ? 'vývoj' :
-             order.status === 'Dokončeno' ? 'dokončená' :
-             order.status?.toLowerCase() || 'čeká',
-    }));
-
-    return NextResponse.json({ orders: mappedOrders }, { status: 200 });
+    return NextResponse.json({ orders: data }, { status: 200 });
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json({ error: 'Interní chyba serveru.' }, { status: 500 });
