@@ -11,6 +11,13 @@ export async function PATCH(
 
     console.log('PATCH /api/orders/[id]:', { id, status });
 
+    // Validate status
+    const validStatuses = ['čeká', 'vývoj', 'dokončená'];
+    if (!validStatuses.includes(status)) {
+      console.error('Invalid status:', status);
+      return NextResponse.json({ error: 'Invalid status', validStatuses }, { status: 400 });
+    }
+
     const { data, error } = await supabase
       .from('orders')
       .update({ status })

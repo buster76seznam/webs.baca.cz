@@ -887,6 +887,54 @@ export default function ProgramPage() {
                   </div>
                 )}
 
+                {/* Colors */}
+                {(selectedOrder.primary_color || selectedOrder.secondary_color) && (
+                  <div>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 block">Zvolené barvy</label>
+                    <div className="flex gap-3">
+                      {selectedOrder.primary_color && (
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-8 h-8 rounded-lg border border-white/10"
+                            style={{ backgroundColor: selectedOrder.primary_color }}
+                          />
+                          <span className="text-white text-sm">{selectedOrder.primary_color}</span>
+                        </div>
+                      )}
+                      {selectedOrder.secondary_color && (
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-8 h-8 rounded-lg border border-white/10"
+                            style={{ backgroundColor: selectedOrder.secondary_color }}
+                          />
+                          <span className="text-white text-sm">{selectedOrder.secondary_color}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Social URLs */}
+                {selectedOrder.social_urls && selectedOrder.social_urls.length > 0 && (
+                  <div>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 block">URL na sociální sítě</label>
+                    <div className="space-y-2">
+                      {selectedOrder.social_urls.map((url, i) => (
+                        <div key={i}>
+                          <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-brand text-sm hover:underline break-all"
+                          >
+                            {url}
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Created At */}
                 <div className="pt-4 border-t border-white/5">
                   <p className="text-zinc-600 text-xs">
