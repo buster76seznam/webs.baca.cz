@@ -26,7 +26,7 @@ export default function AdminTeamStats({ orders, users }: AdminTeamStatsProps) {
           u.role === 'Obchodní zástupce'
             ? orders.filter(o => o.sales_user_id === u.id)
             : orders;
-        const paid = userOrders.filter(o => o.status === 'Platí').length;
+        const paid = userOrders.filter(o => o.status === 'dokončená').length;
         return {
           user: u,
           total: userOrders.length,
