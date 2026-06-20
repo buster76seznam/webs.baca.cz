@@ -68,7 +68,22 @@ export async function GET(
       return NextResponse.json({ error: 'Chyba při načítání objednávky.' }, { status: 500 });
     }
 
-    return NextResponse.json({ order: data }, { status: 200 });
+    // Map database field names to match program page's Order interface
+    const mappedOrder = {
+      ...data,
+      company_phone: data.phone,
+      company_email: data.email,
+      company_address: data.address,
+      description: data.services,
+      domain: data.website_url,
+      // Normalize status values
+      status: data.status === 'Čeká ve frontě' ? 'čeká' :
+             data.status === 'Ve vývoji' ? 'vývoj' :
+             data.status === 'Dokončeno' ? 'dokončená' :
+             data.status?.toLowerCase() || 'čeká',
+    };
+
+    return NextResponse.json({ order: mappedOrder }, { status: 200 });
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json({ error: 'Interní chyba serveru.' }, { status: 500 });
