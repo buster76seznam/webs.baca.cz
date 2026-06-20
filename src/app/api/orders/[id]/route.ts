@@ -9,20 +9,45 @@ export async function PATCH(
     const { id } = await params;
     const { status } = await request.json();
 
+    console.log('PATCH /api/orders/[id]:', { id, status });
+
+    // Map frontend status to database status
+    const dbStatus = status === 'čeká' ? 'Čeká ve frontě' :
+                    status === 'vývoj' ? 'Ve vývoji' :
+                    status === 'dokončená' ? 'Dokončeno' : status;
+
     const { data, error } = await supabase
       .from('orders')
-      .update({ status })
+      .update({ status: dbStatus })
       .eq('id', id)
       .select()
       .single();
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('PATCH error:', error);
+      return NextResponse.json({ error: error.message, details: error }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, order: data }, { status: 200 });
+    console.log('PATCH success:', data);
+
+    // Map response back to frontend format
+    const mappedOrder = {
+      ...data,
+      company_phone: data.phone,
+      company_email: data.email,
+      company_address: data.address,
+      description: data.services,
+      domain: data.website_url,
+      status: data.status === 'Čeká ve frontě' ? 'čeká' :
+             data.status === 'Ve vývoji' ? 'vývoj' :
+             data.status === 'Dokončeno' ? 'dokončená' :
+             data.status?.toLowerCase() || 'čeká',
+    };
+
+    return NextResponse.json({ success: true, order: mappedOrder }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    console.error('PATCH catch error:', error);
+    return NextResponse.json({ error: 'Server error', details: error }, { status: 500 });
   }
 }
 
@@ -39,11 +64,29 @@ export async function GET(
       .single();
 
     if (error) {
+      console.error('GET error:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ order: data }, { status: 200 });
+    console.log('GET success:', data);
+
+    // Map response to frontend format
+    const mappedOrder = {
+      ...data,
+      company_phone: data.phone,
+      company_email: data.email,
+      company_address: data.address,
+      description: data.services,
+      domain: data.website_url,
+      status: data.status === 'Čeká ve frontě' ? 'čeká' :
+             data.status === 'Ve vývoji' ? 'vývoj' :
+             data.status === 'Dokončeno' ? 'dokončená' :
+             data.status?.toLowerCase() || 'čeká',
+    };
+
+    return NextResponse.json({ order: mappedOrder }, { status: 200 });
   } catch (error) {
+    console.error('Server error:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
@@ -56,6 +99,8 @@ export async function DELETE(
     const { id } = await params;
     const { permanent } = await request.json();
 
+    console.log('DELETE /api/orders/[id]:', { id, permanent });
+
     if (permanent) {
       const { error } = await supabase
         .from('orders')
@@ -63,7 +108,8 @@ export async function DELETE(
         .eq('id', id);
 
       if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        console.error('DELETE error:', error);
+        return NextResponse.json({ error: error.message, details: error }, { status: 500 });
       }
     } else {
       const { error } = await supabase
@@ -72,13 +118,16 @@ export async function DELETE(
         .eq('id', id);
 
       if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        console.error('DELETE error:', error);
+        return NextResponse.json({ error: error.message, details: error }, { status: 500 });
       }
     }
 
+    console.log('DELETE success');
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    console.error('DELETE catch error:', error);
+    return NextResponse.json({ error: 'Server error', details: error }, { status: 500 });
   }
 }
 
