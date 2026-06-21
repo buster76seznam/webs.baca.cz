@@ -118,9 +118,9 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
 
       {/* Quick info row */}
       <div className="px-6 pb-4 flex flex-wrap gap-4 text-xs text-zinc-500 font-medium">
-        <span className="flex items-center gap-1.5"><Phone size={11} />{order.phone}</span>
-        <span className="flex items-center gap-1.5"><Mail size={11} />{order.email}</span>
-        <span className="flex items-center gap-1.5"><MapPin size={11} className="shrink-0" />{order.address}</span>
+        <span className="flex items-center gap-1.5"><Phone size={11} />{order.company_phone}</span>
+        <span className="flex items-center gap-1.5"><Mail size={11} />{order.company_email}</span>
+        <span className="flex items-center gap-1.5"><MapPin size={11} className="shrink-0" />{order.company_address}</span>
       </div>
 
       {/* Expand toggle */}
@@ -142,21 +142,17 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
         >
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 flex items-center gap-1"><Camera size={10} />Fotky</p>
-            <p className="text-sm font-bold text-white">{order.has_photos ? 'Ano' : 'Ne'}</p>
+            <p className="text-sm font-bold text-white">{order.images.length > 0 ? 'Ano' : 'Ne'}</p>
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 flex items-center gap-1"><Globe size={10} />Adresa webu</p>
-            <p className="text-sm font-bold text-white">{order.website_url || '—'}</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 flex items-center gap-1"><Globe size={10} />Doména</p>
+            <p className="text-sm font-bold text-white">{order.domain || '—'}</p>
           </div>
           <div className="sm:col-span-2">
-            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 flex items-center gap-1"><Wrench size={10} />Služby</p>
-            <p className="text-sm text-zinc-300 leading-relaxed">{order.services || '—'}</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 flex items-center gap-1"><Wrench size={10} />Co dělají</p>
+            <p className="text-sm text-zinc-300 leading-relaxed">{order.description || '—'}</p>
           </div>
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2">Ceník</p>
-            <p className="text-sm font-bold text-white">{order.pricing_type === 'dle_domluvy' ? 'Dle domluvy' : order.pricing_type === 'doda' ? 'Dodá' : '—'}</p>
-          </div>
-          <div>
+          <div className="sm:col-span-2">
             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2">Stav aktualizován</p>
             <p className="text-sm font-bold text-white">{new Date(order.status_updated_at).toLocaleDateString('cs-CZ')}</p>
           </div>
