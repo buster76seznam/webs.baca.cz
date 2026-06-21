@@ -78,6 +78,8 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status');
     const trash = searchParams.get('trash');
 
+    console.log('GET /api/orders:', { search, status, trash });
+
     let query = supabase
       .from('orders')
       .select('*')
@@ -93,8 +95,10 @@ export async function GET(request: NextRequest) {
 
     if (trash === 'true') {
       query = query.not('deleted_at', 'is', null);
+      console.log('Filtering for trash (deleted_at is not null)');
     } else {
       query = query.is('deleted_at', null);
+      console.log('Filtering for active orders (deleted_at is null)');
     }
 
     const { data, error } = await query;
@@ -105,6 +109,9 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('GET success:', data?.length, 'orders');
+    if (data && data.length > 0) {
+      console.log('First order deleted_at:', data[0].deleted_at);
+    }
 
     return NextResponse.json({ orders: data || [] }, { status: 200 });
   } catch (error) {

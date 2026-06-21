@@ -18,9 +18,12 @@ export async function PATCH(
       return NextResponse.json({ error: 'Invalid status', validStatuses }, { status: 400 });
     }
 
+    const statusUpdatedAt = new Date().toISOString();
+    console.log('Updating status to:', status, 'at:', statusUpdatedAt);
+
     const { data, error } = await supabase
       .from('orders')
-      .update({ status, status_updated_at: new Date().toISOString() })
+      .update({ status, status_updated_at: statusUpdatedAt })
       .eq('id', id)
       .select()
       .maybeSingle();
