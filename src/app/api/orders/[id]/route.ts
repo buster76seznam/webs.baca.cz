@@ -86,15 +86,20 @@ export async function DELETE(
         return NextResponse.json({ error: error.message, details: error }, { status: 500 });
       }
     } else {
-      const { error } = await supabase
+      const deletedAt = new Date().toISOString();
+      console.log('Setting deleted_at to:', deletedAt);
+      const { data, error } = await supabase
         .from('orders')
-        .update({ deleted_at: new Date().toISOString() })
-        .eq('id', id);
+        .update({ deleted_at: deletedAt })
+        .eq('id', id)
+        .select();
 
       if (error) {
         console.error('DELETE error:', error);
         return NextResponse.json({ error: error.message, details: error }, { status: 500 });
       }
+
+      console.log('DELETE update result:', data);
     }
 
     console.log('DELETE success');
