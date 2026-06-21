@@ -26,7 +26,8 @@ USING (true);
 CREATE POLICY "Allow authenticated update"
 ON orders FOR UPDATE
 TO authenticated
-USING (true);
+USING (true)
+WITH CHECK (true);
 
 -- Politika pro mazání (authenticated users - pro admin panel)
 CREATE POLICY "Allow authenticated delete"

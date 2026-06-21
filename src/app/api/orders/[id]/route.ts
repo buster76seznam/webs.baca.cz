@@ -21,7 +21,7 @@ export async function PATCH(
     const statusUpdatedAt = new Date().toISOString();
     console.log('Updating status to:', status, 'at:', statusUpdatedAt);
 
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from('orders')
       .update({ status, status_updated_at: statusUpdatedAt })
       .eq('id', id)
@@ -33,8 +33,9 @@ export async function PATCH(
       return NextResponse.json({ error: error.message, details: error }, { status: 500 });
     }
 
-    console.log('PATCH success:', data);
+    console.log('PATCH success:', data, 'rows affected:', count);
 
+    // Return success even if data is null, as long as no error occurred
     return NextResponse.json({ success: true, order: data }, { status: 200 });
   } catch (error) {
     console.error('PATCH catch error:', error);
