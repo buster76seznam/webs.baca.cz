@@ -21,33 +21,31 @@ export interface Order {
   updated_at: string;
   sales_user_id: string;
   company_name: string;
-  phone: string;
-  email: string;
-  address: string;
+  company_phone: string;
+  company_email: string;
+  company_address: string;
   industry: string;
-  has_photos: boolean | null;
-  services: string | null;
-  website_url: string | null;
-  pricing_type: PricingType | null;
+  domain: string;
+  description: string;
+  advantage: string;
+  price_list: string | null;
+  working_hours: string;
   status: OrderStatus;
   status_updated_at: string;
   developer_id: string | null;
-  // New fields for web orders
-  primary_color?: string | null;
-  secondary_color?: string | null;
-  language?: string | null;
-  facebook_url?: string | null;
-  instagram_url?: string | null;
-  google_maps_url?: string | null;
-  images?: string[] | null;
-  owner_name?: string | null;
-  owner_phone?: string | null;
-  owner_email?: string | null;
-  advantage?: string | null;
-  price_list?: string | null;
-  working_hours?: string | null;
-  notes?: string | null;
-  deleted_at?: string | null;
+  // Optional fields
+  primary_color: string | null;
+  secondary_color: string | null;
+  language: string | null;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  google_maps_url: string | null;
+  images: string[];
+  owner_name: string | null;
+  owner_phone: string | null;
+  owner_email: string | null;
+  notes: string | null;
+  deleted_at: string | null;
   // joined
   sales_user?: { username: string };
 }

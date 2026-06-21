@@ -915,22 +915,46 @@ export default function ProgramPage() {
                 )}
 
                 {/* Social URLs */}
-                {selectedOrder.social_urls && selectedOrder.social_urls.length > 0 && (
+                {(selectedOrder.facebook_url || selectedOrder.instagram_url || selectedOrder.google_maps_url) && (
                   <div>
                     <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 block">URL na sociální sítě</label>
                     <div className="space-y-2">
-                      {selectedOrder.social_urls.map((url, i) => (
-                        <div key={i}>
+                      {selectedOrder.facebook_url && (
+                        <div>
                           <a
-                            href={url}
+                            href={selectedOrder.facebook_url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-brand text-sm hover:underline break-all"
                           >
-                            {url}
+                            Facebook: {selectedOrder.facebook_url}
                           </a>
                         </div>
-                      ))}
+                      )}
+                      {selectedOrder.instagram_url && (
+                        <div>
+                          <a
+                            href={selectedOrder.instagram_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-brand text-sm hover:underline break-all"
+                          >
+                            Instagram: {selectedOrder.instagram_url}
+                          </a>
+                        </div>
+                      )}
+                      {selectedOrder.google_maps_url && (
+                        <div>
+                          <a
+                            href={selectedOrder.google_maps_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-brand text-sm hover:underline break-all"
+                          >
+                            Google Maps: {selectedOrder.google_maps_url}
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
