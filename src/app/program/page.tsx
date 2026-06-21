@@ -856,12 +856,20 @@ export default function ProgramPage() {
                     <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 block">Obrázky</label>
                     <div className="grid grid-cols-3 gap-2">
                       {selectedOrder.images.map((url, i) => (
-                        <img
-                          key={i}
-                          src={url}
-                          alt={`Obrázek ${i + 1}`}
-                          className="w-full h-32 object-cover rounded-xl border border-white/5"
-                        />
+                        <div key={i} className="relative group">
+                          <img
+                            src={url}
+                            alt={`Obrázek ${i + 1}`}
+                            className="w-full h-32 object-cover rounded-xl border border-white/5"
+                          />
+                          <a
+                            href={url}
+                            download
+                            className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-xl"
+                          >
+                            <span className="text-white text-xs font-black">Stáhnout</span>
+                          </a>
+                        </div>
                       ))}
                     </div>
                   </div>

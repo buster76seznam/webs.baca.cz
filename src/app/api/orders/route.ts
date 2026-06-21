@@ -5,6 +5,27 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
 
+    // Extract images from FormData
+    const imageUrls: string[] = [];
+    let imageIndex = 0;
+    while (formData.get(`image_${imageIndex}`) as File) {
+      const file = formData.get(`image_${imageIndex}`) as File;
+      const fileName = `${Date.now()}-${imageIndex}-${file.name}`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('order-images')
+        .upload(fileName, file);
+
+      if (uploadError) {
+        console.error('Image upload error:', uploadError);
+      } else {
+        const { data: publicUrlData } = supabase.storage
+          .from('order-images')
+          .getPublicUrl(fileName);
+        imageUrls.push(publicUrlData.publicUrl);
+      }
+      imageIndex++;
+    }
+
     const insertData = {
       company_name: formData.get('companyName'),
       company_phone: formData.get('companyPhone'),
@@ -20,7 +41,7 @@ export async function POST(request: NextRequest) {
       price_list: formData.get('priceList') || null,
       working_hours: formData.get('workingHours'),
       status: 'čeká',
-      images: [],
+      images: imageUrls,
       primary_color: formData.get('primaryColor') || null,
       secondary_color: formData.get('secondaryColor') || null,
       language: formData.get('language') || null,
