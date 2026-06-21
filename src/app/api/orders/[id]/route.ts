@@ -23,7 +23,7 @@ export async function PATCH(
       .update({ status, status_updated_at: new Date().toISOString() })
       .eq('id', id)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error('PATCH error:', error);

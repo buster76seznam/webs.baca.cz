@@ -875,6 +875,14 @@ export default function ProgramPage() {
                   </div>
                 )}
 
+                {/* Language */}
+                {selectedOrder.language && (
+                  <div>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 block">Jazyk webu</label>
+                    <p className="text-white text-sm uppercase">{selectedOrder.language}</p>
+                  </div>
+                )}
+
                 {/* Colors */}
                 {(selectedOrder.primary_color || selectedOrder.secondary_color) && (
                   <div>
