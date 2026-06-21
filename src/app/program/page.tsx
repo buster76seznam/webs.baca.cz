@@ -3,29 +3,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Image as ImageIcon, Clock, CheckCircle, X, LogOut, Play, Mail, Server, Activity, Users, FileText, AlertCircle } from 'lucide-react';
+import { Order } from '@/types';
 
 const CORRECT_PASSWORD = 'Kx9Pm2Qz7R';
-
-interface Order {
-  id: string;
-  company_name: string;
-  company_phone: string;
-  company_email: string;
-  company_address: string;
-  industry: string;
-  owner_name: string | null;
-  owner_phone: string | null;
-  owner_email: string | null;
-  domain: string;
-  description: string;
-  advantage: string;
-  price_list: string | null;
-  working_hours: string;
-  status: 'čeká' | 'vývoj' | 'dokončená';
-  images: string[];
-  created_at: string;
-  deleted_at: string | null;
-}
 
 export default function ProgramPage() {
   const [password, setPassword] = useState('');
