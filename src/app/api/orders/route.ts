@@ -8,9 +8,12 @@ export async function POST(request: NextRequest) {
     // Extract images from FormData
     const imageUrls: string[] = [];
     let imageIndex = 0;
+    console.log('Starting image upload...');
     while (formData.get(`image_${imageIndex}`) as File) {
       const file = formData.get(`image_${imageIndex}`) as File;
       const fileName = `${Date.now()}-${imageIndex}-${file.name}`;
+      console.log('Uploading image:', fileName, 'size:', file.size);
+      
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('order-images')
         .upload(fileName, file);
@@ -22,9 +25,11 @@ export async function POST(request: NextRequest) {
           .from('order-images')
           .getPublicUrl(fileName);
         imageUrls.push(publicUrlData.publicUrl);
+        console.log('Image uploaded successfully:', publicUrlData.publicUrl);
       }
       imageIndex++;
     }
+    console.log('Total images uploaded:', imageUrls.length);
 
     const insertData = {
       company_name: formData.get('companyName'),

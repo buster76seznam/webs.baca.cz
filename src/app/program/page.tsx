@@ -205,9 +205,7 @@ export default function ProgramPage() {
       const data = await res.json();
       console.log('Status change response:', data);
       if (res.ok) {
-        setOrders(orders.map(order =>
-          order.id === orderId ? { ...order, status: newStatus } : order
-        ));
+        await fetchOrders(); // Refetch from database to get persisted status
         showNotification('success', 'Status byl změněn.');
       } else {
         showNotification('error', data.error || 'Chyba při změně statusu.');

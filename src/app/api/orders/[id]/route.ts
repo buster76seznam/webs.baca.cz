@@ -90,8 +90,9 @@ export async function DELETE(
       }
     } else {
       const deletedAt = new Date().toISOString();
-      console.log('Setting deleted_at to:', deletedAt);
-      const { data, error } = await supabase
+      console.log('Setting deleted_at to:', deletedAt, 'for order:', id);
+      
+      const { data, error, count } = await supabase
         .from('orders')
         .update({ deleted_at: deletedAt })
         .eq('id', id)
@@ -102,7 +103,12 @@ export async function DELETE(
         return NextResponse.json({ error: error.message, details: error }, { status: 500 });
       }
 
-      console.log('DELETE update result:', data);
+      console.log('DELETE update result:', data, 'rows affected:', count);
+      
+      if (!data || data.length === 0) {
+        console.error('DELETE: No rows updated, order might not exist or RLS policy blocked update');
+        return NextResponse.json({ error: 'No rows updated', details: 'Order might not exist or RLS policy blocked update' }, { status: 500 });
+      }
     }
 
     console.log('DELETE success');
