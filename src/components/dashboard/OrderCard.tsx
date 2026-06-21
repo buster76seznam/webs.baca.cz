@@ -28,11 +28,11 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
   // Debug: log order data
   console.log('Order data:', order);
   console.log('Order fields:', {
-    phone: order.phone,
-    email: order.email,
-    address: order.address,
-    website_url: order.website_url,
-    services: order.services,
+    company_phone: order.company_phone,
+    company_email: order.company_email,
+    company_address: order.company_address,
+    domain: order.domain,
+    description: order.description,
     primary_color: order.primary_color,
     secondary_color: order.secondary_color,
     language: order.language,
@@ -226,15 +226,15 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
       <div className="px-6 pb-6 space-y-3">
         <div className="flex items-center gap-3 text-zinc-400">
           <Phone size={14} className="shrink-0" />
-          <span className="text-xs font-bold">{order.phone || 'Nen├ş uvedeno'}</span>
+          <span className="text-xs font-bold">{order.company_phone || 'Nen├ş uvedeno'}</span>
         </div>
         <div className="flex items-center gap-3 text-zinc-400">
           <Mail size={14} className="shrink-0" />
-          <span className="text-xs font-bold truncate">{order.email || 'Nen├ş uvedeno'}</span>
+          <span className="text-xs font-bold truncate">{order.company_email || 'Nen├ş uvedeno'}</span>
         </div>
         <div className="flex items-center gap-3 text-zinc-400">
           <MapPin size={14} className="shrink-0" />
-          <span className="text-xs font-bold truncate">{order.address || 'Nen├ş uvedeno'}</span>
+          <span className="text-xs font-bold truncate">{order.company_address || 'Nen├ş uvedeno'}</span>
         </div>
       </div>
 
@@ -252,9 +252,9 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
           <div>
             <div className="flex items-center gap-2 mb-3 text-[#7C3AED]">
               <Wrench size={14} />
-              <span className="text-[10px] font-black uppercase tracking-widest">Slu┼żby a zam─Ť┼Öen├ş</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Co dělají</span>
             </div>
-            <p className="text-sm text-zinc-300 leading-relaxed">{order.services}</p>
+            <p className="text-sm text-zinc-300 leading-relaxed">{order.description}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-6">
@@ -263,8 +263,8 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                 <Camera size={14} />
                 <span className="text-[10px] font-black uppercase tracking-widest">Fotky</span>
               </div>
-              <span className={`text-xs font-bold ${order.has_photos ? 'text-emerald-400' : 'text-zinc-500'}`}>
-                {order.has_photos ? 'K dispozici' : 'Nem├í / zajist├şme'}
+              <span className={`text-xs font-bold ${order.images.length > 0 ? 'text-emerald-400' : 'text-zinc-500'}`}>
+                {order.images.length > 0 ? 'K dispozici' : 'Nem├í / zajist├şme'}
               </span>
             </div>
             <div>
@@ -272,16 +272,10 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                 <Globe size={14} />
                 <span className="text-[10px] font-black uppercase tracking-widest">Dom├ęna</span>
               </div>
-              <span className="text-xs font-bold text-zinc-300">{order.website_url}</span>
+              <span className="text-xs font-bold text-zinc-300">{order.domain}</span>
             </div>
           </div>
 
-          <div>
-            <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Cen├şk na webu</div>
-            <span className="text-xs font-bold px-3 py-1.5 rounded-none bg-white/5 border border-white/10 text-zinc-300">
-              {order.pricing_type === 'doda' ? 'Dod├í klient' : 'Dle domluvy (1700 pau┼í├íl)'}
-            </span>
-          </div>
 
           {/* Design section */}
           {(order.primary_color || order.secondary_color || order.language) && (
