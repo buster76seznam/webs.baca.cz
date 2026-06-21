@@ -123,8 +123,8 @@ export function CountryProvider({ children }: { children: ReactNode }) {
     detectCountry();
   }, []);
 
-  const price = currency === 'EUR' ? 140 : 150;
-  const priceDisplay = currency === 'EUR' ? '140€' : '$150';
+  const price = currency === 'EUR' ? 140 : currency === 'CZK' ? 1700 : 70;
+  const priceDisplay = currency === 'EUR' ? '140€' : currency === 'CZK' ? '1700 Kč' : '$70';
 
   return (
     <CountryContext.Provider value={{ isUSA, isEurope, language, currency: currency === 'CZK' ? 'Kč' : currency, price, priceDisplay }}>
