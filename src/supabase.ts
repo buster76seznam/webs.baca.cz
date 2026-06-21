@@ -5,6 +5,19 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Service role client for admin operations (bypasses RLS)
+// You need to get this from Supabase dashboard -> Settings -> API -> service_role (secret)
+// For now, we'll use the anon key but disable RLS for admin operations
+// TODO: Replace with actual service role key from Supabase dashboard
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey;
+
+export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false
+  }
+});
+
 // SHA-256 hashovaná univerzální hesla → role
 export const MASTER_PASSWORD_HASHES: Record<string, string> = {
   'd4f3ea7996fa7c8cfc0ee0f7a3e5f40a251b35fecd577b22ff54df860e8d496c': 'Obchodní zástupce',

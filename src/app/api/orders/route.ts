@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/supabase';
+import { supabaseAdmin } from '@/supabase';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,14 +14,14 @@ export async function POST(request: NextRequest) {
       const fileName = `${Date.now()}-${imageIndex}-${file.name}`;
       console.log('Uploading image:', fileName, 'size:', file.size);
       
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
         .from('order-images')
         .upload(fileName, file);
 
       if (uploadError) {
         console.error('Image upload error:', uploadError);
       } else {
-        const { data: publicUrlData } = supabase.storage
+        const { data: publicUrlData } = supabaseAdmin.storage
           .from('order-images')
           .getPublicUrl(fileName);
         imageUrls.push(publicUrlData.publicUrl);
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 
     console.log('Insert data:', insertData);
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('orders')
       .insert(insertData)
       .select()
@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
 
     console.log('GET /api/orders:', { search, status, trash });
 
-    let query = supabase
+    let query = supabaseAdmin
       .from('orders')
       .select('*')
       .order('created_at', { ascending: false });

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/supabase';
+import { supabaseAdmin } from '@/supabase';
 
 export async function PATCH(
   request: NextRequest,
@@ -21,7 +21,7 @@ export async function PATCH(
     const statusUpdatedAt = new Date().toISOString();
     console.log('Updating status to:', status, 'at:', statusUpdatedAt);
 
-    const { data, error, count } = await supabase
+    const { data, error, count } = await supabaseAdmin
       .from('orders')
       .update({ status, status_updated_at: statusUpdatedAt })
       .eq('id', id)
@@ -49,7 +49,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('orders')
       .select('*')
       .eq('id', id)
@@ -80,7 +80,7 @@ export async function DELETE(
     console.log('DELETE /api/orders/[id]:', { id, permanent });
 
     if (permanent) {
-      const { error } = await supabase
+      const { error } = await supabaseAdmin
         .from('orders')
         .delete()
         .eq('id', id);
@@ -93,7 +93,7 @@ export async function DELETE(
       const deletedAt = new Date().toISOString();
       console.log('Setting deleted_at to:', deletedAt, 'for order:', id);
       
-      const { data, error, count } = await supabase
+      const { data, error, count } = await supabaseAdmin
         .from('orders')
         .update({ deleted_at: deletedAt })
         .eq('id', id)
@@ -129,7 +129,7 @@ export async function PUT(
     const { action } = await request.json();
 
     if (action === 'restore') {
-      const { error } = await supabase
+      const { error } = await supabaseAdmin
         .from('orders')
         .update({ deleted_at: null })
         .eq('id', id);
