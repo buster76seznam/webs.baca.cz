@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 // Country code to language mapping for Europe and Americas
-const COUNTRY_LANGUAGE_MAP: Record<string, 'cs' | 'en' | 'es' | 'de' | 'fr' | 'it' | 'pl' | 'nl' | 'pt'> = {
+const COUNTRY_LANGUAGE_MAP: Record<string, 'cs' | 'en' | 'en-gb' | 'es' | 'de' | 'fr' | 'it' | 'pl' | 'nl' | 'pt'> = {
   // Europe
   'CZ': 'cs',
   'SK': 'cs',
@@ -35,6 +35,8 @@ const COUNTRY_LANGUAGE_MAP: Record<string, 'cs' | 'en' | 'es' | 'de' | 'fr' | 'i
   'IS': 'en',
   'MT': 'en',
   'CY': 'en',
+  'GB': 'en-gb',
+  'UK': 'en-gb',
   
   // Americas
   'US': 'en',
@@ -74,6 +76,8 @@ const COUNTRY_CURRENCY_MAP: Record<string, 'USD' | 'EUR' | 'CZK'> = {
   'EE': 'EUR',
   'LV': 'EUR',
   'LT': 'EUR',
+  'GB': 'EUR',
+  'UK': 'EUR',
   
   // CZK zone
   'CZ': 'CZK',
@@ -82,7 +86,7 @@ const COUNTRY_CURRENCY_MAP: Record<string, 'USD' | 'EUR' | 'CZK'> = {
 interface CountryContextType {
   isUSA: boolean;
   isEurope: boolean;
-  language: 'cs' | 'en' | 'es' | 'de' | 'fr' | 'it' | 'pl' | 'nl' | 'pt';
+  language: 'cs' | 'en' | 'en-gb' | 'es' | 'de' | 'fr' | 'it' | 'pl' | 'nl' | 'pt';
   currency: string;
   price: number;
   priceDisplay: string;
@@ -93,7 +97,7 @@ const CountryContext = createContext<CountryContextType | undefined>(undefined);
 export function CountryProvider({ children }: { children: ReactNode }) {
   const [isUSA, setIsUSA] = useState(false);
   const [isEurope, setIsEurope] = useState(false);
-  const [language, setLanguage] = useState<'cs' | 'en' | 'es' | 'de' | 'fr' | 'it' | 'pl' | 'nl' | 'pt'>('cs');
+  const [language, setLanguage] = useState<'cs' | 'en' | 'en-gb' | 'es' | 'de' | 'fr' | 'it' | 'pl' | 'nl' | 'pt'>('cs');
   const [currency, setCurrency] = useState<'USD' | 'EUR' | 'CZK'>('CZK');
 
   useEffect(() => {
@@ -107,7 +111,7 @@ export function CountryProvider({ children }: { children: ReactNode }) {
         const detectedCurrency = COUNTRY_CURRENCY_MAP[countryCode] || 'USD';
         
         setIsUSA(countryCode === 'US');
-        setIsEurope(['DE', 'AT', 'CH', 'FR', 'BE', 'LU', 'IT', 'ES', 'PT', 'PL', 'NL', 'SE', 'NO', 'DK', 'FI', 'GR', 'HU', 'RO', 'BG', 'HR', 'SI', 'EE', 'LV', 'LT', 'IE', 'IS', 'MT', 'CY', 'SK'].includes(countryCode));
+        setIsEurope(['DE', 'AT', 'CH', 'FR', 'BE', 'LU', 'IT', 'ES', 'PT', 'PL', 'NL', 'SE', 'NO', 'DK', 'FI', 'GR', 'HU', 'RO', 'BG', 'HR', 'SI', 'EE', 'LV', 'LT', 'IE', 'IS', 'MT', 'CY', 'SK', 'GB', 'UK'].includes(countryCode));
         setLanguage(detectedLanguage);
         setCurrency(detectedCurrency);
       } catch (error) {
@@ -123,8 +127,8 @@ export function CountryProvider({ children }: { children: ReactNode }) {
     detectCountry();
   }, []);
 
-  const price = currency === 'EUR' ? 140 : currency === 'CZK' ? 1700 : 70;
-  const priceDisplay = currency === 'EUR' ? '140€' : currency === 'CZK' ? '1700 Kč' : '$70';
+  const price = currency === 'EUR' ? 125 : currency === 'CZK' ? 1700 : 150;
+  const priceDisplay = currency === 'EUR' ? '125€' : currency === 'CZK' ? '1700 Kč' : '$150';
 
   return (
     <CountryContext.Provider value={{ isUSA, isEurope, language, currency: currency === 'CZK' ? 'Kč' : currency, price, priceDisplay }}>

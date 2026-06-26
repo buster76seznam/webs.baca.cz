@@ -6,6 +6,7 @@ import { Upload, ArrowUpRight, X, Image as ImageIcon, Share2, Camera, MapPin, Se
 import { useCountry } from '@/contexts/CountryContext';
 import { translations } from '@/lib/translations';
 import dynamic from 'next/dynamic';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const PhoneInput = dynamic(() => import('react-phone-number-input'), {
   ssr: false,
@@ -15,9 +16,14 @@ import 'react-phone-number-input/style.css';
 
 export default function OrdersPage() {
   const { language } = useCountry();
-  const isEnglish = language === 'en';
-  const t = translations[language];
+  const [currentLanguage, setCurrentLanguage] = useState(language);
+  const isEnglish = language === 'en' || language === 'en-gb';
+  const t = translations[currentLanguage as keyof typeof translations];
   const industries = t.industries;
+  
+  const handleLanguageChange = (langCode: string) => {
+    setCurrentLanguage(langCode as 'cs' | 'en' | 'en-gb' | 'es' | 'de' | 'fr' | 'it' | 'pl' | 'nl' | 'pt');
+  };
   
   const [formData, setFormData] = useState({
     companyName: '',
@@ -102,12 +108,12 @@ export default function OrdersPage() {
     
     // Format working hours for display
     let formattedWorkingHours = '';
-    const dayLabels: Record<string, { cs: string; en: string; es: string; de: string; fr: string; it: string; pl: string; nl: string; pt: string }> = {
-      'mon-fri': { cs: 'Po-Pá', en: 'Mon-Fri', es: 'Lun-Vie', de: 'Mo-Fr', fr: 'Lun-Ven', it: 'Lun-Ven', pl: 'Pon-Pt', nl: 'Ma-Vr', pt: 'Seg-Sex' },
-      'mon-sat': { cs: 'Po-So', en: 'Mon-Sat', es: 'Lun-Sáb', de: 'Mo-Sa', fr: 'Lun-Sam', it: 'Lun-Sab', pl: 'Pon-Sob', nl: 'Ma-Za', pt: 'Seg-Sáb' },
-      'mon-sun': { cs: 'Po-Ne', en: 'Mon-Sun', es: 'Lun-Dom', de: 'Mo-So', fr: 'Lun-Dim', it: 'Lun-Dom', pl: 'Pon-Niedz', nl: 'Ma-Zo', pt: 'Seg-Dom' },
-      'tue-sat': { cs: 'Út-So', en: 'Tue-Sat', es: 'Mar-Sáb', de: 'Di-Sa', fr: 'Mar-Sam', it: 'Mar-Sab', pl: 'Wt-Sob', nl: 'Di-Za', pt: 'Ter-Sáb' },
-      'tue-sun': { cs: 'Út-Ne', en: 'Tue-Sun', es: 'Mar-Dom', de: 'Di-So', fr: 'Mar-Dim', it: 'Mar-Dom', pl: 'Wt-Niedz', nl: 'Di-Zo', pt: 'Ter-Dom' },
+    const dayLabels: Record<string, { cs: string; en: string; 'en-gb': string; es: string; de: string; fr: string; it: string; pl: string; nl: string; pt: string }> = {
+      'mon-fri': { cs: 'Po-Pá', en: 'Mon-Fri', 'en-gb': 'Mon-Fri', es: 'Lun-Vie', de: 'Mo-Fr', fr: 'Lun-Ven', it: 'Lun-Ven', pl: 'Pon-Pt', nl: 'Ma-Vr', pt: 'Seg-Sex' },
+      'mon-sat': { cs: 'Po-So', en: 'Mon-Sat', 'en-gb': 'Mon-Sat', es: 'Lun-Sáb', de: 'Mo-Sa', fr: 'Lun-Sam', it: 'Lun-Sab', pl: 'Pon-Sob', nl: 'Ma-Za', pt: 'Seg-Sáb' },
+      'mon-sun': { cs: 'Po-Ne', en: 'Mon-Sun', 'en-gb': 'Mon-Sun', es: 'Lun-Dom', de: 'Mo-So', fr: 'Lun-Dim', it: 'Lun-Dom', pl: 'Pon-Niedz', nl: 'Ma-Zo', pt: 'Seg-Dom' },
+      'tue-sat': { cs: 'Út-So', en: 'Tue-Sat', 'en-gb': 'Tue-Sat', es: 'Mar-Sáb', de: 'Di-Sa', fr: 'Mar-Sam', it: 'Mar-Sab', pl: 'Wt-Sob', nl: 'Di-Za', pt: 'Ter-Sáb' },
+      'tue-sun': { cs: 'Út-Ne', en: 'Tue-Sun', 'en-gb': 'Tue-Sun', es: 'Mar-Dom', de: 'Di-So', fr: 'Mar-Dim', it: 'Mar-Dom', pl: 'Wt-Niedz', nl: 'Di-Zo', pt: 'Ter-Dom' },
     };
     const timeLabels: Record<string, string> = {
       '8-16': '8:00-16:00',
@@ -199,6 +205,7 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white py-24 px-6 flex items-center justify-center">
+      <LanguageSwitcher currentLanguage={currentLanguage} onLanguageChange={handleLanguageChange} />
       <div className="max-w-4xl mx-auto w-full">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-4 uppercase">
