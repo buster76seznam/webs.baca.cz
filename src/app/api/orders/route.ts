@@ -4,6 +4,10 @@ import { supabaseAdmin } from '@/supabase';
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
+    
+    // Log which key is being used
+    console.log('Service role key from env:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'NOT SET');
+    console.log('Using service role key:', process.env.SUPABASE_SERVICE_ROLE_KEY?.substring(0, 20) + '...');
 
     // Extract images from FormData
     const imageUrls: string[] = [];
