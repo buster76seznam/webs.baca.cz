@@ -7,15 +7,14 @@ export const runtime = 'nodejs';
 const publicVapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 const privateVapidKey = process.env.VAPID_PRIVATE_KEY;
 
-if (!publicVapidKey || !privateVapidKey) {
-  throw new Error('VAPID keys are not configured');
+// Only set VAPID details if keys are available
+if (publicVapidKey && privateVapidKey) {
+  webpush.setVapidDetails(
+    'mailto:webs.baca@gmail.com',
+    publicVapidKey,
+    privateVapidKey
+  );
 }
-
-webpush.setVapidDetails(
-  'mailto:webs.baca@gmail.com',
-  publicVapidKey,
-  privateVapidKey
-);
 
 export async function POST(request: NextRequest) {
   try {
