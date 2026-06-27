@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/supabase';
+// @ts-ignore
 import webpush from 'web-push';
 
 export const runtime = 'nodejs';
