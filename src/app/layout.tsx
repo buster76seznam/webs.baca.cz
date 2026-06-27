@@ -114,6 +114,21 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
         <link rel="icon" href="/icon.png?v=2" type="image/png" sizes="32x32" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                  }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                  });
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body className="min-h-full flex flex-col">
         <script

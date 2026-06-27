@@ -1,5 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/supabase';
+import webpush from 'web-push';
+
+const publicVapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+const privateVapidKey = process.env.VAPID_PRIVATE_KEY;
+
+if (publicVapidKey && privateVapidKey) {
+  webpush.setVapidDetails(
+    'mailto:webs.baca@gmail.com',
+    publicVapidKey,
+    privateVapidKey
+  );
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -76,6 +88,54 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('Insert success:', data);
+
+    // Send push notification if VAPID keys are configured
+    if (publicVapidKey && privateVapidKey) {
+      try {
+        // Fetch all subscriptions from database
+        const { data: subscriptions, error: subError } = await supabaseAdmin
+          .from('push_subscriptions')
+          .select('subscription');
+
+        if (subError) {
+          console.error('Error fetching subscriptions:', subError);
+        } else if (subscriptions && subscriptions.length > 0) {
+          const payload = JSON.stringify({
+            title: 'Nová objednávka!',
+            body: `Přišla nová objednávka od ${formData.get('companyName')}`,
+            icon: '/Logo.png',
+            badge: '/Logo.png',
+            data: {
+              url: '/program',
+              orderId: data.id
+            }
+          });
+
+          console.log(`Sending push notifications to ${subscriptions.length} subscribers`);
+          
+          // Send notifications to all subscribers
+          for (const sub of subscriptions) {
+            try {
+              await webpush.sendNotification(sub.subscription, payload);
+              console.log('Notification sent successfully');
+            } catch (err) {
+              console.error('Failed to send notification to subscriber:', err);
+              // Remove invalid subscriptions
+              if (err instanceof Error && err.message.includes('410')) {
+                await supabaseAdmin
+                  .from('push_subscriptions')
+                  .delete()
+                  .eq('subscription', sub.subscription);
+              }
+            }
+          }
+        }
+      } catch (pushError) {
+        console.error('Push notification error:', pushError);
+        // Don't fail the order creation if push fails
+      }
+    }
+
     return NextResponse.json({ success: true, order: data }, { status: 200 });
   } catch (error) {
     console.error('Server error:', error);

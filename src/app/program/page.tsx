@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Image as ImageIcon, Clock, CheckCircle, X, LogOut, Play, Mail, Server, Activity, Users, FileText, AlertCircle } from 'lucide-react';
+import { Search, Image as ImageIcon, Clock, CheckCircle, X, LogOut, Play, Mail, Server, Activity, Users, FileText, AlertCircle, Bell, BellOff } from 'lucide-react';
 import { Order } from '@/types';
 
 const CORRECT_PASSWORD = 'Kx9Pm2Qz7R';
@@ -17,6 +17,8 @@ export default function ProgramPage() {
   const [loading, setLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [activeTab, setActiveTab] = useState<'orders' | 'trash' | 'outreach'>('orders');
+  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
+  const [subscription, setSubscription] = useState<PushSubscription | null>(null);
 
   // Outreach state
   const [stats, setStats] = useState({ contacted: 0, blacklisted: 0, replies: 0, drafts: 0 });
@@ -68,6 +70,97 @@ export default function ProgramPage() {
       return () => clearInterval(interval);
     }
   }, [activeTab, isAuthenticated]);
+
+  // Check notification permission on mount
+  useEffect(() => {
+    if (isAuthenticated && 'Notification' in window) {
+      setNotificationPermission(Notification.permission);
+      
+      // Check for existing subscription
+      if ('serviceWorker' in navigator && 'PushManager' in window) {
+        navigator.serviceWorker.ready.then((registration) => {
+          registration.pushManager.getSubscription().then((sub) => {
+            setSubscription(sub);
+          });
+        });
+      }
+    }
+  }, [isAuthenticated]);
+
+  const requestNotificationPermission = async () => {
+    if (!('Notification' in window)) {
+      showNotification('error', 'Prohlížeč nepodporuje notifikace');
+      return;
+    }
+
+    const permission = await Notification.requestPermission();
+    setNotificationPermission(permission);
+
+    if (permission === 'granted') {
+      await subscribeToPushNotifications();
+      showNotification('success', 'Notifikace povoleny!');
+    } else {
+      showNotification('error', 'Notifikace zamítnuty');
+    }
+  };
+
+  const subscribeToPushNotifications = async () => {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      showNotification('error', 'Prohlížeč nepodporuje push notifikace');
+      return;
+    }
+
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      const sub = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!)
+      });
+
+      setSubscription(sub);
+
+      // Send subscription to server
+      await fetch('/api/notifications/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sub)
+      });
+
+      showNotification('success', 'Přihlášeno k notifikacím');
+    } catch (error) {
+      console.error('Subscription error:', error);
+      showNotification('error', 'Chyba při přihlášení k notifikacím');
+    }
+  };
+
+  const unsubscribeFromNotifications = async () => {
+    if (subscription) {
+      await subscription.unsubscribe();
+      
+      // Delete from database
+      try {
+        await fetch(`/api/notifications/subscribe?subscription=${encodeURIComponent(JSON.stringify(subscription))}`, {
+          method: 'DELETE'
+        });
+      } catch (error) {
+        console.error('Error deleting subscription from database:', error);
+      }
+      
+      setSubscription(null);
+      showNotification('success', 'Odhlášeno od notifikací');
+    }
+  };
+
+  const urlBase64ToUint8Array = (base64String: string) => {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  };
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -342,13 +435,26 @@ export default function ProgramPage() {
               </button>
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm font-bold"
-          >
-            <LogOut size={16} />
-            Odhlásit
-          </button>
+          <div className="flex items-center gap-4">
+            {/* Notification Toggle */}
+            {isAuthenticated && (
+              <button
+                onClick={subscription ? unsubscribeFromNotifications : requestNotificationPermission}
+                className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm font-bold"
+                title={subscription ? 'Vypnout notifikace' : 'Zapnout notifikace'}
+              >
+                {subscription ? <Bell size={16} /> : <BellOff size={16} />}
+                {subscription ? 'Notifikace ON' : 'Notifikace OFF'}
+              </button>
+            )}
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm font-bold"
+            >
+              <LogOut size={16} />
+              Odhlásit
+            </button>
+          </div>
         </div>
       </div>
 
