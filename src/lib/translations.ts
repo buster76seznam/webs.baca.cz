@@ -7,7 +7,6 @@ export const translations = {
     heroDescription: "Návrh do 60 minut. Web spuštěný do 24 hodin. Vše za 1 700 Kč/měsíc – bez vstupního poplatku.",
     heroCTA: "Chci návrh do hodiny",
     heroHowItWorks: "Jak to funguje?",
-    heroPromo: "Letní start — první měsíc zdarma",
     
     // Stats
     statDelivery: "Dodání",
@@ -109,7 +108,6 @@ export const translations = {
     heroDescription: "Design in 60 minutes. Live website in 24 hours. Everything for $150/month – no setup fee.",
     heroCTA: "I want a design in an hour",
     heroHowItWorks: "How it works?",
-    heroPromo: "Summer Start — First Month Free",
     
     // Stats
     statDelivery: "Delivery",
@@ -211,7 +209,6 @@ export const translations = {
     heroDescription: "Design in 60 minutes. Live website in 24 hours. Everything for £125/month – no setup fee.",
     heroCTA: "I want a design in an hour",
     heroHowItWorks: "How it works?",
-    heroPromo: "Summer Start — First Month Free",
     
     // Stats
     statDelivery: "Delivery",
@@ -313,7 +310,6 @@ export const translations = {
     heroDescription: "Diseño en 60 minutos. Web en línea en 24 horas. Todo por 140€/mes – sin tarifa de entrada.",
     heroCTA: "Quiero un diseño en una hora",
     heroHowItWorks: "¿Cómo funciona?",
-    heroPromo: "Inicio de Verano — Primer mes gratis",
     
     // Stats
     statDelivery: "Entrega",
@@ -415,7 +411,6 @@ export const translations = {
     heroDescription: "Design in 60 Minuten. Website live in 24 Stunden. Alles für 140€/Monat – ohne Einrichtungsgebühr.",
     heroCTA: "Ich möchte ein Design in einer Stunde",
     heroHowItWorks: "Wie funktioniert es?",
-    heroPromo: "Sommerstart — Erster Monat kostenlos",
     
     // Stats
     statDelivery: "Lieferung",
@@ -517,7 +512,6 @@ export const translations = {
     heroDescription: "Design en 60 minutes. Site en ligne en 24 heures. Tout pour 140€/mois – sans frais d'installation.",
     heroCTA: "Je veux un design en une heure",
     heroHowItWorks: "Comment ça marche?",
-    heroPromo: "Début d'été — Premier mois gratuit",
     
     // Stats
     statDelivery: "Livraison",
@@ -619,7 +613,6 @@ export const translations = {
     heroDescription: "Design in 60 minuti. Sito online in 24 ore. Tutto per 140€/mese – senza costi di attivazione.",
     heroCTA: "Voglio un design in un'ora",
     heroHowItWorks: "Come funziona?",
-    heroPromo: "Inizio Estate — Primo mese gratuito",
     
     // Stats
     statDelivery: "Consegna",
@@ -721,7 +714,6 @@ export const translations = {
     heroDescription: "Projekt w 60 minut. Strona online w 24 godziny. Wszystko za 140€/miesiąc – bez opłaty startowej.",
     heroCTA: "Chcę projekt w godzinę",
     heroHowItWorks: "Jak to działa?",
-    heroPromo: "Start Lato — Pierwszy miesiąc za darmo",
     
     // Stats
     statDelivery: "Dostawa",

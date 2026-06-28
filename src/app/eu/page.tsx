@@ -2,21 +2,18 @@
 
 import { motion } from "framer-motion";
 import { CheckCircle, Zap, Globe, Shield, Layout, Settings, Mail, Phone, ArrowUpRight, MousePointer2, Rocket, BarChart3, Sparkles } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import ContactLeadModal from "@/components/ContactLeadModal";
-import SummerStartBanner from "@/components/SummerStartBanner";
 import { translations } from "@/lib/translations";
 
 export default function EUPage() {
   const [scrolled, setScrolled] = useState(false);
   const [logoError, setLogoError] = useState(false);
   const [leadOpen, setLeadOpen] = useState(false);
-  const [promoVisible, setPromoVisible] = useState(true);
-  const openLead = useCallback(() => {
+  const openLead = () => {
     window.location.href = '/orders';
-  }, []);
-  const handlePromoVisibility = useCallback((visible: boolean) => setPromoVisible(visible), []);
+  };
   
   // Force British English and EUR for EU route
   const language = 'en-gb';
@@ -43,9 +40,8 @@ export default function EUPage() {
   return (
     <div className="min-h-screen bg-[#030303] text-white selection:bg-brand selection:text-white antialiased">
       <ContactLeadModal open={leadOpen} onClose={() => setLeadOpen(false)} />
-      <SummerStartBanner onCta={openLead} onVisibilityChange={handlePromoVisibility} />
       {/* Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-700 ${promoVisible ? "top-[3.25rem]" : "top-0"} ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
+      <nav className={`fixed w-full z-50 transition-all duration-700 ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 h-full flex items-center justify-between gap-3 min-w-0">
           <div className="flex items-center gap-6 group cursor-pointer">
             <div className="relative w-14 h-14 overflow-hidden rounded-2xl border-2 border-brand bg-[#1a0b2e] group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
@@ -91,7 +87,7 @@ export default function EUPage() {
 
       <main>
         {/* Hero Section */}
-        <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden ${promoVisible ? "pt-72 sm:pt-80 md:pt-96 lg:pt-[28rem]" : "pt-48 sm:pt-52"}`}>
+        <section className="relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden pt-48 sm:pt-52">
           {/* Animated Background Glows */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
           <motion.div 
@@ -138,17 +134,6 @@ export default function EUPage() {
                   <ArrowUpRight size={22} className="sm:w-6 sm:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500 shrink-0" />
                 </button>
               </div>
-
-              <button
-                type="button"
-                onClick={openLead}
-                className="mt-8 sm:mt-10 inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl border-2 border-amber-400/90 bg-gradient-to-r from-[#FDE047] via-[#FACC15] to-[#FBBF24] text-[#422006] shadow-[0_0_40px_rgba(250,204,21,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-transform"
-              >
-                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" aria-hidden />
-                <span className="text-xs sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em]">
-                  {t.heroPromo}
-                </span>
-              </button>
             </motion.div>
           </div>
         </section>
@@ -221,9 +206,6 @@ export default function EUPage() {
                     <span className="text-[140px] md:text-[180px] font-black leading-none tracking-tighter text-gradient">{priceDisplay.replace(currency, '').replace('$', '').replace('Kč', '').trim()}</span>
                   </div>
                   <div className="text-2xl font-bold text-zinc-500 mb-6 italic">{t.pricingPerMonth}</div>
-                  <p className="mb-10 px-5 py-2.5 rounded-xl border border-amber-400/60 bg-gradient-to-r from-[#FDE047] via-[#FACC15] to-[#FBBF24] text-[#422006] text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] shadow-[0_0_24px_rgba(250,204,21,0.25)]">
-                    {t.heroPromo}
-                  </p>
                   
                   <div className="flex justify-center w-full mb-16">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 gap-y-6 w-full text-left">
