@@ -47,6 +47,11 @@ export default function OrdersPage() {
     facebookUrl: '',
     instagramUrl: '',
     googleMapsUrl: '',
+    legalBusinessName: '',
+    stateOfIncorporation: '',
+    principalPlaceOfBusiness: '',
+    authorizedSignatory: '',
+    contractEmail: '',
   });
 
   const [images, setImages] = useState<File[]>([]);
@@ -136,7 +141,9 @@ export default function OrdersPage() {
         !formData.companyEmail.trim() || !formData.companyAddress.trim() ||
         !formData.industry || !formData.domain.trim() || 
         !formData.description.trim() || !formData.advantage.trim() ||
-        !formattedWorkingHours.trim()) {
+        !formattedWorkingHours.trim() || !formData.legalBusinessName.trim() ||
+        !formData.stateOfIncorporation.trim() || !formData.principalPlaceOfBusiness.trim() ||
+        !formData.authorizedSignatory.trim() || !formData.contractEmail.trim()) {
       setErrorMsg(isEnglish ? 'Please fill in all required fields.' : 'Vyplňte prosím všechna povinná pole.');
       setStatus('error');
       return;
@@ -179,6 +186,8 @@ export default function OrdersPage() {
         workingDays: 'mon-fri', workingTime: '9-17', workingHours: '',
         primaryColor: '#7C3AED', secondaryColor: '#10B981', language: 'cs',
         facebookUrl: '', instagramUrl: '', googleMapsUrl: '',
+        legalBusinessName: '', stateOfIncorporation: '', principalPlaceOfBusiness: '',
+        authorizedSignatory: '', contractEmail: '',
       });
       setImages([]);
     } catch {
@@ -513,6 +522,83 @@ export default function OrdersPage() {
                   placeholder="https://maps.google.com/..."
                   className={`${inputClass} pl-12`}
                 />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Pro smlouvu */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12">
+            <h2 className="text-xl font-black mb-6 text-brand uppercase tracking-wider">{isEnglish ? 'For Contract' : 'Pro smlouvu'}</h2>
+            
+            <div className="space-y-4">
+              <div>
+                <label className={labelClass}>{isEnglish ? 'Legal Business Name *' : 'Legal Business Name *'}</label>
+                <input
+                  type="text"
+                  name="legalBusinessName"
+                  value={formData.legalBusinessName}
+                  onChange={handleInputChange}
+                  placeholder={isEnglish ? 'Heritage Roof Care, LLC' : 'Heritage Roof Care, LLC'}
+                  className={inputClass}
+                  required
+                />
+                <p className="text-zinc-600 text-xs mt-1">{isEnglish ? 'Exact legal name including suffix (e.g., LLC, Inc.)' : 'Přesný právní název firmy včetně koncovky (např. LLC, Inc.)'}</p>
+              </div>
+              
+              <div>
+                <label className={labelClass}>{isEnglish ? 'State of Incorporation *' : 'State of Incorporation *'}</label>
+                <input
+                  type="text"
+                  name="stateOfIncorporation"
+                  value={formData.stateOfIncorporation}
+                  onChange={handleInputChange}
+                  placeholder={isEnglish ? 'Florida' : 'Florida'}
+                  className={inputClass}
+                  required
+                />
+                <p className="text-zinc-600 text-xs mt-1">{isEnglish ? 'State where the company is registered' : 'Stát, kde je firma registrovaná'}</p>
+              </div>
+              
+              <div>
+                <label className={labelClass}>{isEnglish ? 'Principal Place of Business *' : 'Principal Place of Business *'}</label>
+                <input
+                  type="text"
+                  name="principalPlaceOfBusiness"
+                  value={formData.principalPlaceOfBusiness}
+                  onChange={handleInputChange}
+                  placeholder={isEnglish ? '123 Main Street, City, State 12345' : '123 Main Street, City, State 12345'}
+                  className={inputClass}
+                  required
+                />
+                <p className="text-zinc-600 text-xs mt-1">{isEnglish ? 'Complete official business address' : 'Kompletní oficiální adresa sídla firmy'}</p>
+              </div>
+              
+              <div>
+                <label className={labelClass}>{isEnglish ? 'Authorized Signatory *' : 'Authorized Signatory *'}</label>
+                <input
+                  type="text"
+                  name="authorizedSignatory"
+                  value={formData.authorizedSignatory}
+                  onChange={handleInputChange}
+                  placeholder={isEnglish ? 'John Smith' : 'John Smith'}
+                  className={inputClass}
+                  required
+                />
+                <p className="text-zinc-600 text-xs mt-1">{isEnglish ? 'Name of person with signing authority (Owner/CEO)' : 'Jméno osoby s jednatelským oprávněním (majitel/CEO)'}</p>
+              </div>
+              
+              <div>
+                <label className={labelClass}>{isEnglish ? 'Contact Email *' : 'Contact Email *'}</label>
+                <input
+                  type="email"
+                  name="contractEmail"
+                  value={formData.contractEmail}
+                  onChange={handleInputChange}
+                  placeholder={isEnglish ? 'email@company.com' : 'email@company.com'}
+                  className={inputClass}
+                  required
+                />
+                <p className="text-zinc-600 text-xs mt-1">{isEnglish ? 'Email for PandaDoc signature requests and payment notifications' : 'E-mail pro výzvy k podpisu a platbám'}</p>
               </div>
             </div>
           </motion.div>

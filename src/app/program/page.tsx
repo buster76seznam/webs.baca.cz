@@ -1059,6 +1059,50 @@ export default function ProgramPage() {
                   </div>
                 )}
 
+                {/* Pro smlouvu */}
+                {(selectedOrder.legal_business_name || selectedOrder.state_of_incorporation || selectedOrder.principal_place_of_business || selectedOrder.authorized_signatory || selectedOrder.contract_email) && (
+                  <div className="bg-white/[0.02] rounded-2xl p-4">
+                    <h3 className="text-sm font-black mb-3 text-brand uppercase tracking-wider">Pro smlouvu</h3>
+                    <div className="space-y-3">
+                      {selectedOrder.legal_business_name && (
+                        <div>
+                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-1 block">Legal Business Name</label>
+                          <p className="text-white text-sm">{selectedOrder.legal_business_name}</p>
+                        </div>
+                      )}
+                      {selectedOrder.state_of_incorporation && (
+                        <div>
+                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-1 block">State of Incorporation</label>
+                          <p className="text-white text-sm">{selectedOrder.state_of_incorporation}</p>
+                        </div>
+                      )}
+                      {selectedOrder.principal_place_of_business && (
+                        <div>
+                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-1 block">Principal Place of Business</label>
+                          <p className="text-white text-sm">{selectedOrder.principal_place_of_business}</p>
+                        </div>
+                      )}
+                      {selectedOrder.authorized_signatory && (
+                        <div>
+                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-1 block">Authorized Signatory</label>
+                          <p className="text-white text-sm">{selectedOrder.authorized_signatory}</p>
+                        </div>
+                      )}
+                      {selectedOrder.contract_email && (
+                        <div>
+                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-1 block">Contact Email</label>
+                          <a
+                            href={`mailto:${selectedOrder.contract_email}`}
+                            className="text-brand text-sm hover:underline break-all"
+                          >
+                            {selectedOrder.contract_email}
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* Created At */}
                 <div className="pt-4 border-t border-white/5">
                   <p className="text-zinc-600 text-xs">

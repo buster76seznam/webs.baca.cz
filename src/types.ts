@@ -46,6 +46,12 @@ export interface Order {
   owner_email: string | null;
   notes: string | null;
   deleted_at: string | null;
+  // Contract fields
+  legal_business_name: string | null;
+  state_of_incorporation: string | null;
+  principal_place_of_business: string | null;
+  authorized_signatory: string | null;
+  contract_email: string | null;
   // joined
   sales_user?: { username: string };
 }

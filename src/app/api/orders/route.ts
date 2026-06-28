@@ -75,6 +75,11 @@ export async function POST(request: NextRequest) {
       facebook_url: formData.get('facebookUrl') || null,
       instagram_url: formData.get('instagramUrl') || null,
       google_maps_url: formData.get('googleMapsUrl') || null,
+      legal_business_name: formData.get('legalBusinessName') || null,
+      state_of_incorporation: formData.get('stateOfIncorporation') || null,
+      principal_place_of_business: formData.get('principalPlaceOfBusiness') || null,
+      authorized_signatory: formData.get('authorizedSignatory') || null,
+      contract_email: formData.get('contractEmail') || null,
     };
 
     console.log('Insert data:', insertData);
