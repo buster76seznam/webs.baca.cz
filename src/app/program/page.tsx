@@ -42,8 +42,10 @@ export default function ProgramPage() {
   };
 
   useEffect(() => {
+    // Check both localStorage and cookie for auth
     const savedAuth = localStorage.getItem('program_authenticated');
-    if (savedAuth === 'true') {
+    const hasCookie = document.cookie.includes('admin_session=valid');
+    if (savedAuth === 'true' || hasCookie) {
       setIsAuthenticated(true);
       fetchOrders();
     }
@@ -186,7 +188,8 @@ export default function ProgramPage() {
     e.preventDefault();
     if (password === CORRECT_PASSWORD) {
       setIsAuthenticated(true);
-      localStorage.setItem('program_authenticated', 'true');
+      // Set cookie for API auth
+      document.cookie = `admin_session=valid; path=/; max-age=${60*60*24}`;
       setError('');
       fetchOrders();
     } else {
@@ -196,7 +199,8 @@ export default function ProgramPage() {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('program_authenticated');
+    // Clear cookie
+    document.cookie = 'admin_session=; path=/; max-age=0';
     setPassword('');
     setOrders([]);
     setActiveTab('orders');
