@@ -19,12 +19,10 @@ export default function OrdersPage() {
   const [currentLanguage, setCurrentLanguage] = useState(language);
   const [isReady, setIsReady] = useState(false);
   
-  // Sync language when detected from IP
+  // Sync language when detected from IP and mark as ready
   useEffect(() => {
-    if (language) {
-      setCurrentLanguage(language);
-      setIsReady(true);
-    }
+    setCurrentLanguage(language);
+    setIsReady(true);
   }, [language]);
   
   const isEnglish = currentLanguage === 'en' || currentLanguage === 'en-gb';
