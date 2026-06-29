@@ -22,19 +22,8 @@ export default function ProgramPage() {
 
   // Outreach state
   const [stats, setStats] = useState({ contacted: 0, blacklisted: 0, replies: 0, drafts: 0 });
-  // Default domains from VPS MAILBOXES - will be replaced if API returns data
-  const defaultDomains = [
-    { email: "filip@websbacadigital.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
-    { email: "filip@websbacateam.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
-    { email: "filip@websbacadigital.online", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
-    { email: "filip@websbacateam.site", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
-    { email: "filip@websitebaca.store", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
-    { email: "filip@websbaca.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
-    { email: "filip@websbacadigital.store", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
-    { email: "filip@get-websbaca.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
-    { email: "filip@get-websbaca.website", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
-    { email: "filip@websitebaca.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
-  ];
+  // Default domains - empty until API returns data
+  const defaultDomains: any[] = [];
   const [domains, setDomains] = useState<any[]>(defaultDomains);
   const [contacts, setContacts] = useState<any[]>([]);
   const [replies, setReplies] = useState<any[]>([]);
@@ -236,16 +225,9 @@ export default function ProgramPage() {
 
       if (domainsRes.ok) {
         const domainsData = await domainsRes.json();
-        console.log('Domains API response:', domainsData);
-        // Always update domains if API returns data
         if (domainsData.domains && domainsData.domains.length > 0) {
-          console.log('Updating domains with data from API');
           setDomains(domainsData.domains);
-        } else {
-          console.log('API returned empty domains, keeping defaults');
         }
-      } else {
-        console.log('Domains API failed, keeping defaults');
       }
 
       if (contactsRes.ok) {
