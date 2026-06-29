@@ -236,13 +236,16 @@ export default function ProgramPage() {
 
       if (domainsRes.ok) {
         const domainsData = await domainsRes.json();
-        // Only update domains if API returns real data with emails
-        if (domainsData.domains && domainsData.domains.length > 0 && domainsData.domains[0]?.email) {
+        console.log('Domains API response:', domainsData);
+        // Always update domains if API returns data
+        if (domainsData.domains && domainsData.domains.length > 0) {
+          console.log('Updating domains with data from API');
           setDomains(domainsData.domains);
+        } else {
+          console.log('API returned empty domains, keeping defaults');
         }
-        // If API returns empty or no data, keep defaultDomains (don't reset to empty array)
       } else {
-        // API call failed, keep defaultDomains
+        console.log('Domains API failed, keeping defaults');
       }
 
       if (contactsRes.ok) {
