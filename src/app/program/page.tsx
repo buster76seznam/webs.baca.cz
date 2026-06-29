@@ -22,7 +22,19 @@ export default function ProgramPage() {
 
   // Outreach state
   const [stats, setStats] = useState({ contacted: 0, blacklisted: 0, replies: 0, drafts: 0 });
-  const [domains, setDomains] = useState<any[]>([]);
+  // Hardcoded domains from VPS config.py MAILBOXES - will connect to API later
+  const [domains, setDomains] = useState<any[]>([
+    { email: "filip@websbacadigital.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
+    { email: "filip@websbacateam.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
+    { email: "filip@websbacadigital.online", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
+    { email: "filip@websbacateam.site", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
+    { email: "filip@websitebaca.store", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
+    { email: "filip@websbaca.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
+    { email: "filip@websbacadigital.store", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
+    { email: "filip@get-websbaca.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
+    { email: "filip@get-websbaca.website", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
+    { email: "filip@websitebaca.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
+  ]);
   const [contacts, setContacts] = useState<any[]>([]);
   const [replies, setReplies] = useState<any[]>([]);
   const [log, setLog] = useState<string[]>([]);
@@ -202,7 +214,7 @@ export default function ProgramPage() {
 
   const fetchOutreachData = async () => {
     setLoadingStats(true);
-    setLoadingDomains(true);
+    // Don't set loadingDomains true - we have hardcoded domains
     setLoadingContacts(true);
     setLoadingReplies(true);
     setLoadingLog(true);
@@ -223,7 +235,10 @@ export default function ProgramPage() {
 
       if (domainsRes.ok) {
         const domainsData = await domainsRes.json();
-        setDomains(domainsData.domains || []);
+        // Only update if API returns data, otherwise keep hardcoded domains
+        if (domainsData.domains && domainsData.domains.length > 0) {
+          setDomains(domainsData.domains);
+        }
       }
 
       if (contactsRes.ok) {
@@ -244,7 +259,7 @@ export default function ProgramPage() {
       console.error('Error fetching outreach data:', err);
     } finally {
       setLoadingStats(false);
-      setLoadingDomains(false);
+      // Don't set loadingDomains false - we have hardcoded domains
       setLoadingContacts(false);
       setLoadingReplies(false);
       setLoadingLog(false);
@@ -658,27 +673,27 @@ export default function ProgramPage() {
                     <tr className="text-left text-zinc-500 text-xs font-black uppercase">
                       <th className="pb-3">Doména</th>
                       <th className="pb-3">Stav</th>
-                      <th className="pb-3">Odesláno celkem</th>
-                      <th className="pb-3">Dnes odesláno</th>
-                      <th className="pb-3">Deliverability %</th>
+                      <th className="pb-3">Warming</th>
+                      <th className="pb-3">Kontaktováno</th>
+                      <th className="pb-3">Odpovědi</th>
                     </tr>
                   </thead>
                   <tbody className="text-sm">
                     {domains.map((domain, i) => (
                       <tr key={i} className="border-t border-white/5">
-                        <td className="py-3 font-medium">{domain.domain}</td>
+                        <td className="py-3 font-medium">{domain.email?.split('@')[1] || domain.email}</td>
                         <td className="py-3">
                           <span className={`px-2 py-1 rounded-lg text-xs font-black uppercase ${
                             domain.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' :
-                            domain.status === 'warming' ? 'bg-amber-500/10 text-amber-400' :
+                            domain.status === 'warmup' ? 'bg-amber-500/10 text-amber-400' :
                             'bg-zinc-500/10 text-zinc-400'
                           }`}>
-                            {domain.status === 'active' ? 'Aktivní' : domain.status === 'warming' ? 'Warming' : 'Pozastaveno'}
+                            {domain.status === 'active' ? 'Aktivní' : domain.status === 'warmup' ? 'Warmup' : 'Pozastaveno'}
                           </span>
                         </td>
-                        <td className="py-3 text-zinc-400">{domain.total_sent || 0}</td>
-                        <td className="py-3 text-zinc-400">{domain.today_sent || 0}</td>
-                        <td className="py-3 text-zinc-400">{domain.deliverability || 0}%</td>
+                        <td className="py-3 text-zinc-400">{domain.warming_days || 0} dní</td>
+                        <td className="py-3 text-zinc-400">{domain.contacted || 0}</td>
+                        <td className="py-3 text-zinc-400">{domain.replies || 0}</td>
                       </tr>
                     ))}
                   </tbody>
