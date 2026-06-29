@@ -24,7 +24,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const response = await fetch(`${VPS_URL}/api/domains`);
+    const response = await fetch(`${VPS_URL}/api/domains`, {
+      cache: 'no-store',
+    });
     if (!response.ok) {
       throw new Error('VPS server error');
     }
