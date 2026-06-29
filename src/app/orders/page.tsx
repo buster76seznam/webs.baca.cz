@@ -17,7 +17,17 @@ import 'react-phone-number-input/style.css';
 export default function OrdersPage() {
   const { language } = useCountry();
   const [currentLanguage, setCurrentLanguage] = useState(language);
-  const isEnglish = language === 'en' || language === 'en-gb';
+  const [isReady, setIsReady] = useState(false);
+  
+  // Sync language when detected from IP
+  useEffect(() => {
+    if (language) {
+      setCurrentLanguage(language);
+      setIsReady(true);
+    }
+  }, [language]);
+  
+  const isEnglish = currentLanguage === 'en' || currentLanguage === 'en-gb';
   const t = translations[currentLanguage as keyof typeof translations];
   const industries = t.industries;
   
@@ -208,6 +218,14 @@ export default function OrdersPage() {
           <p className="text-zinc-400 font-medium mb-8">{isEnglish ? 'We will contact you as soon as possible.' : 'Ozveme se vám co nejdříve.'}</p>
           <button onClick={() => setStatus('idle')} className="text-xs font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-400 transition-colors">{isEnglish ? 'Submit another order' : 'Odeslat další objednávku'}</button>
         </motion.div>
+      </div>
+    );
+  }
+
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-[#1a1a1a] text-white flex items-center justify-center">
+        <div className="animate-pulse text-zinc-500">Loading...</div>
       </div>
     );
   }
