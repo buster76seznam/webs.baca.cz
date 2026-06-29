@@ -22,8 +22,8 @@ export default function ProgramPage() {
 
   // Outreach state
   const [stats, setStats] = useState({ contacted: 0, blacklisted: 0, replies: 0, drafts: 0 });
-  // Hardcoded domains from VPS config.py MAILBOXES - will connect to API later
-  const [domains, setDomains] = useState<any[]>([
+  // Default domains from VPS MAILBOXES - will be replaced if API returns data
+  const defaultDomains = [
     { email: "filip@websbacadigital.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
     { email: "filip@websbacateam.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
     { email: "filip@websbacadigital.online", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
@@ -34,7 +34,8 @@ export default function ProgramPage() {
     { email: "filip@get-websbaca.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
     { email: "filip@get-websbaca.website", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
     { email: "filip@websitebaca.xyz", warming_days: 0, contacted: 0, replies: 0, status: "warmup" },
-  ]);
+  ];
+  const [domains, setDomains] = useState<any[]>(defaultDomains);
   const [contacts, setContacts] = useState<any[]>([]);
   const [replies, setReplies] = useState<any[]>([]);
   const [log, setLog] = useState<string[]>([]);
@@ -235,10 +236,13 @@ export default function ProgramPage() {
 
       if (domainsRes.ok) {
         const domainsData = await domainsRes.json();
-        // Only update if API returns data, otherwise keep hardcoded domains
-        if (domainsData.domains && domainsData.domains.length > 0) {
+        // Only update domains if API returns real data with emails
+        if (domainsData.domains && domainsData.domains.length > 0 && domainsData.domains[0]?.email) {
           setDomains(domainsData.domains);
         }
+        // If API returns empty or no data, keep defaultDomains (don't reset to empty array)
+      } else {
+        // API call failed, keep defaultDomains
       }
 
       if (contactsRes.ok) {
