@@ -71,7 +71,7 @@ export default function Home() {
 
           <button
             type="button"
-            onClick={openLead}
+            onClick={() => setLeadOpen(true)}
             className="shrink-0 bg-brand text-white px-4 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 rounded-xl text-[10px] sm:text-xs font-black hover:bg-brand-dark transition-all duration-500 uppercase tracking-widest shadow-[0_0_30px_-5px_rgba(124,58,237,0.5)] hover:shadow-[0_0_40px_0px_rgba(124,58,237,0.6)]"
           >
             {t.heroCTA}
@@ -81,7 +81,7 @@ export default function Home() {
 
       <main>
         {/* Hero Section */}
-        <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden ${promoVisible ? "pt-72 sm:pt-80 md:pt-96 lg:pt-[28rem]" : "pt-48 sm:pt-52"}`}>
+        <section className="relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden pt-48 sm:pt-52">
           {/* Animated Background Glows */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
           <motion.div 
@@ -121,7 +121,7 @@ export default function Home() {
               <div className="flex justify-center items-center">
                 <button
                   type="button"
-                  onClick={openLead}
+                  onClick={() => setLeadOpen(true)}
                   className="w-full max-w-md sm:w-auto bg-white text-black px-8 py-5 sm:px-12 sm:py-6 md:px-16 md:py-8 rounded-[2rem] text-sm sm:text-base md:text-lg font-black hover:bg-zinc-200 transition-all duration-500 flex items-center justify-center gap-3 sm:gap-4 group uppercase tracking-tighter shadow-2xl shadow-white/5"
                 >
                   {t.heroCTA}
@@ -223,7 +223,7 @@ export default function Home() {
 
                   <button
                     type="button"
-                    onClick={openLead}
+                    onClick={() => setLeadOpen(true)}
                     className="w-full bg-white text-black py-6 sm:py-7 md:py-8 rounded-[2rem] font-black text-lg sm:text-xl md:text-2xl hover:scale-[1.02] transition-all duration-500 uppercase tracking-tighter shadow-2xl"
                   >
                     {t.pricingIncludes}
@@ -336,7 +336,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center">
               <button
                 type="button"
-                onClick={openLead}
+                onClick={() => setLeadOpen(true)}
                 aria-label={isEnglish ? "Open order form" : "Otevřít poptávkový formulář"}
                 className="text-4xl sm:text-5xl md:text-7xl lg:text-[120px] font-black text-white tracking-tighter leading-[0.85] sm:leading-[0.8] uppercase text-center hover:opacity-95 active:scale-[0.99] transition-all max-w-[95vw]"
               >
@@ -376,7 +376,7 @@ export default function Home() {
             <div className="lg:col-span-3">
                <h4 className="text-[11px] font-black uppercase tracking-[0.5em] text-brand mb-10">{t.footerContact}</h4>
                <div className="flex flex-col gap-6 text-sm font-bold text-zinc-400">
-                  <button type="button" onClick={openLead} className="text-left hover:text-white transition-all duration-300 flex items-center gap-4 group w-full">
+                  <button type="button" onClick={() => setLeadOpen(true)} className="text-left hover:text-white transition-all duration-300 flex items-center gap-4 group w-full">
                     <div className="w-10 h-10 rounded-xl glass flex items-center justify-center group-hover:bg-brand transition-colors">
                       <Mail size={18} />
                     </div>
