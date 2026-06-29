@@ -42,7 +42,7 @@ export default function USAPage() {
       <ContactLeadModal open={leadOpen} onClose={() => setLeadOpen(false)} />
       {/* Navigation */}
       <nav className={`fixed w-full z-50 transition-all duration-700 ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 h-full flex items-center justify-between gap-3 min-w-0">
+        <div className="w-full px-4 sm:px-6 md:px-8 h-full flex items-center justify-between gap-3 min-w-0">
           <div className="flex items-center gap-6 group cursor-pointer">
             <div className="relative w-14 h-14 overflow-hidden rounded-2xl border-2 border-brand bg-[#1a0b2e] group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
               {!logoError ? (
@@ -107,7 +107,7 @@ export default function USAPage() {
             className="absolute bottom-1/4 -right-1/4 w-[800px] h-[800px] bg-brand-dark/10 rounded-full blur-[150px]" 
           />
           
-          <div className="max-w-7xl mx-auto w-full relative z-10 text-center">
+          <div className="w-full w-full relative z-10 text-center">
             <motion.div 
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -141,7 +141,7 @@ export default function USAPage() {
         {/* The "Why" Section - Massive Spacing */}
         <section id="why" className="py-64 px-8 border-y border-white/5 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" />
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full">
             <motion.div {...fadeIn} className="mb-40 text-left max-w-4xl">
               <h2 className="text-5xl md:text-[100px] font-black mb-10 tracking-tighter leading-none uppercase">{t.whyTitle} <br /><span className="text-brand italic">{t.whySubtitle}</span></h2>
               <p className="text-zinc-500 uppercase tracking-[0.5em] text-sm font-black mb-12">{t.whyDescription}</p>
@@ -185,7 +185,7 @@ export default function USAPage() {
         <section id="pricing" className="py-64 px-8 relative overflow-hidden bg-[#020202]">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px] pointer-events-none" />
           
-          <div className="max-w-7xl mx-auto relative z-10">
+          <div className="w-full relative z-10">
             <motion.div {...fadeIn} className="text-center mb-40">
               <h2 className="text-6xl md:text-[140px] font-black mb-10 tracking-tighter leading-none uppercase">{t.pricingTitle} <br /><span className="text-brand">{t.pricingSubtitle}</span></h2>
               <p className="text-zinc-500 font-black uppercase tracking-[0.6em] text-sm">{t.pricingDescription}</p>
@@ -268,7 +268,7 @@ export default function USAPage() {
 
         {/* Process Section - Vertical Timeline */}
         <section id="process" className="py-64 px-8 relative">
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full">
             <motion.div {...fadeIn} className="text-center mb-40">
                <h2 className="text-6xl md:text-[100px] font-black tracking-tighter uppercase leading-none">{t.processTitle} <br /><span className="text-brand">{t.processSubtitle}</span></h2>
             </motion.div>
@@ -301,7 +301,7 @@ export default function USAPage() {
 
         {/* Specialization - Grid */}
         <section id="specialization" className="py-64 px-8 bg-[#050505]">
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full">
             <motion.div {...fadeIn} className="mb-40 flex flex-col md:flex-row md:items-end justify-between gap-10">
               <h2 className="text-5xl md:text-[100px] font-black tracking-tighter uppercase leading-none">{t.specTitle} <br /><span className="text-brand">{t.specSubtitle}</span></h2>
               <p className="text-zinc-500 font-black uppercase tracking-[0.4em] text-xs md:mb-4">{t.specDescription}</p>
@@ -336,7 +336,7 @@ export default function USAPage() {
         <section className="py-64 px-8">
           <motion.div 
             {...fadeIn}
-            className="max-w-7xl mx-auto bg-brand p-24 md:p-48 rounded-[5rem] text-center relative overflow-hidden group shadow-[0_50px_100px_-20px_rgba(124,58,237,0.4)]"
+            className="w-full bg-brand p-24 md:p-48 rounded-[5rem] text-center relative overflow-hidden group shadow-[0_50px_100px_-20px_rgba(124,58,237,0.4)]"
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.15),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             <div className="relative z-10 flex flex-col items-center">
@@ -356,7 +356,7 @@ export default function USAPage() {
       </main>
 
       <footer className="py-40 px-8 border-t border-white/5 bg-[#020202]">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full">
           <div className="grid lg:grid-cols-12 gap-20 mb-32">
             <div className="lg:col-span-6">
               <div className="flex items-center gap-6 mb-12 group cursor-pointer">
