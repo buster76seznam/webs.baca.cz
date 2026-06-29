@@ -17,14 +17,7 @@ async function checkAuth(req: NextRequest): Promise<boolean> {
 }
 
 export async function GET(req: NextRequest) {
-  const clientIp = getClientIp(req);
-  
-  // IP whitelist check
-  if (ALLOWED_IPS.length > 0 && !ALLOWED_IPS.includes(clientIp)) {
-    return new NextResponse(null, { status: 404 });
-  }
-
-  // Auth check
+  // Auth check only (skip IP whitelist for Vercel compatibility)
   const isAuth = await checkAuth(req);
   if (!isAuth) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -39,7 +32,8 @@ export async function GET(req: NextRequest) {
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    // If VPS endpoint doesn't exist, return empty list
+    console.error('Domains fetch error:', error);
+    // Return empty list on error
     return NextResponse.json({ domains: [] });
   }
 }
