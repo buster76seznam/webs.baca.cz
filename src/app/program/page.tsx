@@ -36,6 +36,10 @@ export default function ProgramPage() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
+  // Proposal form state
+  const [proposalForm, setProposalForm] = useState({ email: '', firstName: '', proposalUrl: '' });
+  const [proposalLoading, setProposalLoading] = useState(false);
+
   const showNotification = (type: 'success' | 'error', message: string) => {
     setNotification({ type, message });
     setTimeout(() => setNotification(null), 3000);
@@ -292,6 +296,41 @@ export default function ProgramPage() {
       setNotification({ type: 'error', message: 'Chyba při spouštění akce' });
     } finally {
       setActionLoading(null);
+      setTimeout(() => setNotification(null), 3000);
+    }
+  };
+
+  const handleSendProposal = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!proposalForm.email || !proposalForm.firstName || !proposalForm.proposalUrl) {
+      setNotification({ type: 'error', message: 'Vyplňte všechna pole' });
+      return;
+    }
+
+    setProposalLoading(true);
+    try {
+      const res = await fetch('/api/mail/send-proposal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to_email: proposalForm.email,
+          first_name: proposalForm.firstName,
+          proposal_url: proposalForm.proposalUrl,
+        }),
+      });
+
+      if (res.ok) {
+        setNotification({ type: 'success', message: 'Návrh uložen do Drafts' });
+        setProposalForm({ email: '', firstName: '', proposalUrl: '' });
+      } else {
+        const data = await res.json();
+        setNotification({ type: 'error', message: data.error || 'Chyba při ukládání' });
+      }
+    } catch (err) {
+      console.error('Error sending proposal:', err);
+      setNotification({ type: 'error', message: 'Chyba při ukládání návrhu' });
+    } finally {
+      setProposalLoading(false);
       setTimeout(() => setNotification(null), 3000);
     }
   };
@@ -842,6 +881,65 @@ export default function ProgramPage() {
                 </table>
               </div>
             )}
+          </div>
+
+          {/* Send Proposal Form */}
+          <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
+            <h2 className="text-lg font-black mb-4 flex items-center gap-2">
+              <FileText size={20} className="text-brand" />
+              Poslat návrh
+            </h2>
+            <form onSubmit={handleSendProposal} className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-xs font-black uppercase text-zinc-500 mb-2">Email zákazníka</label>
+                <input
+                  type="email"
+                  value={proposalForm.email}
+                  onChange={(e) => setProposalForm({ ...proposalForm, email: e.target.value })}
+                  className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-brand transition-colors"
+                  placeholder="jan@priklad.cz"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-black uppercase text-zinc-500 mb-2">Jméno zákazníka</label>
+                <input
+                  type="text"
+                  value={proposalForm.firstName}
+                  onChange={(e) => setProposalForm({ ...proposalForm, firstName: e.target.value })}
+                  className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-brand transition-colors"
+                  placeholder="Jan"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-black uppercase text-zinc-500 mb-2">Odkaz na návrh</label>
+                <input
+                  type="url"
+                  value={proposalForm.proposalUrl}
+                  onChange={(e) => setProposalForm({ ...proposalForm, proposalUrl: e.target.value })}
+                  className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-brand transition-colors"
+                  placeholder="https://..."
+                  required
+                />
+              </div>
+              <div className="flex items-end">
+                <button
+                  type="submit"
+                  disabled={proposalLoading}
+                  className="w-full bg-brand hover:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 px-4 rounded-xl font-black text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2"
+                >
+                  {proposalLoading ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <FileText size={16} />
+                      Uložit do Drafts
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
