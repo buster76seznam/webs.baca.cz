@@ -653,7 +653,7 @@ export default function ProgramPage() {
 
       {/* Outreach Tab */}
       {activeTab === 'outreach' && (
-        <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
+        <div className="w-full px-6 py-6 space-y-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
