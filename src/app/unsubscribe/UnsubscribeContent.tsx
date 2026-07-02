@@ -21,14 +21,8 @@ export default function UnsubscribeContent() {
     }
 
     try {
-      const response = await fetch(`${VPS_SERVER}/unsubscribe`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
+      const response = await fetch(`${VPS_SERVER}/unsubscribe?email=${encodeURIComponent(email)}`);
+      
       if (response.ok) {
         setStatus("success");
       } else {

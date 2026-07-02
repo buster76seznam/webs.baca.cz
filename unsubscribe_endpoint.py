@@ -56,28 +56,29 @@ def add_to_blacklist(email: str) -> bool:
 #   if request.path in EXEMPT_ROUTES:
 #       return None
 
-@app.route('/unsubscribe', methods=['POST'])
+@app.route('/unsubscribe', methods=['GET'])
 def unsubscribe():
-    """Public endpoint to unsubscribe an email address."""
+    """Public endpoint to unsubscribe an email address (GET method with query param)."""
+    email = request.args.get("email", "").strip().lower()
+    if not email or "@" not in email:
+        return "<h2>Invalid unsubscribe link.</h2>", 400
+    
     try:
-        data = request.get_json()
-        if not data or 'email' not in data:
-            return jsonify({'error': 'Email is required'}), 400
-        
-        email = data.get('email', '').strip()
-        if not email or '@' not in email:
-            return jsonify({'error': 'Invalid email format'}), 400
-        
         add_to_blacklist(email)
         
-        return jsonify({
-            'success': True,
-            'message': 'Successfully unsubscribed'
-        }), 200
-        
+        return f"""
+        <!DOCTYPE html>
+        <html>
+        <head><title>Unsubscribed</title></head>
+        <body>
+        <h2>✓ You have been unsubscribed.</h2>
+        <p>You will no longer receive emails from us.</p>
+        </body>
+        </html>
+        """
     except Exception as e:
         print(f"Unsubscribe error: {e}")
-        return jsonify({'error': 'Internal server error'}), 500
+        return "<h2>Error processing unsubscribe.</h2>", 500
 
 
 # OPTIONAL: Add route to check if email is blacklisted (for mail sending logic)
