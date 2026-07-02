@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import UnsubscribeContent from "./UnsubscribeContent";
 
 export const metadata = {
-  title: "Odhlášení z odběru",
-  description: "Odhlášení z e-mailového odběru",
+  title: "Unsubscribe",
+  description: "Unsubscribe from email notifications",
 };
 
 export default function UnsubscribePage() {

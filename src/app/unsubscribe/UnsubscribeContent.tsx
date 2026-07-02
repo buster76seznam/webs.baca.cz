@@ -55,7 +55,7 @@ export default function UnsubscribeContent() {
             </div>
           )}
         </div>
-        <div className="text-zinc-500 text-lg">Odhlašování z odběru...</div>
+        <div className="text-zinc-500 text-lg">Unsubscribing...</div>
       </div>
     );
   }
@@ -72,15 +72,15 @@ export default function UnsubscribeContent() {
             </div>
           )}
         </div>
-        <h1 className="text-2xl font-bold text-white mb-4">Chybí e-mailová adresa</h1>
+        <h1 className="text-2xl font-bold text-white mb-4">Missing Email Address</h1>
         <p className="text-zinc-500 text-center mb-8">
-          Odkaz pro odhlášení je neplatný. Kontaktujte nás pro ruční odhlášení.
+          This unsubscribe link is invalid. Contact us for manual unsubscription.
         </p>
         <Link
           href="/"
           className="bg-brand text-white px-6 py-3 rounded-xl font-bold hover:bg-brand-dark transition-colors"
         >
-         Zpět na hlavní stránku
+          Back to Home
         </Link>
       </div>
     );
@@ -105,17 +105,17 @@ export default function UnsubscribeContent() {
           </div>
           
           <h1 className="text-3xl font-black text-white mb-4">
-            Úspěšně odhlášeno
+            Successfully Unsubscribed
           </h1>
           
           <p className="text-zinc-400 text-lg leading-relaxed">
-            ✓ Odhlášeni jste úspěšně.<br />
-            Již od nás nebudete dostávat e-maily.
+            ✓ You have been unsubscribed successfully.<br />
+            You will no longer receive emails from us.
           </p>
 
           {email && (
             <p className="text-zinc-600 text-sm mt-4">
-              E-mail: {email}
+              Email: {email}
             </p>
           )}
         </div>
@@ -125,7 +125,7 @@ export default function UnsubscribeContent() {
             href="/"
             className="inline-block bg-white text-black px-8 py-4 rounded-xl font-black hover:bg-zinc-200 transition-colors uppercase tracking-wider"
           >
-            Zpět na hlavní stránku
+            Back to Home
           </Link>
         </div>
       </div>
