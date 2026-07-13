@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Building2, Phone, Mail, MapPin, Wrench } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import { PricingType } from '@/types';
 
 interface NewOrderModalProps {
@@ -47,29 +46,38 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
     setLoading(true);
     setError('');
 
-    const { error: insertError } = await supabase.from('orders').insert({
-      sales_user_id: salesUserId,
-      company_name: companyName.trim(),
-      phone: phone.trim(),
-      email: email.trim(),
-      address: address.trim(),
-      industry: 'autoservisy',
-      has_photos: hasPhotos,
-      services: services.trim(),
-      website_url: websiteUrl.trim(),
-      pricing_type: pricingType,
-      status: 'Čeká ve frontě',
-      status_updated_at: new Date().toISOString(),
-    });
+    try {
+      const res = await fetch('/api/orders/internal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          salesUserId,
+          companyName: companyName.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          address: address.trim(),
+          industry: 'autoservisy',
+          hasPhotos,
+          services: services.trim(),
+          websiteUrl: websiteUrl.trim(),
+          pricingType,
+        }),
+      });
 
-    if (insertError) {
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || 'Chyba při odesílání. Zkus to znovu.');
+        setLoading(false);
+        return;
+      }
+
+      onSuccess();
+      onClose();
+    } catch (err) {
       setError('Chyba při odesílání. Zkus to znovu.');
       setLoading(false);
-      return;
     }
-
-    onSuccess();
-    onClose();
   };
 
   const inputClass = `w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white 
