@@ -61,6 +61,9 @@ async function sendOrderEmail(orderData: {
   `;
 
   try {
+    console.log('Attempting to send email with Resend...');
+    console.log('API Key present:', !!resendApiKey, resendApiKey?.substring(0, 10) + '...');
+    
     const { data, error } = await resend.emails.send({
       from: 'Webs Bača <noreply@webs.baca.cz>',
       to: ['webs.baca.support@gmail.com'],
@@ -70,11 +73,14 @@ async function sendOrderEmail(orderData: {
 
     if (error) {
       console.error('Email send error:', error);
+      return { success: false, error };
     } else {
       console.log('Email sent successfully:', data?.id);
+      return { success: true, id: data?.id };
     }
   } catch (err) {
     console.error('Email sending failed:', err);
+    return { success: false, error: err };
   }
 }
 
@@ -160,11 +166,12 @@ export async function POST(request: NextRequest) {
     console.log('Insert success:', data);
 
     // Send email notification
-    await sendOrderEmail({
+    const emailResult = await sendOrderEmail({
       companyName: formData.get('companyName') as string,
       companyEmail: formData.get('companyEmail') as string,
       industry: formData.get('industry') as string,
     });
+    console.log('Email result:', emailResult);
 
     // Send push notification if VAPID keys are configured
     if (publicVapidKey && privateVapidKey) {
