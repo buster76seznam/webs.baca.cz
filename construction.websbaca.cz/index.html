@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summit Builders | Custom Home Construction & Renovation in Nashville, TN</title>
+  <meta name="description" content="Nashville's premier custom home builder. Luxury homes, renovations, and commercial construction. Award-winning craftsmanship. Get your free consultation today!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #059669;
+      --primary-light: #10B981;
+      --primary-dark: #047857;
+      --accent: #D97706;
+      --dark: #0C0F0A;
+      --dark-card: #151A12;
+      --dark-border: #1F2919;
+      --text: #FAFAF9;
+      --text-muted: #A3B18A;
+      --gradient-1: linear-gradient(135deg, #059669 0%, #10B981 100%);
+      --gradient-2: linear-gradient(135deg, #151A12 0%, #0C0F0A 100%);
+      --stone: linear-gradient(135deg, #78716C 0%, #57534E 50%, #44403C 100%);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Work Sans', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 24px 0;
+      transition: all 0.4s ease;
+    }
+
+    nav.scrolled {
+      padding: 16px 0;
+      background: rgba(12, 15, 10, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(5, 150, 105, 0.1);
+    }
+
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gradient-1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .logo-icon svg {
+      width: 26px;
+      height: 26px;
+      color: white;
+    }
+
+    .logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 44px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary-light);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      background: var(--gradient-1);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(5, 150, 105, 0.3);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse at 70% 30%, rgba(5, 150, 105, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 70%, rgba(217, 119, 6, 0.08) 0%, transparent 50%);
+    }
+
+    .hero-divider {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 150px;
+      background: linear-gradient(to top, var(--dark-card), transparent);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hero-text {
+      max-width: 600px;
+    }
+
+    .hero-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--primary-light);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--dark-border);
+    }
+
+    .hero h1 {
+      font-size: clamp(48px, 6vw, 72px);
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 28px;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 span {
+      color: var(--primary-light);
+      font-style: italic;
+    }
+
+    .hero-description {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 56px;
+    }
+
+    .btn-primary {
+      background: var(--gradient-1);
+      color: white;
+      padding: 18px 36px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(5, 150, 105, 0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      padding: 18px 36px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--dark-border);
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      background: rgba(5, 150, 105, 0.1);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+    }
+
+    .stat-item {
+      text-align: left;
+    }
+
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--primary-light);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Featured Project Card */
+    .hero-visual {
+      position: relative;
+    }
+
+    .featured-project {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .featured-image {
+      height: 320px;
+      background: var(--stone);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.2), rgba(217, 119, 6, 0.1));
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--gradient-1);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .featured-content {
+      padding: 32px;
+    }
+
+    .featured-category {
+      font-size: 11px;
+      color: var(--primary-light);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .featured-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .featured-description {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .featured-meta {
+      display: flex;
+      gap: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--dark-border);
+    }
+
+    .featured-meta-item {
+      text-align: center;
+    }
+
+    .featured-meta-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary-light);
+    }
+
+    .featured-meta-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Awards Section */
+    .awards {
+      padding: 100px 0;
+      background: var(--dark-card);
+      border-top: 1px solid var(--dark-border);
+      border-bottom: 1px solid var(--dark-border);
+    }
+
+    .awards-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .awards-header h2 {
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 400;
+      margin-bottom: 16px;
+    }
+
+    .awards-header p {
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    .awards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+
+    .award-item {
+      text-align: center;
+      padding: 32px 24px;
+      background: var(--dark);
+      border: 1px solid var(--dark-border);
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .award-item:hover {
+      transform: translateY(-4px);
+      border-color: rgba(5, 150, 105, 0.3);
+    }
+
+    .award-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(217, 119, 6, 0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .award-icon svg {
+      width: 32px;
+      height: 32px;
+      color: var(--accent);
+    }
+
+    .award-item h4 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .award-item p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Services Section */
+    .services {
+      padding: 120px 0;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 72px;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--primary-light);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(40px, 5vw, 60px);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .section-description {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .service-card {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      border-radius: 20px;
+      padding: 40px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-1);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .service-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .service-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(5, 150, 105, 0.3);
+      box-shadow: 0 20px 60px rgba(5, 150, 105, 0.1);
+    }
+
+    .service-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(5, 150, 105, 0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .service-icon svg {
+      width: 32px;
+      height: 32px;
+      color: var(--primary-light);
+    }
+
+    .service-card h3 {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .service-card p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .service-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-light);
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .service-link:hover {
+      gap: 12px;
+    }
+
+    /* Projects Section */
+    .projects {
+      padding: 120px 0;
+      background: var(--dark-card);
+      position: relative;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .project-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      background: var(--dark-border);
+    }
+
+    .project-card:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+      aspect-ratio: auto;
+    }
+
+    .project-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--stone);
+      transition: transform 0.5s ease;
+    }
+
+    .project-card:hover .project-image {
+      transform: scale(1.05);
+    }
+
+    .project-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 32px;
+      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    }
+
+    .project-category {
+      font-size: 11px;
+      color: var(--primary-light);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .project-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .project-location {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* Process Section */
+    .process {
+      padding: 120px 0;
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .process-content h2 {
+      font-size: clamp(36px, 4vw, 52px);
+      font-weight: 400;
+      margin-bottom: 24px;
+    }
+
+    .process-content > p {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 40px;
+    }
+
+    .process-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .process-step {
+      display: flex;
+      gap: 20px;
+      padding: 24px;
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .process-step:hover {
+      border-color: rgba(5, 150, 105, 0.3);
+      transform: translateX(8px);
+    }
+
+    .step-number {
+      width: 48px;
+      height: 48px;
+      background: var(--gradient-1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .step-content h4 {
+      font-family: 'Work Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .step-content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .process-visual {
+      position: relative;
+    }
+
+    .process-image {
+      background: var(--stone);
+      border-radius: 20px;
+      height: 500px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .process-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.2), rgba(217, 119, 6, 0.1));
+    }
+
+    .process-card {
+      position: absolute;
+      bottom: -40px;
+      left: -40px;
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .process-card-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--primary-light);
+      line-height: 1;
+    }
+
+    .process-card-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      padding: 120px 0;
+      background: var(--dark-card);
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: var(--dark);
+      border: 1px solid var(--dark-border);
+      border-radius: 20px;
+      padding: 36px;
+      transition: all 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(5, 150, 105, 0.3);
+    }
+
+    .testimonial-stars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    .testimonial-stars svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--accent);
+    }
+
+    .testimonial-text {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .testimonial-avatar {
+      width: 52px;
+      height: 52px;
+      background: var(--gradient-1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .testimonial-info h5 {
+      font-family: 'Work Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .testimonial-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* CTA Section */
+    .cta {
+      padding: 120px 0;
+      background: var(--gradient-1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .cta h2 {
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .cta p {
+      font-size: 18px;
+      opacity: 0.9;
+      margin-bottom: 40px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .cta .btn-white {
+      background: white;
+      color: var(--dark);
+      padding: 18px 36px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .cta .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .cta .btn-outline {
+      background: transparent;
+      color: white;
+      padding: 18px 36px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 2px solid rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .cta .btn-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: white;
+    }
+
+    /* Contact Section */
+    .contact {
+      padding: 120px 0;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+    }
+
+    .contact-info {
+      max-width: 480px;
+    }
+
+    .contact-info h2 {
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 400;
+      margin-bottom: 20px;
+    }
+
+    .contact-info > p {
+      font-size: 17px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      line-height: 1.8;
+    }
+
+    .contact-details {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .contact-item {
+      display: flex;
+      gap: 16px;
+    }
+
+    .contact-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(5, 150, 105, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--primary-light);
+    }
+
+    .contact-item h4 {
+      font-family: 'Work Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .contact-item p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .contact-form {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      border-radius: 20px;
+      padding: 48px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 16px 18px;
+      background: var(--dark);
+      border: 1px solid var(--dark-border);
+      border-radius: 8px;
+      font-size: 15px;
+      color: white;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 18px;
+      background: var(--gradient-1);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .form-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(5, 150, 105, 0.3);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark-card);
+      border-top: 1px solid var(--dark-border);
+      padding: 60px 0 30px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-top: 20px;
+      max-width: 320px;
+    }
+
+    .footer-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links a {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary-light);
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 30px;
+      border-top: 1px solid var(--dark-border);
+    }
+
+    .footer-copyright {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      background: var(--dark);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+      border: 1px solid var(--dark-border);
+    }
+
+    .footer-social a:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .footer-social svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+
+      .hero-visual {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .project-card:first-child {
+        grid-column: span 2;
+        grid-row: span 1;
+        aspect-ratio: 16/9;
+      }
+
+      .process-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+
+      .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+      }
+
+      .awards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .hero-stats {
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .project-card:first-child {
+        grid-column: span 1;
+      }
+
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+
+      .awards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-content">
+        <a href="#" class="logo">
+          <div class="logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <span class="logo-text">Summit Builders</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a href="#contact" class="nav-cta">Free Consultation</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-divider"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="hero-label">Award-Winning Construction</div>
+          <h1>Building <span>Dreams</span> in Nashville</h1>
+          <p class="hero-description">From custom homes to commercial spaces, we bring architectural vision to life with uncompromising quality. Every project reflects our commitment to excellence and your unique vision.</p>
+          <div class="hero-buttons">
+            <a href="#contact" class="btn-primary">
+              Start Your Project
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a href="#projects" class="btn-secondary">
+              View Our Work
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-number">500+</div>
+              <div class="stat-label">Projects Built</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">25+</div>
+              <div class="stat-label">Years Experience</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">100%</div>
+              <div class="stat-label">Client Satisfaction</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="featured-project">
+            <div class="featured-image">
+              <div class="featured-badge">Featured Project</div>
+            </div>
+            <div class="featured-content">
+              <div class="featured-category">Luxury Residence</div>
+              <h3 class="featured-title">The Henderson Estate</h3>
+              <p class="featured-description">A 6,200 sq ft custom home featuring sustainable design, smart home technology, and panoramic views of the Tennessee countryside.</p>
+              <div class="featured-meta">
+                <div class="featured-meta-item">
+                  <div class="featured-meta-value">6,200</div>
+                  <div class="featured-meta-label">Sq Ft</div>
+                </div>
+                <div class="featured-meta-item">
+                  <div class="featured-meta-value">14</div>
+                  <div class="featured-meta-label">Months</div>
+                </div>
+                <div class="featured-meta-item">
+                  <div class="featured-meta-value">$2.8M</div>
+                  <div class="featured-meta-label">Investment</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Awards Section -->
+  <section class="awards">
+    <div class="container">
+      <div class="awards-header">
+        <h2>Recognized Excellence</h2>
+        <p>Awards that reflect our commitment to exceptional craftsmanship</p>
+      </div>
+      <div class="awards-grid">
+        <div class="award-item">
+          <div class="award-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+          </div>
+          <h4>Best Custom Builder</h4>
+          <p>Nashville Home Awards 2025</p>
+        </div>
+        <div class="award-item">
+          <div class="award-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h4>Safety Excellence</h4>
+          <p>ABC Tennessee 2024</p>
+        </div>
+        <div class="award-item">
+          <div class="award-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h4>Quality Certified</h4>
+          <p>NAHB Member</p>
+        </div>
+        <div class="award-item">
+          <div class="award-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83"/></svg>
+          </div>
+          <h4>Green Builder</h4>
+          <p>LEED Certified Projects</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Our Expertise</span>
+        <h2 class="section-title">Construction Services</h2>
+        <p class="section-description">From concept to completion, we deliver exceptional results across residential and commercial construction.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <h3>Custom Homes</h3>
+          <p>Turn-key custom home construction tailored to your vision. From luxury estates to modern minimalism, we build homes that define living.</p>
+          <a href="#contact" class="service-link">
+            Learn More
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <h3>Home Renovations</h3>
+          <p>Transform your existing space with comprehensive renovations. Kitchen remodels, bathroom updates, room additions, and whole-home transformations.</p>
+          <a href="#contact" class="service-link">
+            Learn More
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+          </div>
+          <h3>Commercial Build</h3>
+          <p>Office buildings, retail spaces, restaurants, and mixed-use developments. Professional commercial construction with minimal business disruption.</p>
+          <a href="#contact" class="service-link">
+            Learn More
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Design-Build</h3>
+          <p>Integrated design and construction services. Streamlined process from initial concept through final walkthrough with a single point of contact.</p>
+          <a href="#contact" class="service-link">
+            Learn More
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <h3>Project Management</h3>
+          <p>Expert project oversight for your build. Scheduling, budgeting, quality control, and vendor coordination for seamless execution.</p>
+          <a href="#contact" class="service-link">
+            Learn More
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          </div>
+          <h3>Sustainable Building</h3>
+          <p>Green construction practices and LEED certification. Energy-efficient homes that reduce environmental impact and lower operating costs.</p>
+          <a href="#contact" class="service-link">
+            Learn More
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section class="projects" id="projects">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Portfolio</span>
+        <h2 class="section-title">Recent Projects</h2>
+        <p class="section-description">Explore our portfolio of completed projects across Middle Tennessee.</p>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card">
+          <div class="project-image"></div>
+          <div class="project-overlay">
+            <div class="project-category">Luxury Estate</div>
+            <h3 class="project-title">The Franklin Manor</h3>
+            <p class="project-location">Franklin, TN • 8,400 sq ft</p>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-image"></div>
+          <div class="project-overlay">
+            <div class="project-category">Modern Home</div>
+            <h3 class="project-title">Germantown Loft</h3>
+            <p class="project-location">Nashville, TN • 3,200 sq ft</p>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-image"></div>
+          <div class="project-overlay">
+            <div class="project-category">Commercial</div>
+            <h3 class="project-title">East Nashville Office</h3>
+            <p class="project-location">Nashville, TN • 12,000 sq ft</p>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-image"></div>
+          <div class="project-overlay">
+            <div class="project-category">Renovation</div>
+            <h3 class="project-title">Belle Meade Victorian</h3>
+            <p class="project-location">Belle Meade, TN • Full Restoration</p>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-image"></div>
+          <div class="project-overlay">
+            <div class="project-category">Restaurant</div>
+            <h3 class="project-title">12 South Bistro</h3>
+            <p class="project-location">Nashville, TN • 5,800 sq ft</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Section -->
+  <section class="process" id="process">
+    <div class="container">
+      <div class="process-grid">
+        <div class="process-content">
+          <span class="section-label">Our Approach</span>
+          <h2>From Vision to Reality</h2>
+          <p>Our proven process ensures transparency, quality, and your complete satisfaction from first meeting to final walkthrough.</p>
+          <div class="process-steps">
+            <div class="process-step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Consultation</h4>
+                <p>Free initial meeting to discuss your vision, budget, and timeline. We listen carefully to understand your needs.</p>
+              </div>
+            </div>
+            <div class="process-step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Design & Planning</h4>
+                <p>Collaborative design development with architects and designers. Detailed budgeting and project scheduling.</p>
+              </div>
+            </div>
+            <div class="process-step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Construction</h4>
+                <p>Expert construction with regular updates. Dedicated project manager as your single point of contact.</p>
+              </div>
+            </div>
+            <div class="process-step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h4>Final Walkthrough</h4>
+                <p>Thorough inspection and demonstration of every system. Your satisfaction is our ultimate goal.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="process-visual">
+          <div class="process-image"></div>
+          <div class="process-card">
+            <div class="process-card-number">25+</div>
+            <div class="process-card-text">Years Building Excellence</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Testimonials</span>
+        <h2 class="section-title">Client Stories</h2>
+        <p class="section-description">Hear from homeowners and business owners about their experience working with Summit Builders.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testimonial-text">"Building our dream home seemed overwhelming until we met Summit. They guided us through every decision and delivered a home that exceeds our expectations."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">JM</div>
+            <div class="testimonial-info">
+              <h5>James & Karen Mitchell</h5>
+              <p>Custom Home • Brentwood</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testimonial-text">"Our restaurant renovation was completed on time and on budget. The craftsmanship is exceptional - our customers constantly compliment the space."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">SR</div>
+            <div class="testimonial-info">
+              <h5>Sarah Richardson</h5>
+              <p>Restaurant Owner • 12 South</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testimonial-text">"They transformed our 1960s home into a modern masterpiece while preserving its historic character. The attention to detail is remarkable."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">DT</div>
+            <div class="testimonial-info">
+              <h5>David & Lisa Thompson</h5>
+              <p>Home Renovation • Green Hills</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Build Your Dream?</h2>
+        <p>Schedule a free consultation and let's discuss your next project. No obligation, just expert guidance.</p>
+        <div class="cta-buttons">
+          <a href="#contact" class="btn-white">
+            Get Free Consultation
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </a>
+          <a href="tel:+16155551234" class="btn-outline">
+            Call (615) 555-1234
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <span class="section-label">Contact Us</span>
+          <h2>Start Your Project</h2>
+          <p>Ready to build? Contact us for a free consultation. We'll discuss your vision, provide initial estimates, and answer all your questions.</p>
+          <div class="contact-details">
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div>
+                <h4>Office</h4>
+                <p>2840 Old Hickory Blvd, Nashville, TN 37215</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div>
+                <h4>Phone</h4>
+                <p>(615) 555-1234</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div>
+                <h4>Hours</h4>
+                <p>Mon-Fri: 8AM-6PM | Sat: By Appointment</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <form class="contact-form" action="#" method="POST">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" placeholder="Robert Anderson" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="(615) 555-1234" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="robert@example.com" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="project-type">Project Type</label>
+              <select id="project-type" name="project-type" required>
+                <option value="">Select type</option>
+                <option value="custom-home">Custom Home</option>
+                <option value="renovation">Home Renovation</option>
+                <option value="commercial">Commercial</option>
+                <option value="room-addition">Room Addition</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="budget">Budget Range</label>
+              <select id="budget" name="budget">
+                <option value="">Select range</option>
+                <option value="under-500k">Under $500K</option>
+                <option value="500k-1m">$500K - $1M</option>
+                <option value="1m-2m">$1M - $2M</option>
+                <option value="2m-plus">$2M+</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="message">Tell Us About Your Project</label>
+            <textarea id="message" name="message" placeholder="Describe your vision, timeline, and any specific requirements..."></textarea>
+          </div>
+          <button type="submit" class="form-submit">Request Free Consultation</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <div class="logo-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <span class="logo-text">Summit Builders</span>
+          </a>
+          <p>Nashville's premier custom home builder. Creating exceptional spaces that inspire for over 25 years.</p>
+        </div>
+        <div>
+          <h4 class="footer-title">Services</h4>
+          <ul class="footer-links">
+            <li><a href="#services">Custom Homes</a></li>
+            <li><a href="#services">Renovations</a></li>
+            <li><a href="#services">Commercial</a></li>
+            <li><a href="#services">Design-Build</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-title">Company</h4>
+          <ul class="footer-links">
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#process">Process</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-title">Contact</h4>
+          <ul class="footer-links">
+            <li><a href="tel:+16155551234">(615) 555-1234</a></li>
+            <li><a href="mailto:info@summitbuilders.com">info@summitbuilders.com</a></li>
+            <li><a href="#">2840 Old Hickory Blvd</a></li>
+            <li><a href="#">Nashville, TN 37215</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copyright">© 2026 Summit Builders. All rights reserved. Licensed & Insured TN #12345</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Form submission
+    const form = document.querySelector('.contact-form');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Thank you for your inquiry! Our team will contact you within 24 hours to schedule your free consultation.');
+      form.reset();
+    });
+  </script>
+</body>
+</html>
