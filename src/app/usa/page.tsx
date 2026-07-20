@@ -346,7 +346,7 @@ export default function USAPage() {
                 {
                   title: t.workProject1Title,
                   category: t.workProject1Category,
-                  url: "https://autoservice.websbaca.cz",
+                  url: "/autoservice",
                   gradient: "from-blue-600 via-blue-500 to-cyan-400",
                   icon: Wrench,
                   mockupBg: "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
@@ -354,7 +354,7 @@ export default function USAPage() {
                 {
                   title: t.workProject2Title,
                   category: t.workProject2Category,
-                  url: "https://autobody.websbaca.cz",
+                  url: "/autobody",
                   gradient: "from-amber-500 via-orange-500 to-red-500",
                   icon: Hammer,
                   mockupBg: "bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900"
@@ -362,7 +362,7 @@ export default function USAPage() {
                 {
                   title: t.workProject3Title,
                   category: t.workProject3Category,
-                  url: "https://plumber.websbaca.cz",
+                  url: "/plumber",
                   gradient: "from-cyan-500 via-blue-500 to-indigo-500",
                   icon: Droplets,
                   mockupBg: "bg-gradient-to-br from-sky-900 via-sky-800 to-blue-900"
@@ -370,7 +370,7 @@ export default function USAPage() {
                 {
                   title: t.workProject4Title,
                   category: t.workProject4Category,
-                  url: "https://construction.websbaca.cz",
+                  url: "/construction",
                   gradient: "from-emerald-500 via-green-500 to-teal-500",
                   icon: Building2,
                   mockupBg: "bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900"
@@ -379,8 +379,6 @@ export default function USAPage() {
                 <motion.a
                   key={i}
                   href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   {...fadeIn}
                   transition={{ delay: i * 0.1 }}
                   className="group relative bg-dark-bg rounded-[2rem] overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-700"
