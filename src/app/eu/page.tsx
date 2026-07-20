@@ -309,14 +309,15 @@ export default function EUPage() {
             
             <div className="grid lg:grid-cols-3 gap-px bg-white/5 border border-white/5 rounded-[3rem] overflow-hidden">
               {[
-                { title: t.spec1Title, desc: t.spec1Desc, icon: Settings },
-                { title: t.spec2Title, desc: t.spec2Desc, icon: Layout },
-                { title: t.spec3Title, desc: t.spec3Desc, icon: MousePointer2 },
+                { title: t.spec1Title, desc: t.spec1Desc, icon: Settings, url: "/autoservice" },
+                { title: t.spec2Title, desc: t.spec2Desc, icon: Layout, url: "/construction" },
+                { title: t.spec3Title, desc: t.spec3Desc, icon: MousePointer2, url: "/plumber" },
               ].map((item, i) => (
-                <motion.div 
+                <motion.a 
                   key={i} 
+                  href={item.url}
                   {...fadeIn}
-                  className="bg-dark-bg p-20 hover:bg-brand/5 transition-all duration-700 group flex flex-col justify-between min-h-[500px]"
+                  className="bg-dark-bg p-20 hover:bg-brand/5 transition-all duration-700 group flex flex-col justify-between min-h-[500px] cursor-pointer"
                 >
                   <div>
                     <item.icon size={48} className="text-brand/30 group-hover:text-brand mb-12 transition-colors duration-500" />
@@ -324,9 +325,9 @@ export default function EUPage() {
                     <p className="text-zinc-500 font-medium leading-relaxed text-xl">{item.desc}</p>
                   </div>
                   <div className="mt-16 text-brand font-black text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    {t.exploreSolution}
+                    {t.exploreSolution} →
                   </div>
-                </motion.div>
+                </motion.a>
               ))}
             </div>
           </div>
