@@ -65,6 +65,20 @@ export const translations = {
     spec3Desc: "Lead-gen weby navržené pro konverzi. Změňte návštěvníky v platící klienty.",
     exploreSolution: "Prozkoumat řešení →",
     
+    // Our Work / Portfolio
+    workTitle: "NAŠE",
+    workSubtitle: "PRÁCE.",
+    workDescription: "Reálné weby, které jsme vytvořili pro skutečné podniky",
+    workVisit: "Navštívit web",
+    workProject1Title: "Prime Auto Solutions",
+    workProject1Category: "Autoservis",
+    workProject2Title: "Elite Collision Center",
+    workProject2Category: "Autoklempířství",
+    workProject3Title: "SwiftFlow Plumbing",
+    workProject3Category: "Instalatérství",
+    workProject4Title: "Summit Builders",
+    workProject4Category: "Stavebnictví",
+    
     // CTA
     ctaStart: "ZAČNĚTE",
     ctaEarn: "VYDĚLÁVAT",
@@ -165,6 +179,20 @@ export const translations = {
     spec3Title: "B2B SERVICES",
     spec3Desc: "Lead-gen websites designed for conversion. Turn visitors into paying clients.",
     exploreSolution: "Explore solution →",
+    
+    // Our Work / Portfolio
+    workTitle: "OUR",
+    workSubtitle: "WORK.",
+    workDescription: "Real websites we've built for real businesses",
+    workVisit: "Visit Website",
+    workProject1Title: "Prime Auto Solutions",
+    workProject1Category: "Auto Service",
+    workProject2Title: "Elite Collision Center",
+    workProject2Category: "Auto Body Shop",
+    workProject3Title: "SwiftFlow Plumbing",
+    workProject3Category: "Plumbing Services",
+    workProject4Title: "Summit Builders",
+    workProject4Category: "Construction",
     
     // CTA
     ctaStart: "START",
@@ -267,6 +295,20 @@ export const translations = {
     spec3Desc: "Lead-gen websites designed for conversion. Turn visitors into paying clients.",
     exploreSolution: "Explore solution →",
     
+    // Our Work / Portfolio
+    workTitle: "OUR",
+    workSubtitle: "WORK.",
+    workDescription: "Real websites we've built for real businesses",
+    workVisit: "Visit Website",
+    workProject1Title: "Prime Auto Solutions",
+    workProject1Category: "Auto Service",
+    workProject2Title: "Elite Collision Center",
+    workProject2Category: "Auto Body Shop",
+    workProject3Title: "SwiftFlow Plumbing",
+    workProject3Category: "Plumbing Services",
+    workProject4Title: "Summit Builders",
+    workProject4Category: "Construction",
+    
     // CTA
     ctaStart: "START",
     ctaEarn: "EARNING",
@@ -367,6 +409,20 @@ export const translations = {
     spec3Title: "SERVICIOS B2B",
     spec3Desc: "Webs de generación de leads diseñadas para conversión. Convierte visitantes en clientes de pago.",
     exploreSolution: "Explorar solución →",
+    
+    // Our Work / Portfolio
+    workTitle: "NUESTRO",
+    workSubtitle: "TRABAJO.",
+    workDescription: "Sitios web reales que hemos construido para negocios reales",
+    workVisit: "Visitar Sitio",
+    workProject1Title: "Prime Auto Solutions",
+    workProject1Category: "Taller",
+    workProject2Title: "Elite Collision Center",
+    workProject2Category: "Carrocería",
+    workProject3Title: "SwiftFlow Plumbing",
+    workProject3Category: "Fontanería",
+    workProject4Title: "Summit Builders",
+    workProject4Category: "Construcción",
     
     // CTA
     ctaStart: "EMPIEZA",
@@ -469,6 +525,20 @@ export const translations = {
     spec3Desc: "Lead-Generierung-Websites, die für Konversion entwickelt wurden. Verwandeln Sie Besucher in zahlende Kunden.",
     exploreSolution: "Lösung erkunden →",
     
+    // Our Work / Portfolio
+    workTitle: "UNSERE",
+    workSubtitle: "ARBEIT.",
+    workDescription: "Echte Websites, die wir für echte Unternehmen gebaut haben",
+    workVisit: "Website besuchen",
+    workProject1Title: "Prime Auto Solutions",
+    workProject1Category: "Werkstatt",
+    workProject2Title: "Elite Collision Center",
+    workProject2Category: "Karosserie",
+    workProject3Title: "SwiftFlow Plumbing",
+    workProject3Category: "Installateur",
+    workProject4Title: "Summit Builders",
+    workProject4Category: "Bau",
+    
     // CTA
     ctaStart: "STARTEN",
     ctaEarn: "VERDIENEN",
@@ -569,6 +639,20 @@ export const translations = {
     spec3Title: "SERVICES B2B",
     spec3Desc: "Sites de génération de leads conçus pour la conversion. Transformez les visiteurs en clients payants.",
     exploreSolution: "Explorer la solution →",
+    
+    // Our Work / Portfolio
+    workTitle: "NOTRE",
+    workSubtitle: "TRAVAIL.",
+    workDescription: "Sites web réels que nous avons construits pour de vraies entreprises",
+    workVisit: "Visiter le site",
+    workProject1Title: "Prime Auto Solutions",
+    workProject1Category: "Atelier",
+    workProject2Title: "Elite Collision Center",
+    workProject2Category: "Carrosserie",
+    workProject3Title: "SwiftFlow Plumbing",
+    workProject3Category: "Plomberie",
+    workProject4Title: "Summit Builders",
+    workProject4Category: "Construction",
     
     // CTA
     ctaStart: "COMMENCER",
@@ -671,6 +755,20 @@ export const translations = {
     spec3Desc: "Siti di lead generation progettati per la conversione. Trasforma i visitatori in clienti paganti.",
     exploreSolution: "Esplora soluzione →",
     
+    // Our Work / Portfolio
+    workTitle: "IL NOSTRO",
+    workSubtitle: "LAVORO.",
+    workDescription: "Siti web reali che abbiamo costruito per aziende reali",
+    workVisit: "Visita il sito",
+    workProject1Title: "Prime Auto Solutions",
+    workProject1Category: "Officina",
+    workProject2Title: "Elite Collision Center",
+    workProject2Category: "Carrozzeria",
+    workProject3Title: "SwiftFlow Plumbing",
+    workProject3Category: "Idraulico",
+    workProject4Title: "Summit Builders",
+    workProject4Category: "Costruzione",
+    
     // CTA
     ctaStart: "INIZIA",
     ctaEarn: "GUADAGNARE",
@@ -771,6 +869,20 @@ export const translations = {
     spec3Title: "USŁUGI B2B",
     spec3Desc: "Strony generowania leadów zaprojektowane do konwersji. Przekształć odwiedzających w płacących klientów.",
     exploreSolution: "Poznaj rozwiązanie →",
+    
+    // Our Work / Portfolio
+    workTitle: "NASZA",
+    workSubtitle: "PRACA.",
+    workDescription: "Rzeczywiste strony internetowe, które zbudowaliśmy dla prawdziwych firm",
+    workVisit: "Odwiedź stronę",
+    workProject1Title: "Prime Auto Solutions",
+    workProject1Category: "Warsztat",
+    workProject2Title: "Elite Collision Center",
+    workProject2Category: "Blacharnia",
+    workProject3Title: "SwiftFlow Plumbing",
+    workProject3Category: "Hydraulik",
+    workProject4Title: "Summit Builders",
+    workProject4Category: "Budownictwo",
     
     // CTA
     ctaStart: "ZACZNIJ",
@@ -874,6 +986,20 @@ export const translations = {
     spec3Desc: "Lead-generatie websites ontworpen voor conversie. Bezoekers omzetten in betalende klanten.",
     exploreSolution: "Oplossing verkennen →",
     
+    // Our Work / Portfolio
+    workTitle: "ONS",
+    workSubtitle: "WERK.",
+    workDescription: "Echte websites die we hebben gebouwd voor echte bedrijven",
+    workVisit: "Bezoek Website",
+    workProject1Title: "Prime Auto Solutions",
+    workProject1Category: "Werkplaats",
+    workProject2Title: "Elite Collision Center",
+    workProject2Category: "Autospuiterij",
+    workProject3Title: "SwiftFlow Plumbing",
+    workProject3Category: "Loodgieter",
+    workProject4Title: "Summit Builders",
+    workProject4Category: "Bouw",
+    
     // CTA
     ctaStart: "BEGIN",
     ctaEarn: "VERDIEN",
@@ -975,6 +1101,20 @@ export const translations = {
     spec3Title: "SERVIÇOS B2B",
     spec3Desc: "Sites de geração de leads projetados para conversão. Transforme visitantes em clientes pagantes.",
     exploreSolution: "Explorar solução →",
+    
+    // Our Work / Portfolio
+    workTitle: "NOSSO",
+    workSubtitle: "TRABALHO.",
+    workDescription: "Sites reais que construímos para negócios reais",
+    workVisit: "Visitar Site",
+    workProject1Title: "Prime Auto Solutions",
+    workProject1Category: "Oficina",
+    workProject2Title: "Elite Collision Center",
+    workProject2Category: "Carroceria",
+    workProject3Title: "SwiftFlow Plumbing",
+    workProject3Category: "Encanador",
+    workProject4Title: "Summit Builders",
+    workProject4Category: "Construção",
     
     // CTA
     ctaStart: "COMEÇAR",
