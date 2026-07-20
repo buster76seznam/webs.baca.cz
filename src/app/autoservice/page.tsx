@@ -34,8 +34,8 @@ export default function AutoServicePage() {
       </header>
 
       {/* Hero - Magazine style centered */}
-      <section className="py-20 bg-gradient-to-b from-slate-50 to-white">
-        <div className="max-w-4xl mx-auto px-8 text-center">
+      <section className="py-32 bg-gradient-to-b from-slate-50 to-white">
+        <div className="max-w-4xl mx-auto px-12 text-center">
           <span className="inline-block text-xs font-bold tracking-[0.3em] text-emerald-600 mb-6">FAMILY-OWNED SINCE 1985</span>
           <h1 className="text-6xl md:text-7xl font-black leading-[0.85] mb-8 text-slate-900">
             Your Car Deserves<br />
@@ -56,8 +56,8 @@ export default function AutoServicePage() {
       </section>
 
       {/* Trust Badges - Horizontal strip */}
-      <section className="bg-slate-900 text-white py-8">
-        <div className="max-w-5xl mx-auto px-8">
+      <section className="bg-slate-900 text-white py-12">
+        <div className="max-w-5xl mx-auto px-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div className="flex flex-col items-center gap-2">
               <span className="text-3xl font-black text-emerald-400">1,247</span>
@@ -80,8 +80,8 @@ export default function AutoServicePage() {
       </section>
 
       {/* Services - Clean cards */}
-      <section id="services" className="py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-8">
+      <section id="services" className="py-32 bg-white">
+        <div className="max-w-5xl mx-auto px-12">
           <div className="mb-12">
             <span className="text-xs font-bold tracking-[0.3em] text-emerald-600">WHAT WE OFFER</span>
             <h2 className="text-4xl font-black mt-2">Services & Pricing</h2>
@@ -113,8 +113,8 @@ export default function AutoServicePage() {
       </section>
 
       {/* Why Us - Simple list */}
-      <section id="about" className="py-24 bg-slate-50">
-        <div className="max-w-3xl mx-auto px-8">
+      <section id="about" className="py-32 bg-slate-50">
+        <div className="max-w-3xl mx-auto px-12">
           <span className="text-xs font-bold tracking-[0.3em] text-emerald-600">THE PREMIER PROMISE</span>
           <h2 className="text-4xl font-black mt-2 mb-12">Why Choose Us</h2>
           
@@ -140,10 +140,10 @@ export default function AutoServicePage() {
       </section>
 
       {/* Reviews - Simple centered */}
-      <section id="reviews" className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-8 text-center">
+      <section id="reviews" className="py-32 bg-white">
+        <div className="max-w-5xl mx-auto px-12 text-center">
           <span className="text-xs font-bold tracking-[0.3em] text-emerald-600">REAL CUSTOMERS</span>
-          <h2 className="text-4xl font-black mt-2 mb-12">What They Say</h2>
+          <h2 className="text-4xl font-black mt-2 mb-16">What They Say</h2>
           
           <div className="grid md:grid-cols-3 gap-8">
             {[
@@ -169,8 +169,8 @@ export default function AutoServicePage() {
       </section>
 
       {/* Contact - Two columns */}
-      <section id="contact" className="py-24 bg-emerald-500 text-white">
-        <div className="max-w-5xl mx-auto px-8">
+      <section id="contact" className="py-32 bg-emerald-500 text-white">
+        <div className="max-w-5xl mx-auto px-12">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-4xl font-black mb-4">Ready to Experience the Difference?</h2>
