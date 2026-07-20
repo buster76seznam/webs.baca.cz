@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from "framer-motion";
-import { CheckCircle, Zap, Globe, Shield, Layout, Settings, Mail, Phone, ArrowUpRight, MousePointer2, Rocket, BarChart3, Sparkles } from "lucide-react";
+import { CheckCircle, Zap, Globe, Shield, Layout, Settings, Mail, Phone, ArrowUpRight, MousePointer2, Rocket, BarChart3, Sparkles, Wrench, Hammer, Droplets, Building2, ExternalLink } from "lucide-react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import ContactLeadModal from "@/components/ContactLeadModal";
@@ -68,9 +68,9 @@ export default function USAPage() {
           </div>
           
           <div className="hidden lg:flex gap-14 text-[11px] font-black uppercase tracking-[0.3em] text-zinc-500">
-            {['why', 'pricing', 'process', 'specialization'].map((item) => (
+            {['why', 'pricing', 'process', 'specialization', 'work'].map((item) => (
               <a key={item} href={`#${item}`} className="hover:text-brand transition-all duration-300 hover:tracking-[0.4em]">
-                {item === 'why' ? t.footerWhy : item === 'pricing' ? t.footerPricing : item === 'process' ? t.footerProcess : t.footerSpecialization}
+                {item === 'why' ? t.footerWhy : item === 'pricing' ? t.footerPricing : item === 'process' ? t.footerProcess : item === 'specialization' ? t.footerSpecialization : 'Our Work'}
               </a>
             ))}
           </div>
@@ -332,6 +332,112 @@ export default function USAPage() {
           </div>
         </section>
 
+        {/* Our Work - Portfolio Section */}
+        <section id="work" className="py-64 px-8 relative overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-brand/5 rounded-full blur-[150px]" />
+          <div className="w-full relative z-10">
+            <motion.div {...fadeIn} className="mb-40 flex flex-col md:flex-row md:items-end justify-between gap-10">
+              <h2 className="text-5xl md:text-[100px] font-black tracking-tighter uppercase leading-none">{t.workTitle} <br /><span className="text-brand">{t.workSubtitle}</span></h2>
+              <p className="text-zinc-500 font-black uppercase tracking-[0.4em] text-xs md:mb-4">{t.workDescription}</p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {[
+                {
+                  title: t.workProject1Title,
+                  category: t.workProject1Category,
+                  url: "https://autoservice.websbaca.cz",
+                  gradient: "from-blue-600 via-blue-500 to-cyan-400",
+                  icon: Wrench,
+                  mockupBg: "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
+                },
+                {
+                  title: t.workProject2Title,
+                  category: t.workProject2Category,
+                  url: "https://autobody.websbaca.cz",
+                  gradient: "from-amber-500 via-orange-500 to-red-500",
+                  icon: Hammer,
+                  mockupBg: "bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900"
+                },
+                {
+                  title: t.workProject3Title,
+                  category: t.workProject3Category,
+                  url: "https://plumber.websbaca.cz",
+                  gradient: "from-cyan-500 via-blue-500 to-indigo-500",
+                  icon: Droplets,
+                  mockupBg: "bg-gradient-to-br from-sky-900 via-sky-800 to-blue-900"
+                },
+                {
+                  title: t.workProject4Title,
+                  category: t.workProject4Category,
+                  url: "https://construction.websbaca.cz",
+                  gradient: "from-emerald-500 via-green-500 to-teal-500",
+                  icon: Building2,
+                  mockupBg: "bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900"
+                },
+              ].map((project, i) => (
+                <motion.a
+                  key={i}
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  {...fadeIn}
+                  transition={{ delay: i * 0.1 }}
+                  className="group relative bg-dark-bg rounded-[2rem] overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-700"
+                >
+                  {/* Mockup Browser Frame */}
+                  <div className={`${project.mockupBg} p-6 pt-16 relative`}>
+                    {/* Browser dots */}
+                    <div className="absolute top-6 left-6 flex gap-2">
+                      <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                    </div>
+
+                    {/* Mock website content */}
+                    <div className="space-y-4">
+                      <div className="h-8 w-48 bg-white/10 rounded" />
+                      <div className="flex gap-3">
+                        <div className="h-6 w-20 bg-white/5 rounded" />
+                        <div className="h-6 w-20 bg-white/5 rounded" />
+                        <div className="h-6 w-20 bg-white/5 rounded" />
+                      </div>
+                      <div className="mt-8 p-6 bg-white/5 rounded-xl">
+                        <div className="h-4 w-32 bg-white/10 rounded mb-3" />
+                        <div className="h-4 w-full bg-white/10 rounded mb-2" />
+                        <div className="h-4 w-3/4 bg-white/10 rounded" />
+                      </div>
+                      <div className="grid grid-cols-3 gap-3 mt-4">
+                        <div className="h-24 bg-white/5 rounded-lg" />
+                        <div className="h-24 bg-white/5 rounded-lg" />
+                        <div className="h-24 bg-white/5 rounded-lg" />
+                      </div>
+                    </div>
+
+                    {/* Gradient overlay at bottom */}
+                    <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-dark-bg to-transparent" />
+                  </div>
+
+                  {/* Project Info */}
+                  <div className="p-8 relative z-10">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${project.gradient} flex items-center justify-center`}>
+                        <project.icon size={24} className="text-white" />
+                      </div>
+                      <span className="text-xs font-black uppercase tracking-widest text-brand">{project.category}</span>
+                    </div>
+                    <h3 className="text-2xl font-black text-white group-hover:text-brand transition-colors duration-500 mb-4">{project.title}</h3>
+                    <div className="flex items-center gap-2 text-brand font-black text-sm uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      {t.workVisit}
+                      <ExternalLink size={16} />
+                    </div>
+                  </div>
+                </motion.a>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Final CTA - Massive */}
         <section className="py-64 px-8">
           <motion.div 
@@ -404,6 +510,7 @@ export default function USAPage() {
                   <a href="#pricing" className="hover:text-white transition-all duration-300">{t.footerPricing}</a>
                   <a href="#process" className="hover:text-white transition-all duration-300">{t.footerProcess}</a>
                   <a href="#specialization" className="hover:text-white transition-all duration-300">{t.footerSpecialization}</a>
+                  <a href="#work" className="hover:text-white transition-all duration-300">Our Work</a>
                </div>
             </div>
           </div>
