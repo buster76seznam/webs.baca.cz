@@ -2,104 +2,121 @@
 
 export default function PlumberPage() {
   const services = [
-    { name: 'Emergency', desc: '24/7 burst pipe, flooding', price: 'Same Day' },
-    { name: 'Drain Cleaning', desc: 'Hydro-jetting, professional equipment', price: '$89+' },
-    { name: 'Water Heater', desc: 'Install, repair, all types', price: '$99+' },
-    { name: 'Leak Detection', desc: 'Electronic, no damage', price: '$75+' },
-    { name: 'Sewer Line', desc: 'Trenchless repair, replacement', price: 'Quote' },
-    { name: 'Gas Line', desc: 'Certified gas services', price: '$85+' },
+    { name: 'Drain Cleaning', price: '$99', desc: 'Unclog any drain fast', popular: true },
+    { name: 'Leak Repair', price: '$149', desc: 'Fix leaks before damage', popular: false },
+    { name: 'Water Heater', price: '$299', desc: 'Install or replace', popular: true },
+    { name: 'Pipe Replacement', price: '$400', desc: 'Full repiping service', popular: false },
+    { name: 'Sewer Line', price: '$599+', desc: 'Camera inspection included', popular: true },
+    { name: 'Emergency 24/7', price: '$199', desc: 'Same-day service', popular: false },
   ];
 
   return (
-    <div className="min-h-screen bg-blue-50 text-slate-900 font-sans">
+    <div className="min-h-screen bg-white text-slate-900 font-sans">
       {/* Header */}
-      <header className="bg-white border-b border-blue-100 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-12 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-              </svg>
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between py-5">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-black text-white">W</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-black tracking-tight">WATERWORKS PRO</h1>
+                <p className="text-xs text-blue-500 tracking-widest font-semibold">CHICAGO, IL</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-black tracking-tight">FLOW MASTERS</h1>
-              <p className="text-xs text-blue-600 tracking-widest font-semibold">DENVER PLUMBING</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-6">
-            <span className="hidden sm:flex items-center gap-2 text-sm font-medium">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              <span className="text-slate-600">24/7 Emergency</span>
-            </span>
-            <a href="tel:3035550198" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition">
-              (303) 555-0198
-            </a>
+            <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+              <a href="#services" className="hover:text-blue-500 transition-colors">Services</a>
+              <a href="#why" className="hover:text-blue-500 transition-colors">Why Us</a>
+              <a href="#reviews" className="hover:text-blue-500 transition-colors">Reviews</a>
+              <a href="#contact" className="hover:text-blue-500 transition-colors">Contact</a>
+            </nav>
           </div>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="py-32 bg-gradient-to-b from-blue-600 to-blue-700 text-white">
-        <div className="max-w-4xl mx-auto px-12 text-center">
-          <div className="mb-10">
-            <span className="inline-block bg-white/20 px-5 py-2 rounded-full text-sm font-semibold">
-              Serving Denver Since 1998
-            </span>
-          </div>
-          <h1 className="text-6xl md:text-7xl font-black leading-tight mb-8">
-            Denver's Most<br />
-            <span className="text-blue-200">Trusted Plumbers</span>
-          </h1>
-          <p className="text-2xl text-blue-100 mb-12 max-w-xl mx-auto">
-            Fast, honest plumbing. Upfront pricing. 24/7 emergency service when you need it most.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-5 justify-center">
-            <button className="bg-white text-blue-600 px-10 py-5 rounded-xl font-bold text-lg hover:bg-blue-50 transition shadow-lg">
-              Schedule Service
-            </button>
-            <a href="tel:3035550198" className="px-10 py-5 rounded-xl border-2 border-white/50 font-bold hover:bg-white/10 transition">
-              (303) 555-0198
-            </a>
+      <section className="bg-gradient-to-br from-blue-50 via-white to-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <span className="inline-block text-sm font-bold tracking-widest text-blue-500 mb-6">24/7 EMERGENCY SERVICE</span>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-6 text-slate-900">
+                Licensed Plumbers<br />
+                <span className="text-blue-500">You Can Rely On</span>
+              </h1>
+              <p className="text-xl text-slate-500 mb-8 leading-relaxed">
+                Family-owned since 2003. Upfront pricing, no surprises. Licensed, bonded & insured.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg">
+                  Schedule Service
+                </button>
+                <a href="tel:3125550891" className="px-8 py-4 rounded-xl border-2 border-slate-300 font-bold text-lg text-slate-700 hover:border-blue-500 hover:text-blue-500 transition text-center">
+                  (312) 555-0891
+                </a>
+              </div>
+            </div>
+            <div className="hidden lg:block">
+              <div className="bg-gradient-to-br from-blue-400 to-blue-600 rounded-3xl h-96 flex items-center justify-center shadow-xl">
+                <span className="text-white text-9xl font-black opacity-20">🚰</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-12 bg-white border-b border-blue-100">
-        <div className="max-w-5xl mx-auto px-12">
-          <div className="flex flex-wrap justify-center gap-6">
-            {[
-              { icon: '⭐', num: '4.9/5', label: 'Google Rating' },
-              { icon: '👥', num: '50,000+', label: 'Happy Customers' },
-              { icon: '🔧', num: '25+', label: 'Years Experience' },
-              { icon: '⏰', num: '24/7', label: 'Emergency Service' },
-            ].map((stat, i) => (
-              <div key={i} className="flex items-center gap-4 bg-blue-50 px-6 py-4 rounded-full">
-                <span className="text-xl">{stat.icon}</span>
-                <span className="font-bold text-lg">{stat.num}</span>
-                <span className="text-slate-500">{stat.label}</span>
-              </div>
-            ))}
+      {/* Trust Badges */}
+      <section className="bg-blue-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-4xl md:text-5xl font-black">20+</span>
+              <span className="text-xs md:text-sm opacity-90 tracking-wider font-semibold">YEARS EXPERIENCE</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-4xl md:text-5xl font-black">1hr</span>
+              <span className="text-xs md:text-sm opacity-90 tracking-wider font-semibold">RESPONSE TIME</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-4xl md:text-5xl font-black">4.9★</span>
+              <span className="text-xs md:text-sm opacity-90 tracking-wider font-semibold">GOOGLE RATING</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-4xl md:text-5xl font-black">100%</span>
+              <span className="text-xs md:text-sm opacity-90 tracking-wider font-semibold">SATISFACTION</span>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Services */}
-      <section className="py-32 bg-white">
-        <div className="max-w-4xl mx-auto px-12">
-          <div className="mb-16">
-            <span className="text-blue-600 text-xs font-bold tracking-[0.3em]">SERVICES</span>
-            <h2 className="text-5xl font-black mt-3">What We Do</h2>
+      <section id="services" className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <div className="mb-12">
+            <span className="text-sm font-bold tracking-widest text-blue-500">OUR SERVICES</span>
+            <h2 className="text-4xl md:text-5xl font-black mt-2">Plumbing Solutions</h2>
           </div>
           
-          <div className="space-y-5">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((service, i) => (
-              <div key={i} className="flex items-center justify-between p-8 bg-slate-50 rounded-2xl hover:bg-blue-50 transition cursor-pointer group">
-                <div>
-                  <h3 className="font-bold text-xl group-hover:text-blue-600 transition">{service.name}</h3>
-                  <p className="text-slate-500">{service.desc}</p>
+              <div key={i} className={`p-6 rounded-2xl border-2 transition-all cursor-pointer ${
+                service.popular 
+                  ? 'bg-blue-50 border-blue-300 hover:border-blue-500' 
+                  : 'bg-white border-slate-200 hover:border-slate-400'
+              }`}>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-xl font-bold">{service.name}</h3>
+                      {service.popular && (
+                        <span className="text-xs bg-blue-500 text-white px-2 py-0.5 rounded-full font-semibold">Popular</span>
+                      )}
+                    </div>
+                    <p className="text-slate-500">{service.desc}</p>
+                  </div>
+                  <span className="text-3xl font-black text-blue-500">{service.price}</span>
                 </div>
-                <span className="text-2xl font-black text-blue-600">{service.price}</span>
               </div>
             ))}
           </div>
@@ -107,111 +124,113 @@ export default function PlumberPage() {
       </section>
 
       {/* Why Us */}
-      <section className="py-32 bg-slate-50">
-        <div className="max-w-5xl mx-auto px-12">
-          <div className="grid md:grid-cols-2 gap-20">
-            <div>
-              <span className="text-blue-600 text-xs font-bold tracking-[0.3em]">WHY US</span>
-              <h2 className="text-5xl font-black mt-3 mb-10">The Flow Masters Difference</h2>
-              <div className="space-y-6">
-                {[
-                  { title: 'Upfront Pricing', desc: 'You\'ll know the cost before we start. No surprises.' },
-                  { title: 'Licensed & Insured', desc: 'Full coverage for your protection.' },
-                  { title: 'Guaranteed Work', desc: 'All work backed by our 100% satisfaction promise.' },
-                  { title: 'Clean & Tidy', desc: 'We leave your home spotless.' },
-                ].map((item, i) => (
-                  <div key={i} className="flex gap-5">
-                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold shrink-0">✓</div>
-                    <div>
-                      <h4 className="font-bold text-lg">{item.title}</h4>
-                      <p className="text-slate-500">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="bg-blue-600 rounded-3xl p-10 text-white">
-              <h3 className="text-3xl font-bold mb-6">Need Service?</h3>
-              <p className="text-blue-100 text-lg mb-10">Contact us 24/7 for emergency service or schedule at your convenience.</p>
-              <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <span className="text-3xl">📞</span>
-                  <div>
-                    <p className="text-blue-200">Call Us Anytime</p>
-                    <p className="font-bold text-2xl">(303) 555-0198</p>
-                  </div>
+      <section id="why" className="bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <span className="text-sm font-bold tracking-widest text-blue-500">WHY WATERWORKS</span>
+          <h2 className="text-4xl md:text-5xl font-black mt-2 mb-12">The Difference</h2>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              { title: 'Upfront Pricing', desc: 'You approve the price before we start work. No surprises.' },
+              { title: 'Licensed Professionals', desc: 'All technicians are licensed, bonded & insured.' },
+              { title: '24/7 Availability', desc: 'Emergencies don\'t wait. Neither do we.' },
+              { title: 'Clean & Respectful', desc: 'We wear shoe covers and clean up after every job.' },
+            ].map((item, i) => (
+              <div key={i} className="flex gap-6 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                <div className="w-14 h-14 bg-blue-500 rounded-xl flex items-center justify-center text-xl font-black text-white shrink-0">
+                  ✓
                 </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-3xl">📍</span>
-                  <div>
-                    <p className="text-blue-200">Location</p>
-                    <p className="font-bold text-xl">Denver, CO</p>
-                  </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-1">{item.title}</h3>
+                  <p className="text-slate-500">{item.desc}</p>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Service Areas */}
-      <section className="py-32 bg-white">
-        <div className="max-w-4xl mx-auto px-12 text-center">
-          <span className="text-blue-600 text-xs font-bold tracking-[0.3em]">COVERAGE</span>
-          <h2 className="text-5xl font-black mt-3 mb-12">Service Areas</h2>
-          <div className="flex flex-wrap justify-center gap-4">
-            {['Denver', 'Aurora', 'Lakewood', 'Thornton', 'Arvada', 'Westminster', 'Broomfield', 'Littleton', 'Englewood', 'Golden', 'Highlands Ranch'].map((area, i) => (
-              <span key={i} className="px-5 py-3 bg-slate-100 rounded-xl text-base font-medium hover:bg-blue-100 hover:text-blue-700 transition cursor-pointer">
-                {area}
-              </span>
             ))}
           </div>
         </div>
       </section>
 
       {/* Reviews */}
-      <section className="py-32 bg-blue-600 text-white">
-        <div className="max-w-5xl mx-auto px-12 text-center">
-          <span className="text-blue-200 text-xs font-bold tracking-[0.3em]">TESTIMONIALS</span>
-          <h2 className="text-5xl font-black mt-3 mb-16">What People Say</h2>
+      <section id="reviews" className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <span className="text-sm font-bold tracking-widest text-blue-500">REVIEWS</span>
+          <h2 className="text-4xl md:text-5xl font-black mt-2 mb-12">What Chicago Says</h2>
           
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { name: 'Lisa A.', text: 'Saved us from a flooded basement at midnight. Incredible service!' },
-              { name: 'Marcus J.', text: 'Professional, on-time, fair pricing. Use them for years now.' },
-              { name: 'Patricia L.', text: 'Technician was thorough and explained everything clearly.' },
+              { name: 'Patricia Johnson', city: 'Lincoln Park', text: 'Came within an hour on a Sunday! Fixed our burst pipe quickly and fairly priced.' },
+              { name: 'James Wilson', city: 'Wicker Park', text: 'Best plumbing experience ever. Professional, clean, and explained everything.' },
+              { name: 'Maria Garcia', city: 'Lakeview', text: 'Used them 3 times now. Always reliable and honest about pricing.' },
             ].map((review, i) => (
-              <div key={i} className="bg-white/10 backdrop-blur rounded-2xl p-8 text-left">
-                <p className="text-blue-100 mb-6 text-lg leading-relaxed">"{review.text}"</p>
-                <p className="font-bold text-lg">{review.name}</p>
+              <div key={i} className="p-8 bg-slate-50 rounded-2xl">
+                <p className="text-slate-600 text-lg mb-6 leading-relaxed">"{review.text}"</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-lg font-bold text-white">
+                    {review.name.split(' ').map(n => n[0]).join('')}
+                  </div>
+                  <div>
+                    <p className="font-bold">{review.name}</p>
+                    <p className="text-slate-400 text-sm">{review.city}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-32 bg-white">
-        <div className="max-w-3xl mx-auto px-12 text-center">
-          <h2 className="text-5xl font-black mb-6">Have a Plumbing Problem?</h2>
-          <p className="text-slate-500 text-xl mb-12">We're here 24/7. Give us a call.</p>
-          <a href="tel:3035550198" className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-12 py-5 rounded-xl font-bold text-2xl transition">
-            (303) 555-0198
-          </a>
+      {/* Contact */}
+      <section id="contact" className="bg-blue-500 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-black mb-4">Plumbing Problems? We Fix Them.</h2>
+              <p className="text-xl text-blue-100 mb-8">24/7 emergency service. Licensed & insured. Satisfaction guaranteed.</p>
+              <div className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center text-2xl">📞</div>
+                  <div>
+                    <p className="text-blue-200 text-sm">Call Us</p>
+                    <p className="font-bold text-3xl">(312) 555-0891</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center text-2xl">📍</div>
+                  <div>
+                    <p className="text-blue-200 text-sm">Office</p>
+                    <p className="font-bold text-xl">2847 N Damen Ave, Chicago</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white text-slate-900 p-8 rounded-2xl shadow-xl">
+              <h3 className="text-2xl font-bold mb-6">Request Service</h3>
+              <div className="space-y-4">
+                <input type="text" placeholder="Your Name" className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl" />
+                <input type="tel" placeholder="Phone" className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl" />
+                <select className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl">
+                  <option>Select Service</option>
+                  <option>Drain Cleaning</option>
+                  <option>Leak Repair</option>
+                  <option>Water Heater</option>
+                  <option>Emergency</option>
+                </select>
+                <button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 rounded-xl text-lg">Request Service</button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <footer className="bg-slate-900 text-white py-10">
-        <div className="max-w-5xl mx-auto px-12 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-              </svg>
+      <footer className="bg-slate-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center font-black">W</div>
+              <span className="font-bold">Waterworks Pro</span>
             </div>
-            <span className="font-bold">Flow Masters Plumbing</span>
+            <p className="text-slate-400">© 2025 • Licensed Plumbers</p>
           </div>
-          <p className="text-slate-400">© 2025 • Licensed Plumbers #PC.012345</p>
         </div>
       </footer>
     </div>
