@@ -127,7 +127,7 @@ export default function Home() {
               <div className="flex justify-center items-center gap-6 flex-wrap">
                 <button
                   type="button"
-                  onClick={() => document.getElementById('specialization')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => window.location.href = '/partnerprogram'}
                   className="w-full max-w-md sm:w-auto bg-brand/20 border-2 border-brand text-white px-8 py-5 sm:px-12 sm:py-6 md:px-16 md:py-8 rounded-[2rem] text-sm sm:text-base md:text-lg font-black hover:bg-brand hover:text-black transition-all duration-500 flex items-center justify-center gap-3 sm:gap-4 group uppercase tracking-tighter shadow-2xl"
                 >
                   Partner Program
@@ -396,7 +396,7 @@ export default function Home() {
                 
                 <button
                   type="button"
-                  onClick={openLead}
+                  onClick={() => window.location.href = '/partnerprogram'}
                   className="w-full bg-brand text-white py-6 md:py-8 rounded-[2rem] font-black text-lg md:text-xl hover:scale-[1.02] transition-all duration-500 uppercase tracking-tighter shadow-2xl shadow-brand/50"
                 >
                   {t.affiliateButton}
