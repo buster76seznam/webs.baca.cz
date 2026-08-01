@@ -5,6 +5,7 @@ import { calculateCommission, getTierInfo, getProgressToNextTier } from '@/lib/a
 
 interface PartnerStats {
   partnerId: string;
+  name: string;
   totalClicks: number;
   activeClients: number;
   monthlyRevenue: number;
@@ -53,6 +54,7 @@ export function AffiliateProvider({ children }: { children: ReactNode }) {
 
       setPartner({
         partnerId: pId,
+        name: data.name || '',
         totalClicks: data.totalClicks,
         activeClients: data.activeClients,
         monthlyRevenue: data.monthlyRevenue,

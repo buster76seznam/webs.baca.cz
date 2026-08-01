@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site";
 import { CountryProvider } from "@/contexts/CountryContext";
+import { AffiliateProvider } from "@/contexts/AffiliateContext";
 import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
@@ -136,7 +137,9 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <CountryProvider>
-          {children}
+          <AffiliateProvider>
+            {children}
+          </AffiliateProvider>
         </CountryProvider>
         <Analytics />
       </body>

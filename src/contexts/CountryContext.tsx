@@ -43,7 +43,11 @@ export function CountryProvider({ children }: { children: ReactNode }) {
   };
 
   if (!mounted) {
-    return <>{children}</>;
+    return (
+      <CountryContext.Provider value={{ country: DEFAULT_COUNTRY, countryCode: 'US', setCountry: () => {} }}>
+        {children}
+      </CountryContext.Provider>
+    );
   }
 
   return (
