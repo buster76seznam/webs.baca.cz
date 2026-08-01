@@ -444,7 +444,7 @@ export default function PartnerProgramPage() {
 
   // Main Partner Program Page
   return (
-    <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-gray-900 dark:text-white selection:bg-brand selection:text-white antialiased">
+    <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-gray-900 dark:text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden">
       <LoginModal />
 
       {/* Navigation */}
