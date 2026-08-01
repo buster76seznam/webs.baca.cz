@@ -15,9 +15,8 @@ const PhoneInput = dynamic(() => import('react-phone-number-input'), {
 import 'react-phone-number-input/style.css';
 
 export default function OrdersPage() {
-  const { language } = useCountry();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
-  const isEnglish = language === 'en' || language === 'en-gb';
+  const [currentLanguage, setCurrentLanguage] = useState<'cs' | 'en' | 'en-gb' | 'es' | 'de' | 'fr' | 'it' | 'pl' | 'nl' | 'pt'>('en');
+  const isEnglish = currentLanguage === 'en' || currentLanguage === 'en-gb';
   const t = translations[currentLanguage as keyof typeof translations];
   const industries = t.industries;
   
