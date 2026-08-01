@@ -130,7 +130,7 @@ export default function OrdersPage() {
     if (formData.workingTime === 'custom') {
       formattedWorkingHours = formData.workingHours;
     } else {
-      const dayLabel = dayLabels[formData.workingDays]?.[language] || formData.workingDays;
+      const dayLabel = dayLabels[formData.workingDays]?.[currentLanguage] || formData.workingDays;
       const timeLabel = timeLabels[formData.workingTime] || formData.workingTime;
       formattedWorkingHours = `${dayLabel} ${timeLabel}`;
     }
