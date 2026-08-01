@@ -5,16 +5,22 @@ import { CheckCircle, Zap, Globe, Shield, Layout, Settings, Mail, Phone, ArrowUp
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import ContactLeadModal from "@/components/ContactLeadModal";
-import { useCountry } from "@/contexts/CountryContext";
 import { translations } from "@/lib/translations";
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [logoError, setLogoError] = useState(false);
   const [leadOpen, setLeadOpen] = useState(false);
-  const { language, priceDisplay, currency } = useCountry();
-  const isEnglish = language === 'en';
+  const language = 'en';
+  const currency = '$';
+  const priceDisplay = '$150';
+  const isEnglish = true;
   const t = translations[language];
+  const promoVisible = false;
+
+  const openLead = () => {
+    window.location.href = '/orders';
+  };
 
   useEffect(() => {
     const handleScroll = () => {
