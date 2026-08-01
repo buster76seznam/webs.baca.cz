@@ -124,7 +124,15 @@ export default function Home() {
                 </p>
               </div>
               
-              <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center gap-6 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => document.getElementById('specialization')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="w-full max-w-md sm:w-auto bg-brand/20 border-2 border-brand text-white px-8 py-5 sm:px-12 sm:py-6 md:px-16 md:py-8 rounded-[2rem] text-sm sm:text-base md:text-lg font-black hover:bg-brand hover:text-black transition-all duration-500 flex items-center justify-center gap-3 sm:gap-4 group uppercase tracking-tighter shadow-2xl"
+                >
+                  Partner Program
+                  <ArrowUpRight size={22} className="sm:w-6 sm:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500 shrink-0" />
+                </button>
                 <button
                   type="button"
                   onClick={openLead}
