@@ -85,9 +85,9 @@ export default function Home() {
         </div>
       </nav>
 
-      <main>
+      <main className="w-full overflow-x-hidden">
         {/* Hero Section */}
-        <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden ${promoVisible ? "pt-72 sm:pt-80 md:pt-96 lg:pt-[28rem]" : "pt-48 sm:pt-52"}`}>
+        <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden w-full ${promoVisible ? "pt-72 sm:pt-80 md:pt-96 lg:pt-[28rem]" : "pt-48 sm:pt-52"}`}>
           {/* Animated Background Glows */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
           <motion.div 
@@ -147,7 +147,7 @@ export default function Home() {
         </section>
 
         {/* The "Why" Section - Massive Spacing */}
-        <section id="why" className="py-64 px-8 border-y border-white/5 relative overflow-hidden">
+        <section id="why" className="py-64 px-8 border-y border-white/5 relative overflow-hidden w-full">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" />
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="mb-40 text-left max-w-4xl">
@@ -190,7 +190,7 @@ export default function Home() {
         </section>
 
         {/* Pricing Section - Ultra Premium */}
-        <section id="pricing" className="py-64 px-8 relative overflow-hidden bg-[#020202]">
+        <section id="pricing" className="py-64 px-8 relative overflow-hidden bg-[#020202] w-full">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px] pointer-events-none" />
           
           <div className="max-w-7xl mx-auto relative z-10">
@@ -275,7 +275,7 @@ export default function Home() {
         </section>
 
         {/* Process Section - Vertical Timeline */}
-        <section id="process" className="py-64 px-8 relative">
+        <section id="process" className="py-64 px-8 relative w-full">
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="text-center mb-40">
                <h2 className="text-6xl md:text-[100px] font-black tracking-tighter uppercase leading-none">{t.processTitle} <br /><span className="text-brand">{t.processSubtitle}</span></h2>
@@ -308,7 +308,7 @@ export default function Home() {
         </section>
 
         {/* Specialization - Grid */}
-        <section id="specialization" className="py-64 px-8 bg-[#050505]">
+        <section id="specialization" className="py-64 px-8 bg-[#050505] w-full">
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="mb-40 flex flex-col md:flex-row md:items-end justify-between gap-10">
               <h2 className="text-5xl md:text-[100px] font-black tracking-tighter uppercase leading-none">{t.specTitle} <br /><span className="text-brand">{t.specSubtitle}</span></h2>
@@ -341,7 +341,7 @@ export default function Home() {
         </section>
 
         {/* Affiliate Program Section */}
-        <section className="py-64 px-8 bg-[#050505] relative overflow-hidden">
+        <section className="py-64 px-8 bg-[#050505] relative overflow-hidden w-full">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px] pointer-events-none" />
           
           <div className="max-w-7xl mx-auto relative z-10">
@@ -411,7 +411,7 @@ export default function Home() {
         </section>
 
         {/* Final CTA - Massive */}
-        <section className="py-64 px-8">
+        <section className="py-64 px-8 w-full">
           <motion.div 
             {...fadeIn}
             className="max-w-7xl mx-auto bg-brand p-24 md:p-48 rounded-[5rem] text-center relative overflow-hidden group shadow-[0_50px_100px_-20px_rgba(124,58,237,0.4)]"
@@ -433,7 +433,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="py-40 px-8 border-t border-white/5 bg-[#020202]">
+      <footer className="py-40 px-8 border-t border-white/5 bg-[#020202] w-full">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-20 mb-32">
             <div className="lg:col-span-6">

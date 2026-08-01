@@ -220,9 +220,9 @@ export default function PartnerProgramPage() {
     const progress = getProgressToNextTier(partner.activeClients);
 
     return (
-      <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-white selection:bg-brand selection:text-white antialiased">
+      <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden">
         {/* Header */}
-        <nav className="sticky top-0 z-50 bg-white/40 dark:bg-black/40 backdrop-blur-xl border-b border-white/20 dark:border-white/5">
+        <nav className="sticky top-0 z-50 bg-white/40 dark:bg-black/40 backdrop-blur-xl border-b border-white/20 dark:border-white/5 w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex items-center justify-between">
             <div className="flex items-center gap-4 group cursor-pointer" onClick={() => window.location.href = '/'}>
               <div className="relative w-10 h-10 overflow-hidden rounded-lg border-2 border-brand bg-brand/10 group-hover:border-brand-light transition-all duration-500">
@@ -261,7 +261,7 @@ export default function PartnerProgramPage() {
           </div>
         </nav>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 w-full">
           {/* Welcome Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -433,7 +433,7 @@ export default function PartnerProgramPage() {
           </div>
         </main>
 
-        <footer className="py-20 px-4 sm:px-6 md:px-8 border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#020202]">
+        <footer className="py-20 px-4 sm:px-6 md:px-8 border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#020202] w-full">
           <div className="max-w-7xl mx-auto text-center text-sm text-gray-600 dark:text-zinc-500 font-bold">
             <p>Questions? Contact us: <a href="mailto:webs.baca@gmail.com" className="text-brand hover:text-brand-dark transition">webs.baca@gmail.com</a></p>
           </div>
@@ -501,7 +501,7 @@ export default function PartnerProgramPage() {
         </div>
       </nav>
 
-      <main>
+      <main className="w-full overflow-x-hidden">
         {/* Hero Section */}
         <section className="relative w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
