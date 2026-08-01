@@ -332,6 +332,76 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Affiliate Program Section */}
+        <section className="py-64 px-8 bg-[#050505] relative overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px] pointer-events-none" />
+          
+          <div className="max-w-7xl mx-auto relative z-10">
+            <motion.div {...fadeIn} className="text-center mb-24">
+              <h2 className="text-5xl md:text-[80px] font-black tracking-tighter uppercase leading-none mb-8">{t.affiliateTitle}</h2>
+              <p className="text-xl md:text-2xl text-zinc-400 font-medium leading-relaxed mb-8">{t.affiliateDescription}</p>
+              <p className="text-lg md:text-xl text-zinc-500 leading-relaxed">{t.affiliatePitch}</p>
+            </motion.div>
+            
+            <motion.div {...fadeIn} className="grid lg:grid-cols-2 gap-16 items-start mb-24">
+              {/* Left side - Why partner */}
+              <div>
+                <h3 className="text-3xl font-black mb-12 italic text-white">{t.affiliateHeading}</h3>
+                <div className="space-y-10">
+                  <div className="flex gap-6 group">
+                    <div className="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center shrink-0 group-hover:bg-brand group-hover:text-white transition-all duration-500">
+                      <Zap size={24} />
+                    </div>
+                    <p className="text-zinc-400 text-lg leading-relaxed pt-2">{t.affiliateReason1}</p>
+                  </div>
+                  
+                  <div className="flex gap-6 group">
+                    <div className="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center shrink-0 group-hover:bg-brand group-hover:text-white transition-all duration-500">
+                      <BarChart3 size={24} />
+                    </div>
+                    <p className="text-zinc-400 text-lg leading-relaxed pt-2">{t.affiliateReason2}</p>
+                  </div>
+                  
+                  <div className="flex gap-6 group">
+                    <div className="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center shrink-0 group-hover:bg-brand group-hover:text-white transition-all duration-500">
+                      <Sparkles size={24} />
+                    </div>
+                    <p className="text-zinc-400 text-lg leading-relaxed pt-2">{t.affiliateReason3}</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Right side - Tiers */}
+              <div className="glass-purple p-16 md:p-20 rounded-[2.5rem] border border-brand/20">
+                <h3 className="text-2xl font-black mb-10 text-white">{t.affiliateTiers}</h3>
+                <div className="space-y-6 mb-12">
+                  <div className="p-6 bg-brand/5 rounded-2xl border border-brand/10 hover:border-brand/30 hover:bg-brand/10 transition-all duration-500">
+                    <div className="text-lg font-black text-brand mb-2">📊 {t.affiliateTier1}</div>
+                  </div>
+                  <div className="p-6 bg-brand/5 rounded-2xl border border-brand/10 hover:border-brand/30 hover:bg-brand/10 transition-all duration-500">
+                    <div className="text-lg font-black text-brand mb-2">📈 {t.affiliateTier2}</div>
+                  </div>
+                  <div className="p-6 bg-brand/5 rounded-2xl border border-brand/10 hover:border-brand/30 hover:bg-brand/10 transition-all duration-500">
+                    <div className="text-lg font-black text-brand mb-2">🚀 {t.affiliateTier3}</div>
+                  </div>
+                </div>
+                
+                <button
+                  type="button"
+                  onClick={openLead}
+                  className="w-full bg-brand text-white py-6 md:py-8 rounded-[2rem] font-black text-lg md:text-xl hover:scale-[1.02] transition-all duration-500 uppercase tracking-tighter shadow-2xl shadow-brand/50"
+                >
+                  {t.affiliateButton}
+                </button>
+              </div>
+            </motion.div>
+            
+            <motion.div {...fadeIn} className="bg-brand/10 border border-brand/20 p-16 rounded-[2.5rem] text-center">
+              <p className="text-lg md:text-xl text-zinc-300 leading-relaxed mb-8">{t.affiliateCTA}</p>
+            </motion.div>
+          </div>
+        </section>
+
         {/* Final CTA - Massive */}
         <section className="py-64 px-8">
           <motion.div 

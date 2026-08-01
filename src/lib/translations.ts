@@ -65,6 +65,22 @@ export const translations = {
     spec3Desc: "Lead-gen weby navržené pro konverzi. Změňte návštěvníky v platící klienty.",
     exploreSolution: "Prozkoumat řešení →",
     
+    // Affiliate Program
+    affiliateTitle: "Proměň svůj vliv v pasivní důchod na doživotí s Webs Bačou",
+    affiliateSubtitle: "Připoj se k partnerskému programu",
+    affiliateDescription: "Většina partnerských programů nabídne jednoduchou \"děkuji\" a pak na vás zapomene. V Webs Bačě věříme v dlouhodobé partnerství, které vám odměňuje váš vliv.",
+    affiliatePitch: "Poskytujeme službu „Done-For-You (DFY)" pro miliony řemeslníků v USA a Británii, kteří mají skvělé recenze, ale žádný digitální odkaz.",
+    affiliateHeading: "Proč s námi spolupracovat?",
+    affiliateReason1: "Vytváříme profesionální weby velmi rychle a s vysokou kvalitou. Díky tomu si lidé nemusí čekat a vy dostanete provizi ještě dříve.",
+    affiliateReason2: "Opakující se pasivní příjmy: Nezískáte zaplaceno jen jednou. Vydělávate si procento z každého měsíčního předplatného, pokud klient u nás zůstane.",
+    affiliateTiers: "Agresivní stupňované provize",
+    affiliateTier1: "Stupeň 1 (1–50 klientů): 10% měsíční provize.",
+    affiliateTier2: "Stupeň 2 (51–125 klientů): 15% měsíční provize.",
+    affiliateTier3: "Stupeň 3 (126+ klientů): 20% měsíční provize.",
+    affiliateReason3: "Vysoká poptávka: Existují stovky tisíc instalatérů, elektrikářů a stavbytelů, kteří zoufale potřebují profesionální přítomnost, ale nemají čas ji budovat.",
+    affiliateCTA: "Přestaň propagovat jednorázové produkty. Začni budovat portfolio měsíčních šeků. Připoj se k partnerskému programu Webs Bača ještě dnes",
+    affiliateButton: "Připoj se k partnerskému programu",
+    
     // CTA
     ctaStart: "ZAČNĚTE",
     ctaEarn: "VYDĚLÁVAT",
@@ -165,6 +181,22 @@ export const translations = {
     spec3Title: "B2B SERVICES",
     spec3Desc: "Lead-gen websites designed for conversion. Turn visitors into paying clients.",
     exploreSolution: "Explore solution →",
+    
+    // Affiliate Program
+    affiliateTitle: "Turn Your Influence into Lifetime Passive Income with Webs Bača",
+    affiliateSubtitle: "Join the Partner Program",
+    affiliateDescription: "Most affiliate programs offer a one-time 'thank you' and then forget you. At Webs Bača, we believe in long-term partnerships that reward your influence.",
+    affiliatePitch: "We provide a Done-For-You (DFY) service for the millions of blue-collar businesses in the USA and UK that have great reviews but no digital footprint.",
+    affiliateHeading: "Why partner with us?",
+    affiliateReason1: "We create professional websites very quickly and with high quality. Thanks to this, people don't have to wait and you get your commission even sooner.",
+    affiliateReason2: "Recurring Passive Income: You don't just get paid once. You earn a percentage of every monthly subscription for as long as the client stays with us.",
+    affiliateTiers: "Aggressive Tiered Commissions",
+    affiliateTier1: "Tier 1 (1–50 clients): 10% monthly commission.",
+    affiliateTier2: "Tier 2 (51–125 clients): 15% monthly commission.",
+    affiliateTier3: "Tier 3 (126+ clients): 20% monthly commission.",
+    affiliateReason3: "High Demand: There are hundreds of thousands of plumbers, electricians, and contractors who desperately need a professional presence but have zero time to build it.",
+    affiliateCTA: "Stop promoting one-off products. Start building a portfolio of monthly checks. Join the Webs Bača Partner Program today",
+    affiliateButton: "Join in Partner Program",
     
     // CTA
     ctaStart: "START",
