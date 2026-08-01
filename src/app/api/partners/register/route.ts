@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/supabase';
 
 function generateReferralCode(): string {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -46,7 +47,29 @@ export async function POST(request: NextRequest) {
     const referralCode = generateReferralCode();
     const verificationToken = generateVerificationToken();
 
-    const { error: insertError } = await supabase.from('partners').insert({
+    // Create Supabase Auth user to satisfy the user_id NOT NULL FK constraint
+    // Generate a random password - partner logs in via referral code, not Supabase auth
+    const randomPassword = crypto.randomUUID() + crypto.randomUUID();
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password: randomPassword,
+    });
+
+    if (authError) {
+      console.error('Supabase auth signup error:', authError);
+      // If user already exists in auth (identities empty), check partners table
+      if (authError.code !== 'user_already_exists') {
+        return NextResponse.json(
+          { success: false, error: 'Registration failed. Please try again.' },
+          { status: 500 }
+        );
+      }
+    }
+
+    // authData.user.id may be null if email already exists in auth (Supabase returns empty identities)
+    const userId = authData?.user?.id ?? null;
+
+    const { error: insertError } = await supabaseAdmin.from('partners').insert({
       name,
       email,
       referral_code: referralCode,
@@ -55,6 +78,7 @@ export async function POST(request: NextRequest) {
       verification_token: verificationToken,
       verified: false,
       active: true,
+      user_id: userId,
     });
 
     if (insertError) {
