@@ -61,9 +61,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (insertError) {
-      console.error('Supabase insert error:', insertError);
+      console.error('Supabase insert error:', JSON.stringify(insertError));
       return NextResponse.json(
-        { success: false, error: 'Registration failed. Please try again.' },
+        { success: false, error: `DB error: ${insertError.message} (code: ${insertError.code})` },
         { status: 500 }
       );
     }
