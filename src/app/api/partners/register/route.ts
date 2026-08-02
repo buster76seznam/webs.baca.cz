@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { supabaseAdmin } from '@/supabase';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 function generateReferralCode(): string {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  const length = 6 + Math.floor(Math.random() * 3); // 6-8 chars
+  const length = 6 + Math.floor(Math.random() * 3);
   let result = 'ref_';
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -47,29 +49,7 @@ export async function POST(request: NextRequest) {
     const referralCode = generateReferralCode();
     const verificationToken = generateVerificationToken();
 
-    // Create Supabase Auth user to satisfy the user_id NOT NULL FK constraint
-    // Generate a random password - partner logs in via referral code, not Supabase auth
-    const randomPassword = crypto.randomUUID() + crypto.randomUUID();
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password: randomPassword,
-    });
-
-    if (authError) {
-      console.error('Supabase auth signup error:', authError);
-      // If user already exists in auth (identities empty), check partners table
-      if (authError.code !== 'user_already_exists') {
-        return NextResponse.json(
-          { success: false, error: 'Registration failed. Please try again.' },
-          { status: 500 }
-        );
-      }
-    }
-
-    // authData.user.id may be null if email already exists in auth (Supabase returns empty identities)
-    const userId = authData?.user?.id ?? null;
-
-    const { error: insertError } = await supabaseAdmin.from('partners').insert({
+    const { error: insertError } = await supabase.from('partners').insert({
       name,
       email,
       referral_code: referralCode,
@@ -78,7 +58,6 @@ export async function POST(request: NextRequest) {
       verification_token: verificationToken,
       verified: false,
       active: true,
-      user_id: userId,
     });
 
     if (insertError) {
@@ -89,53 +68,49 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send verification email via VPS email server
+    // Send verification email via Resend
     const verificationLink = `https://websbaca.cz/partnerprogram/verify?token=${verificationToken}`;
     try {
-      const emailResponse = await fetch('http://142.93.163.199:5000/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          to: email,
-          subject: 'Potvrzení registrace - Webs Bača Partner Program',
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 12px;">
-              <div style="text-align: center; margin-bottom: 32px;">
-                <h1 style="color: #7c3aed; font-size: 28px; margin: 0;">Webs Bača</h1>
-                <p style="color: #666; margin: 4px 0 0 0; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;">Partner Program</p>
-              </div>
-              <h2 style="color: #111; font-size: 22px;">Vítej, ${name}! 🎉</h2>
-              <p style="color: #444; line-height: 1.6;">Děkujeme za registraci do našeho partner programu. Pro dokončení registrace potvrď svůj email kliknutím na tlačítko níže:</p>
-              <div style="text-align: center; margin: 32px 0;">
-                <a href="${verificationLink}" style="display: inline-block; background: #7c3aed; color: white; padding: 16px 32px; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 16px;">
-                  ✓ Potvrdit email
-                </a>
-              </div>
-              <p style="color: #666; font-size: 14px;">Nebo zkopíruj tento odkaz do prohlížeče:<br>
-              <span style="color: #7c3aed;">${verificationLink}</span></p>
-              <div style="background: #f5f3ff; border: 1px solid #ede9fe; border-radius: 8px; padding: 16px; margin: 24px 0;">
-                <p style="margin: 0; color: #7c3aed; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em;">Tvůj Referral kód</p>
-                <p style="margin: 8px 0 0 0; font-size: 20px; font-weight: bold; color: #111; font-family: monospace;">${referralCode}</p>
-                <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;">Ulož si ho – budeš ho potřebovat pro přihlášení</p>
-              </div>
-              <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
-              <p style="color: #999; font-size: 12px; text-align: center;">Webs Bača Partner Program &bull; websbaca.cz</p>
+      const { error: emailError } = await resend.emails.send({
+        from: 'Webs Bača <noreply@websbaca.cz>',
+        to: email,
+        subject: 'Potvrzeni registrace - Webs Baca Partner Program',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 12px;">
+            <div style="text-align: center; margin-bottom: 32px;">
+              <h1 style="color: #7c3aed; font-size: 28px; margin: 0;">Webs Baca</h1>
+              <p style="color: #666; margin: 4px 0 0 0; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;">Partner Program</p>
             </div>
-          `,
-        }),
+            <h2 style="color: #111; font-size: 22px;">Vitej, ${name}!</h2>
+            <p style="color: #444; line-height: 1.6;">Dekujeme za registraci do nascho partner programu. Pro dokonceni registrace potvrdte svuj email kliknuti na tlacitko nize:</p>
+            <div style="text-align: center; margin: 32px 0;">
+              <a href="${verificationLink}" style="display: inline-block; background: #7c3aed; color: white; padding: 16px 32px; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 16px;">
+                Potvrdit email
+              </a>
+            </div>
+            <p style="color: #666; font-size: 14px;">Nebo zkopirujte tento odkaz do prohlizece:<br>
+            <span style="color: #7c3aed;">${verificationLink}</span></p>
+            <div style="background: #f5f3ff; border: 1px solid #ede9fe; border-radius: 8px; padding: 16px; margin: 24px 0;">
+              <p style="margin: 0; color: #7c3aed; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em;">Vas Referral kod</p>
+              <p style="margin: 8px 0 0 0; font-size: 20px; font-weight: bold; color: #111; font-family: monospace;">${referralCode}</p>
+              <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;">Ulozit si ho - budete ho potrebovat pro prihlaseni</p>
+            </div>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+            <p style="color: #999; font-size: 12px; text-align: center;">Webs Baca Partner Program - websbaca.cz</p>
+          </div>
+        `,
       });
 
-      if (!emailResponse.ok) {
-        console.error('VPS email server error:', emailResponse.status, await emailResponse.text());
+      if (emailError) {
+        console.error('Resend email error:', emailError);
       }
-    } catch (emailError) {
-      console.error('Failed to send verification email:', emailError);
-      // Continue - registration is saved, email failure is not critical
+    } catch (emailErr) {
+      console.error('Failed to send verification email:', emailErr);
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Registrace úspěšná! Zkontroluj svůj email pro potvrzení účtu.',
+      message: 'Registration successful! Check your email to verify your account.',
       referralCode,
     });
   } catch (error) {
