@@ -25,6 +25,10 @@ export default function PartnerProgramPage() {
     email: '',
     socialLinks: '',
     payoutMethod: 'bank-transfer',
+    iban: '',
+    accountNumber: '',
+    swift: '',
+    paypalEmail: '',
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formError, setFormError] = useState('');
@@ -82,7 +86,7 @@ export default function PartnerProgramPage() {
       const data = await response.json();
       if (data.success) {
         setFormSubmitted(true);
-        setFormData({ name: '', email: '', socialLinks: '', payoutMethod: 'bank-transfer' });
+        setFormData({ name: '', email: '', socialLinks: '', payoutMethod: 'bank-transfer', iban: '', accountNumber: '', swift: '', paypalEmail: '' });
         setTimeout(() => setFormSubmitted(false), 8000);
       } else {
         setFormError(data.error || 'Registration failed. Please try again.');
@@ -843,6 +847,95 @@ export default function PartnerProgramPage() {
                   className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-zinc-500 focus:outline-none focus:border-brand transition font-bold"
                   placeholder="https://instagram.com/yourhandle or your YouTube channel link"
                 />
+              </div>
+
+              {/* Výplatní údaje */}
+              <div className="border-t-2 border-gray-200 dark:border-white/10 pt-6">
+                <p className="text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-4">
+                  Výplatní údaje
+                </p>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-3">
+                    Způsob výplaty
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {(['bank-transfer', 'paypal'] as const).map((method) => (
+                      <button
+                        key={method}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, payoutMethod: method })}
+                        className={`py-3 px-4 rounded-xl border-2 font-black text-sm uppercase tracking-widest transition-all duration-200 ${
+                          formData.payoutMethod === method
+                            ? 'bg-brand text-white border-brand'
+                            : 'bg-gray-50 dark:bg-black/20 text-gray-700 dark:text-zinc-300 border-gray-300 dark:border-white/10 hover:border-brand'
+                        }`}
+                      >
+                        {method === 'bank-transfer' ? 'Bankovní převod' : 'PayPal'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {formData.payoutMethod === 'bank-transfer' && (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-2">
+                        IBAN
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.iban}
+                        onChange={(e) => setFormData({ ...formData, iban: e.target.value })}
+                        className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-zinc-500 focus:outline-none focus:border-brand transition font-mono font-bold"
+                        placeholder="CZ65 0800 0000 1920 0014 5399"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-2">
+                        Číslo účtu (CZ formát)
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.accountNumber}
+                        onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
+                        className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-zinc-500 focus:outline-none focus:border-brand transition font-mono font-bold"
+                        placeholder="192000145399/0800"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-2">
+                        SWIFT / BIC
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.swift}
+                        onChange={(e) => setFormData({ ...formData, swift: e.target.value })}
+                        className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-zinc-500 focus:outline-none focus:border-brand transition font-mono font-bold"
+                        placeholder="KOMBCZPP"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {formData.payoutMethod === 'paypal' && (
+                  <div>
+                    <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-2">
+                      PayPal Email
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.paypalEmail}
+                      onChange={(e) => setFormData({ ...formData, paypalEmail: e.target.value })}
+                      className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-zinc-500 focus:outline-none focus:border-brand transition font-bold"
+                      placeholder="vas@email.com"
+                    />
+                  </div>
+                )}
+
+                <p className="text-xs text-gray-500 dark:text-zinc-500 mt-3 font-bold">
+                  Výplatní údaje jsou bezpečně uloženy a slouží výhradně pro vyplacení provize.
+                </p>
               </div>
 
               {formError && (

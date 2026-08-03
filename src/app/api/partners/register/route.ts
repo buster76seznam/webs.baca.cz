@@ -23,7 +23,7 @@ function generateVerificationToken(): string {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, socialLinks, payoutMethod } = body;
+    const { name, email, socialLinks, payoutMethod, iban, accountNumber, swift, paypalEmail } = body;
 
     if (!email || !name) {
       return NextResponse.json(
@@ -54,7 +54,16 @@ export async function POST(request: NextRequest) {
       email,
       referral_code: referralCode,
       social_links: socialLinks || null,
-      payout_method: { type: payoutMethod || 'bank-transfer' },
+      payout_method: {
+        type: payoutMethod || 'bank-transfer',
+        ...(payoutMethod === 'paypal'
+          ? { paypal_email: paypalEmail || null }
+          : {
+              iban: iban || null,
+              account_number: accountNumber || null,
+              swift: swift || null,
+            }),
+      },
       verification_token: verificationToken,
       verified: false,
       active: true,
