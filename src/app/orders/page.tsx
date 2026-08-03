@@ -29,6 +29,7 @@ export default function OrdersPage() {
     companyPhone: '',
     companyEmail: '',
     companyAddress: '',
+    companyCountry: '',
     industry: '',
     ownerName: '',
     ownerPhone: '',
@@ -93,6 +94,39 @@ export default function OrdersPage() {
     lang.native.toLowerCase().includes(languageSearch.toLowerCase())
   );
 
+  const countries = [
+    { code: 'CZ', name: 'Česká republika', en: 'Czech Republic' },
+    { code: 'SK', name: 'Slovensko', en: 'Slovakia' },
+    { code: 'PL', name: 'Polsko', en: 'Poland' },
+    { code: 'DE', name: 'Německo', en: 'Germany' },
+    { code: 'AT', name: 'Rakousko', en: 'Austria' },
+    { code: 'HU', name: 'Maďarsko', en: 'Hungary' },
+    { code: 'RO', name: 'Rumunsko', en: 'Romania' },
+    { code: 'HR', name: 'Chorvatsko', en: 'Croatia' },
+    { code: 'SI', name: 'Slovinsko', en: 'Slovenia' },
+    { code: 'GB', name: 'Velká Británie', en: 'United Kingdom' },
+    { code: 'US', name: 'USA', en: 'United States' },
+    { code: 'FR', name: 'Francie', en: 'France' },
+    { code: 'IT', name: 'Itálie', en: 'Italy' },
+    { code: 'ES', name: 'Španělsko', en: 'Spain' },
+    { code: 'NL', name: 'Nizozemsko', en: 'Netherlands' },
+    { code: 'BE', name: 'Belgie', en: 'Belgium' },
+    { code: 'CH', name: 'Švýcarsko', en: 'Switzerland' },
+    { code: 'SE', name: 'Švédsko', en: 'Sweden' },
+    { code: 'DK', name: 'Dánsko', en: 'Denmark' },
+    { code: 'NO', name: 'Norsko', en: 'Norway' },
+    { code: 'FI', name: 'Finsko', en: 'Finland' },
+    { code: 'PT', name: 'Portugalsko', en: 'Portugal' },
+    { code: 'GR', name: 'Řecko', en: 'Greece' },
+    { code: 'UA', name: 'Ukrajina', en: 'Ukraine' },
+    { code: 'RU', name: 'Rusko', en: 'Russia' },
+    { code: 'TR', name: 'Turecko', en: 'Turkey' },
+    { code: 'AE', name: 'Spojené arabské emiráty', en: 'United Arab Emirates' },
+    { code: 'CA', name: 'Kanada', en: 'Canada' },
+    { code: 'AU', name: 'Austrálie', en: 'Australia' },
+    { code: 'OTHER', name: 'Jiná', en: 'Other' },
+  ];
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -140,7 +174,7 @@ export default function OrdersPage() {
     // Validation - all required fields (contract fields removed)
     if (!formData.companyName.trim() || !formData.companyPhone.trim() || 
         !formData.companyEmail.trim() || !formData.companyAddress.trim() ||
-        !formData.industry || !formData.domain.trim() || 
+        !formData.companyCountry || !formData.industry || !formData.domain.trim() || 
         !formData.description.trim() || !formData.advantage.trim() ||
         !formattedWorkingHours.trim()) {
       setErrorMsg(isEnglish ? 'Please fill in all required fields.' : 'Vyplňte prosím všechna povinná pole.');
@@ -180,7 +214,7 @@ export default function OrdersPage() {
       setStatus('success');
       setFormData({
         companyName: '', companyPhone: '', companyEmail: '', companyAddress: '',
-        industry: '', ownerName: '', ownerPhone: '', ownerEmail: '',
+        companyCountry: '', industry: '', ownerName: '', ownerPhone: '', ownerEmail: '',
         domain: '', description: '', advantage: '', priceList: '',
         workingDays: 'mon-fri', workingTime: '9-17', workingHours: '',
         primaryColor: '#7C3AED', secondaryColor: '#10B981', language: 'cs',
@@ -295,6 +329,15 @@ export default function OrdersPage() {
               <div>
                 <label className={labelClass}>{isEnglish ? 'Address *' : 'Adresa *'}</label>
                 <input type="text" name="companyAddress" value={formData.companyAddress} onChange={handleInputChange} placeholder={isEnglish ? 'Street 123, 123 45 City' : 'Ulice 123, 123 45 Město'} className={inputClass} required />
+              </div>
+              <div>
+                <label className={labelClass}>{isEnglish ? 'Country *' : 'Země *'}</label>
+                <select name="companyCountry" value={formData.companyCountry} onChange={handleInputChange} className={inputClass} required>
+                  <option value="">{isEnglish ? 'Select country' : 'Vyberte zemi'}</option>
+                  {countries.map(c => (
+                    <option key={c.code} value={c.code}>{isEnglish ? c.en : c.name}</option>
+                  ))}
+                </select>
               </div>
             </motion.div>
           )}

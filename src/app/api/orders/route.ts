@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
       company_phone: formData.get('companyPhone'),
       company_email: formData.get('companyEmail'),
       company_address: formData.get('companyAddress'),
+      company_country: formData.get('companyCountry') || null,
       industry: formData.get('industry'),
       owner_name: formData.get('ownerName') || null,
       owner_phone: formData.get('ownerPhone') || null,
