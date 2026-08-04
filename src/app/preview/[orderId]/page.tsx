@@ -9,6 +9,10 @@ interface GeneratedSiteJson {
   advantages: Array<{ title: string; description: string }>;
   contact: { email: string; phone: string; address: string };
   theme: { primary_color: string; secondary_color: string; font_style: string };
+  layout?: {
+    hero_variant?: 'variant_1' | 'variant_2' | 'variant_3';
+    services_variant?: 'grid' | 'list';
+  };
 }
 
 interface OrderRow {

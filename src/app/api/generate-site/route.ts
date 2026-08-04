@@ -13,6 +13,10 @@ interface GeneratedSiteJson {
   advantages: Array<{ title: string; description: string }>;
   contact: { email: string; phone: string; address: string };
   theme: { primary_color: string; secondary_color: string; font_style: string };
+  layout: {
+    hero_variant: 'variant_1' | 'variant_2' | 'variant_3';
+    services_variant: 'grid' | 'list';
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -64,6 +68,14 @@ Generate the JSON with these exact keys:
 - advantages: array of { title, description }
 - contact: { email, phone, address }
 - theme: { primary_color (hex), secondary_color (hex), font_style }
+- layout: { hero_variant (one of: "variant_1", "variant_2", "variant_3"), services_variant (one of: "grid", "list") }
+
+For layout: choose hero_variant and services_variant that best match the industry and brand personality:
+- variant_1 (Split): good for service companies, local businesses
+- variant_2 (Centered/Full-width): good for bold brands, tech, creative agencies
+- variant_3 (Minimal): good for luxury, premium, design-focused brands
+- grid: good when there are 3+ distinct services to display
+- list: good when services have longer descriptions or fewer items (1-4)
 
 Write all text content in the language specified (${formData.language || 'cs'}). Make it professional and compelling.`;
 
