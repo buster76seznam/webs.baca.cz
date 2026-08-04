@@ -28,6 +28,7 @@ interface OrderRow {
   company_email: string | null;
   company_phone: string | null;
   company_address: string | null;
+  revision_count: number | null;
 }
 
 export default async function PreviewPage({
@@ -40,7 +41,7 @@ export default async function PreviewPage({
   const { data: order, error } = await supabaseAdmin
     .from('orders')
     .select(
-      'id, company_name, status, generated_site_json, primary_color, language, google_maps_url, facebook_url, instagram_url, company_email, company_phone, company_address'
+      'id, company_name, status, generated_site_json, primary_color, language, google_maps_url, facebook_url, instagram_url, company_email, company_phone, company_address, revision_count'
     )
     .eq('id', orderId)
     .single<OrderRow>();
@@ -68,6 +69,7 @@ export default async function PreviewPage({
       order={order}
       siteJson={order.generated_site_json}
       isPaid={isPaid}
+      revisionCount={order.revision_count ?? 0}
     />
   );
 }
