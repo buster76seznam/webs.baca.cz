@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/supabase';
+import { sendPreviewEmail } from '@/lib/emails';
 
 export const runtime = 'nodejs';
 
@@ -146,6 +147,14 @@ Write all text content in the language specified (${formData.language || 'cs'}).
     }
 
     console.log('Site generated successfully for order:', order_id);
+
+    // Send preview email to client
+    if (order.company_email) {
+      const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/preview/${order_id}`;
+      sendPreviewEmail(order.company_email, previewUrl, order_id).catch((err) =>
+        console.error('Failed to send preview email:', err)
+      );
+    }
 
     return NextResponse.json(
       { success: true, order: updatedOrder, generated_site_json: generatedJson },
