@@ -4,10 +4,9 @@ import { supabaseAdmin } from '@/supabase';
 
 export const runtime = 'nodejs';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export async function POST(request: NextRequest) {
   try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     const { orderId } = await request.json();
 
     if (!orderId) {

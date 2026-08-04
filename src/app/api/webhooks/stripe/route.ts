@@ -8,10 +8,9 @@ export const runtime = 'nodejs';
 // Vypnout automatický body parser – Stripe vyžaduje raw body pro ověření podpisu
 export const dynamic = 'force-dynamic';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-
 export async function POST(request: NextRequest) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
   const rawBody = await request.text();
   const sig = request.headers.get('stripe-signature');
 
