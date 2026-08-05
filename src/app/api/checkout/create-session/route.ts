@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://webs.baca.cz';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_BASE_URL || 'https://webs.baca.cz';
 
     // Metadata pro webhook
     const metadata: Record<string, string> = { orderId };
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       ],
       automatic_tax: { enabled: true },
       metadata,
-      success_url: `${baseUrl}/preview/${orderId}?status=success`,
+      success_url: `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/preview/${orderId}`,
     });
 
