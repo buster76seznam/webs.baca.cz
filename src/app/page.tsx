@@ -41,8 +41,8 @@ export default function Home() {
     <div className="min-h-screen bg-[#030303] text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden">
       <ContactLeadModal open={leadOpen} onClose={() => setLeadOpen(false)} />
       {/* Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-700 ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
-        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-8 h-full flex items-center justify-between gap-3 min-w-0">
+      <nav className={`fixed inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 transition-all duration-700 ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
+        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-8 h-full flex items-center justify-between gap-3 min-w-0 overflow-hidden">
           <div className="flex items-center gap-6 group cursor-pointer">
             <div className="relative w-14 h-14 overflow-hidden rounded-2xl border-2 border-brand bg-[#1a0b2e] group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
               {!logoError ? (
@@ -78,7 +78,7 @@ export default function Home() {
           <button
             type="button"
             onClick={openLead}
-            className="shrink-0 bg-brand text-white px-4 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 rounded-xl text-[10px] sm:text-xs font-black hover:bg-brand-dark transition-all duration-500 uppercase tracking-widest shadow-[0_0_30px_-5px_rgba(124,58,237,0.5)] hover:shadow-[0_0_40px_0px_rgba(124,58,237,0.6)]"
+            className="shrink-0 min-w-0 bg-brand text-white px-4 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 rounded-xl text-[10px] sm:text-xs font-black hover:bg-brand-dark transition-all duration-500 uppercase tracking-widest shadow-[0_0_30px_-5px_rgba(124,58,237,0.5)] hover:shadow-[0_0_40px_0px_rgba(124,58,237,0.6)]"
           >
             {t.heroCTA}
           </button>

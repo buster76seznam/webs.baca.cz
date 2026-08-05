@@ -226,8 +226,8 @@ export default function PartnerProgramPage() {
     return (
       <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden">
         {/* Header */}
-        <nav className="sticky top-0 z-50 bg-white/40 dark:bg-black/40 backdrop-blur-xl border-b border-white/20 dark:border-white/5 w-full">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex items-center justify-between">
+        <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/40 dark:bg-black/40 backdrop-blur-xl border-b border-white/20 dark:border-white/5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex items-center justify-between min-w-0 overflow-hidden">
             <div className="flex items-center gap-4 group cursor-pointer" onClick={() => window.location.href = '/'}>
               <div className="relative w-10 h-10 overflow-hidden rounded-lg border-2 border-brand bg-brand/10 group-hover:border-brand-light transition-all duration-500">
                 {!logoError ? (
@@ -452,8 +452,8 @@ export default function PartnerProgramPage() {
       <LoginModal />
 
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/60 dark:bg-black/40 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 transition-all duration-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 h-20 flex items-center justify-between gap-3">
+      <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/60 dark:bg-black/40 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 transition-all duration-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 h-20 flex items-center justify-between gap-3 min-w-0 overflow-hidden">
           <div className="flex items-center gap-4 group cursor-pointer" onClick={() => window.location.href = '/'}>
             <div className="relative w-12 h-12 overflow-hidden rounded-2xl border-2 border-brand bg-brand/10 group-hover:border-brand-light transition-all duration-500">
               {!logoError ? (
