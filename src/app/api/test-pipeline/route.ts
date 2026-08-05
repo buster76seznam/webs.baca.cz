@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { supabaseAdmin } from '@/supabase';
 import { COMMISSION_STRUCTURE } from '@/lib/affiliate-types';
-import { sendPreviewEmail } from '@/lib/emails';
+import { sendPreviewEmail, sendAdminDomainPurchaseEmail, sendOrderConfirmationEmail } from '@/lib/emails';
 
 export const runtime = 'nodejs';
 
@@ -385,17 +385,39 @@ Write all text content in English. Make it professional and compelling.`;
       };
     }
 
-    // 5c: Odeslání testovacího e-mailu přes Resend
+    // 5c: Odeslání testovacích e-mailů přes Resend (admin + zákazník paralelně)
     let emailResult: Record<string, unknown> = {};
     try {
       const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://webs.baca.cz'}/preview/${orderId}`;
-      const emailResponse = await sendPreviewEmail(
+      const [adminEmailResponse, confirmationEmailResponse] = await Promise.all([
+        sendAdminDomainPurchaseEmail(
+          orderId!,
+          'Austin Roofing Co.',
+          'test-austinroofing.com',
+          'test@austinroofingco.com'
+        ),
+        sendOrderConfirmationEmail(
+          'test@austinroofingco.com',
+          'Austin Roofing Co.',
+          'test-austinroofing.com',
+          orderId!
+        ),
+      ]);
+      // Odeslat i preview e-mail (jako dříve)
+      const previewEmailResponse = await sendPreviewEmail(
         'test@austinroofingco.com',
         previewUrl,
         orderId!
       );
-      console.log('[TEST-PIPELINE] 5c: testovací e-mail odeslán', emailResponse);
-      emailResult = { sent: true, id: (emailResponse as { id?: string })?.id };
+      console.log('[TEST-PIPELINE] 5c: admin e-mail odeslán', adminEmailResponse);
+      console.log('[TEST-PIPELINE] 5c: potvrzovací e-mail zákazníkovi odeslán', confirmationEmailResponse);
+      console.log('[TEST-PIPELINE] 5c: preview e-mail odeslán', previewEmailResponse);
+      emailResult = {
+        sent: true,
+        adminEmailId: (adminEmailResponse as { id?: string })?.id,
+        confirmationEmailId: (confirmationEmailResponse as { id?: string })?.id,
+        previewEmailId: (previewEmailResponse as { id?: string })?.id,
+      };
     } catch (emailErr) {
       const msg = emailErr instanceof Error ? emailErr.message : String(emailErr);
       console.warn('[TEST-PIPELINE] 5c: e-mail se nepodařilo odeslat:', msg);

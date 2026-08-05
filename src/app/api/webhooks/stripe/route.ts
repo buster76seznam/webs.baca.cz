@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { supabaseAdmin } from '@/supabase';
 import { COMMISSION_STRUCTURE } from '@/lib/affiliate-types';
+import { sendAdminDomainPurchaseEmail, sendOrderConfirmationEmail } from '@/lib/emails';
 
 export const runtime = 'nodejs';
 
@@ -47,6 +48,26 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`Webhook: order ${orderId} marked as paid`);
+
+    // Načíst detail objednávky pro e-maily
+    const { data: order } = await supabaseAdmin
+      .from('orders')
+      .select('company_name, company_email, domain')
+      .eq('id', orderId)
+      .single();
+
+    if (order) {
+      // Odeslat admin e-mail a potvrzovací e-mail zákazníkovi paralelně
+      await Promise.all([
+        sendAdminDomainPurchaseEmail(orderId, order.company_name, order.domain, order.company_email),
+        order.company_email
+          ? sendOrderConfirmationEmail(order.company_email, order.company_name, order.domain, orderId)
+          : Promise.resolve(),
+      ]);
+      console.log(`Webhook: emails sent for order ${orderId}`);
+    } else {
+      console.warn(`Webhook: could not load order details for ${orderId}, skipping emails`);
+    }
 
     // Pokud byl přítomen ref_code, připsat partnerovi provizi
     if (ref_code) {
