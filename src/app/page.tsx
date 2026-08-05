@@ -491,8 +491,8 @@ export default function Home() {
               {t.footerCopyright}
             </div>
             <div className="flex gap-14 text-[11px] text-zinc-600 font-black uppercase tracking-[0.6em]">
-               <span className="hover:text-brand cursor-pointer transition-colors">{t.footerGDPR}</span>
-               <span className="hover:text-brand cursor-pointer transition-colors">{t.footerVOP}</span>
+               <a href="/privacy" className="hover:text-brand cursor-pointer transition-colors">{t.footerGDPR}</a>
+               <a href="/terms" className="hover:text-brand cursor-pointer transition-colors">{t.footerVOP}</a>
             </div>
           </div>
         </div>

@@ -96,8 +96,8 @@ export const translations = {
     footerProcess: "Process",
     footerSpecialization: "Industries",
     footerCopyright: "© 2026 Webs Bača • Created with passion for efficiency",
-    footerGDPR: "GDPR",
-    footerVOP: "T&C",
+    footerGDPR: "PRIVACY",
+    footerVOP: "TERMS",
     
     // Support
     supportPhone: "+1 (555) 123-4567",
