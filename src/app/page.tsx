@@ -275,7 +275,7 @@ export default function Home() {
         </section>
 
         {/* Process Section - Vertical Timeline */}
-        <section id="process" className="py-64 px-8 relative w-full">
+        <section id="process" className="py-64 px-8 relative w-full overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="text-center mb-40">
                <h2 className="text-6xl md:text-[100px] font-black tracking-tighter uppercase leading-none">{t.processTitle} <br /><span className="text-brand">{t.processSubtitle}</span></h2>
@@ -308,7 +308,7 @@ export default function Home() {
         </section>
 
         {/* Specialization - Grid */}
-        <section id="specialization" className="py-64 px-8 bg-[#050505] w-full">
+        <section id="specialization" className="py-64 px-8 bg-[#050505] w-full overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="mb-40 flex flex-col md:flex-row md:items-end justify-between gap-10">
               <h2 className="text-5xl md:text-[100px] font-black tracking-tighter uppercase leading-none">{t.specTitle} <br /><span className="text-brand">{t.specSubtitle}</span></h2>
@@ -411,7 +411,7 @@ export default function Home() {
         </section>
 
         {/* Final CTA - Massive */}
-        <section className="py-64 px-8 w-full">
+        <section className="py-64 px-8 w-full overflow-hidden">
           <motion.div 
             {...fadeIn}
             className="max-w-7xl mx-auto bg-brand p-24 md:p-48 rounded-[5rem] text-center relative overflow-hidden group shadow-[0_50px_100px_-20px_rgba(124,58,237,0.4)]"
@@ -433,7 +433,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="py-40 px-8 border-t border-white/5 bg-[#020202] w-full">
+      <footer className="py-40 px-8 border-t border-white/5 bg-[#020202] w-full overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-20 mb-32">
             <div className="lg:col-span-6">

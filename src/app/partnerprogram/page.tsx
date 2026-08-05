@@ -1044,7 +1044,7 @@ export default function PartnerProgramPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-16 px-4 sm:px-6 md:px-8 bg-gray-50 dark:bg-[#020202] border-t border-gray-200 dark:border-white/5">
+      <footer className="w-full py-16 px-4 sm:px-6 md:px-8 bg-gray-50 dark:bg-[#020202] border-t border-gray-200 dark:border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-12 mb-12">
             <div>
