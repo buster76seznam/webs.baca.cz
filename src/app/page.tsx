@@ -89,23 +89,25 @@ export default function Home() {
         {/* Hero Section */}
         <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden w-full ${promoVisible ? "pt-72 sm:pt-80 md:pt-96 lg:pt-[28rem]" : "pt-48 sm:pt-52"}`}>
           {/* Animated Background Glows */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.1, 1],
-              opacity: [0.3, 0.4, 0.3]
-            }}
-            transition={{ duration: 10, repeat: Infinity }}
-            className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[150px]" 
-          />
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.2, 1],
-              opacity: [0.2, 0.3, 0.2]
-            }}
-            transition={{ duration: 12, repeat: Infinity, delay: 1 }}
-            className="absolute bottom-1/4 -right-1/4 w-[800px] h-[800px] bg-brand-dark/10 rounded-full blur-[150px]" 
-          />
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.1, 1],
+                opacity: [0.3, 0.4, 0.3]
+              }}
+              transition={{ duration: 10, repeat: Infinity }}
+              className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[150px]" 
+            />
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.2, 0.3, 0.2]
+              }}
+              transition={{ duration: 12, repeat: Infinity, delay: 1 }}
+              className="absolute bottom-1/4 -right-1/4 w-[800px] h-[800px] bg-brand-dark/10 rounded-full blur-[150px]" 
+            />
+          </div>
           
           <div className="max-w-7xl mx-auto w-full relative z-10 text-center">
             <motion.div 
@@ -148,7 +150,7 @@ export default function Home() {
 
         {/* The "Why" Section - Massive Spacing */}
         <section id="why" className="py-64 px-8 border-y border-white/5 relative overflow-hidden w-full">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" />
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" /></div>
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="mb-40 text-left max-w-4xl">
               <h2 className="text-5xl md:text-[100px] font-black mb-10 tracking-tighter leading-none uppercase">{t.whyTitle} <br /><span className="text-brand italic">{t.whySubtitle}</span></h2>
@@ -191,7 +193,7 @@ export default function Home() {
 
         {/* Pricing Section - Ultra Premium */}
         <section id="pricing" className="py-64 px-8 relative overflow-hidden bg-[#020202] w-full">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px] pointer-events-none" />
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
           
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-40">
@@ -342,7 +344,7 @@ export default function Home() {
 
         {/* Affiliate Program Section */}
         <section className="py-64 px-8 bg-[#050505] relative overflow-hidden w-full">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px] pointer-events-none" />
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
           
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-24">

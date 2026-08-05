@@ -509,6 +509,7 @@ export default function PartnerProgramPage() {
         {/* Hero Section */}
         <section className="relative w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
             animate={{
               scale: [1, 1.1, 1],
@@ -517,6 +518,7 @@ export default function PartnerProgramPage() {
             transition={{ duration: 10, repeat: Infinity }}
             className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[150px]"
           />
+          </div>
 
           <div className="max-w-7xl mx-auto w-full relative z-10">
             <motion.div
@@ -548,7 +550,7 @@ export default function PartnerProgramPage() {
 
         {/* Tier System & Commission Calculator */}
         <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px] pointer-events-none" />
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
 
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-16">
@@ -638,7 +640,7 @@ export default function PartnerProgramPage() {
 
         {/* Dashboard Preview */}
         <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" />
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" /></div>
 
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-16">
@@ -788,7 +790,7 @@ export default function PartnerProgramPage() {
 
         {/* Registration Form */}
         <section id="registration-form" className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px] pointer-events-none" />
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
 
           <div className="max-w-3xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-12">
