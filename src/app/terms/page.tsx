@@ -1,8 +1,8 @@
 export default function TermsPage() {
   return (
-    <div style={{ padding: '3rem 2rem', maxWidth: '860px', margin: '0 auto', fontFamily: 'inherit', color: '#111', lineHeight: 1.7 }}>
+    <div style={{ padding: '3rem 2rem', maxWidth: '860px', margin: '0 auto', fontFamily: 'inherit', color: '#fff', lineHeight: 1.7 }}>
       <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '0.25rem' }}>WEBSITE SERVICES AGREEMENT & TERMS OF SERVICE</h1>
-      <p style={{ color: '#666', marginBottom: '2rem' }}>Last Updated: August 5, 2026</p>
+      <p style={{ color: '#aaa', marginBottom: '2rem' }}>Last Updated: August 5, 2026</p>
 
       <p style={{ marginBottom: '1.5rem' }}>
         This Website Services Agreement ("Agreement") is entered into by and between Ing. Petr Bača, residing/headquartered at Dvořákova 1879/10, 741 01 Nový Jičín, Czech Republic, operating and presenting services under the trade name Webs Bača ("Provider"), and the entity or individual subscribing to the services ("Client").

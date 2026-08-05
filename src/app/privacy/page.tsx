@@ -1,8 +1,8 @@
 export default function PrivacyPage() {
   return (
-    <div style={{ padding: '3rem 2rem', maxWidth: '860px', margin: '0 auto', fontFamily: 'inherit', color: '#111', lineHeight: 1.7 }}>
+    <div style={{ padding: '3rem 2rem', maxWidth: '860px', margin: '0 auto', fontFamily: 'inherit', color: '#fff', lineHeight: 1.7 }}>
       <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '0.25rem' }}>PRIVACY POLICY</h1>
-      <p style={{ color: '#666', marginBottom: '2rem' }}>Last Updated: August 5, 2026</p>
+      <p style={{ color: '#aaa', marginBottom: '2rem' }}>Last Updated: August 5, 2026</p>
 
       <p style={{ marginBottom: '2rem' }}>
         This Privacy Policy describes how Ing. Petr Bača, operating under the trade name Webs Bača ("we", "us", or "our"), collects, uses, and protects your personal information when you use our website and services.
