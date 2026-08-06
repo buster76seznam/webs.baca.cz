@@ -398,9 +398,9 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#030303]">
+    <div className="min-h-screen bg-[#030303] overflow-x-hidden max-w-screen">
       {/* Navigace */}
-      <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-black/60 backdrop-blur-xl border-b border-white/5">
+      <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-black/60 backdrop-blur-xl border-b border-white/5 max-w-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex items-center justify-between min-w-0 overflow-hidden">
           <div className="flex items-center gap-3">
             <div className="relative w-9 h-9 rounded-xl border-2 border-brand bg-brand/10 overflow-hidden">

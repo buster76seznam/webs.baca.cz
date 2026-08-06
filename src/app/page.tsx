@@ -38,10 +38,10 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-[#030303] text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden max-w-screen">
       <ContactLeadModal open={leadOpen} onClose={() => setLeadOpen(false)} />
       {/* Navigation */}
-      <nav className={`fixed inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 transition-all duration-700 ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
+      <nav className={`fixed inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 transition-all duration-700 max-w-screen ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-8 h-full flex items-center justify-between gap-3 min-w-0 overflow-hidden">
           <div className="flex items-center gap-6 group cursor-pointer">
             <div className="relative w-14 h-14 overflow-hidden rounded-2xl border-2 border-brand bg-[#1a0b2e] group-hover:border-brand-light transition-all duration-500 shadow-2xl shadow-brand/20">
@@ -85,9 +85,9 @@ export default function Home() {
         </div>
       </nav>
 
-      <main className="w-full overflow-x-hidden">
+      <main className="w-full overflow-x-hidden max-w-screen">
         {/* Hero Section */}
-        <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden w-full ${promoVisible ? "pt-72 sm:pt-80 md:pt-96 lg:pt-[28rem]" : "pt-48 sm:pt-52"}`}>
+        <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden w-full max-w-screen ${promoVisible ? "pt-72 sm:pt-80 md:pt-96 lg:pt-[28rem]" : "pt-48 sm:pt-52"}`}>
           {/* Animated Background Glows */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
@@ -97,7 +97,7 @@ export default function Home() {
                 opacity: [0.3, 0.4, 0.3]
               }}
               transition={{ duration: 10, repeat: Infinity }}
-              className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[150px]" 
+              className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-brand/10 rounded-full blur-[150px]" 
             />
             <motion.div 
               animate={{ 
@@ -105,7 +105,7 @@ export default function Home() {
                 opacity: [0.2, 0.3, 0.2]
               }}
               transition={{ duration: 12, repeat: Infinity, delay: 1 }}
-              className="absolute bottom-1/4 -right-1/4 w-[800px] h-[800px] bg-brand-dark/10 rounded-full blur-[150px]" 
+              className="absolute bottom-1/4 right-0 w-[600px] h-[600px] bg-brand-dark/10 rounded-full blur-[150px]" 
             />
           </div>
           
@@ -149,8 +149,8 @@ export default function Home() {
         </section>
 
         {/* The "Why" Section - Massive Spacing */}
-        <section id="why" className="py-64 px-8 border-y border-white/5 relative overflow-hidden w-full">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" /></div>
+        <section id="why" className="py-64 px-8 border-y border-white/5 relative overflow-hidden w-full max-w-screen">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand/5 rounded-full blur-[120px]" /></div>
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="mb-40 text-left max-w-4xl">
               <h2 className="text-5xl md:text-[100px] font-black mb-10 tracking-tighter leading-none uppercase">{t.whyTitle} <br /><span className="text-brand italic">{t.whySubtitle}</span></h2>
@@ -192,8 +192,8 @@ export default function Home() {
         </section>
 
         {/* Pricing Section - Ultra Premium */}
-        <section id="pricing" className="py-64 px-8 relative overflow-hidden bg-[#020202] w-full">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
+        <section id="pricing" className="py-64 px-8 relative overflow-hidden bg-[#020202] w-full max-w-screen">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand/5 rounded-full blur-[200px]" /></div>
           
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-40">
@@ -277,7 +277,7 @@ export default function Home() {
         </section>
 
         {/* Process Section - Vertical Timeline */}
-        <section id="process" className="py-64 px-8 relative w-full overflow-hidden">
+        <section id="process" className="py-64 px-8 relative w-full overflow-hidden max-w-screen">
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="text-center mb-40">
                <h2 className="text-6xl md:text-[100px] font-black tracking-tighter uppercase leading-none">{t.processTitle} <br /><span className="text-brand">{t.processSubtitle}</span></h2>
@@ -310,7 +310,7 @@ export default function Home() {
         </section>
 
         {/* Specialization - Grid */}
-        <section id="specialization" className="py-64 px-8 bg-[#050505] w-full overflow-hidden">
+        <section id="specialization" className="py-64 px-8 bg-[#050505] w-full overflow-hidden max-w-screen">
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="mb-40 flex flex-col md:flex-row md:items-end justify-between gap-10">
               <h2 className="text-5xl md:text-[100px] font-black tracking-tighter uppercase leading-none">{t.specTitle} <br /><span className="text-brand">{t.specSubtitle}</span></h2>
@@ -343,8 +343,8 @@ export default function Home() {
         </section>
 
         {/* Affiliate Program Section */}
-        <section className="py-64 px-8 bg-[#050505] relative overflow-hidden w-full">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
+        <section className="py-64 px-8 bg-[#050505] relative overflow-hidden w-full max-w-screen">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand/5 rounded-full blur-[200px]" /></div>
           
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-24">
@@ -413,7 +413,7 @@ export default function Home() {
         </section>
 
         {/* Final CTA - Massive */}
-        <section className="py-64 px-8 w-full overflow-hidden">
+        <section className="py-64 px-8 w-full overflow-hidden max-w-screen">
           <motion.div 
             {...fadeIn}
             className="max-w-7xl mx-auto bg-brand p-24 md:p-48 rounded-[5rem] text-center relative overflow-hidden group shadow-[0_50px_100px_-20px_rgba(124,58,237,0.4)]"
@@ -435,7 +435,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="py-40 px-8 border-t border-white/5 bg-[#020202] w-full overflow-hidden">
+      <footer className="py-40 px-8 border-t border-white/5 bg-[#020202] w-full overflow-hidden max-w-screen">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-20 mb-32">
             <div className="lg:col-span-6">

@@ -224,9 +224,9 @@ export default function PartnerProgramPage() {
     const progress = getProgressToNextTier(partner.activeClients);
 
     return (
-      <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden">
+      <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden max-w-screen">
         {/* Header */}
-        <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/40 dark:bg-black/40 backdrop-blur-xl border-b border-white/20 dark:border-white/5">
+        <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/40 dark:bg-black/40 backdrop-blur-xl border-b border-white/20 dark:border-white/5 max-w-screen">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex items-center justify-between min-w-0 overflow-hidden">
             <div className="flex items-center gap-4 group cursor-pointer" onClick={() => window.location.href = '/'}>
               <div className="relative w-10 h-10 overflow-hidden rounded-lg border-2 border-brand bg-brand/10 group-hover:border-brand-light transition-all duration-500">
@@ -452,7 +452,7 @@ export default function PartnerProgramPage() {
       <LoginModal />
 
       {/* Navigation */}
-      <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/60 dark:bg-black/40 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 transition-all duration-700">
+      <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/60 dark:bg-black/40 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 transition-all duration-700 max-w-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 h-20 flex items-center justify-between gap-3 min-w-0 overflow-hidden">
           <div className="flex items-center gap-4 group cursor-pointer" onClick={() => window.location.href = '/'}>
             <div className="relative w-12 h-12 overflow-hidden rounded-2xl border-2 border-brand bg-brand/10 group-hover:border-brand-light transition-all duration-500">
@@ -505,9 +505,9 @@ export default function PartnerProgramPage() {
         </div>
       </nav>
 
-      <main className="w-full overflow-x-hidden">
+      <main className="w-full overflow-x-hidden max-w-screen">
         {/* Hero Section */}
-        <section className="relative w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 overflow-hidden">
+        <section className="relative w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 overflow-hidden max-w-screen">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
@@ -516,7 +516,7 @@ export default function PartnerProgramPage() {
               opacity: [0.3, 0.4, 0.3]
             }}
             transition={{ duration: 10, repeat: Infinity }}
-            className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[150px]"
+            className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-brand/10 rounded-full blur-[150px]"
           />
           </div>
 
@@ -549,8 +549,8 @@ export default function PartnerProgramPage() {
         </section>
 
         {/* Tier System & Commission Calculator */}
-        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
+        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative overflow-hidden max-w-screen">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand/5 rounded-full blur-[200px]" /></div>
 
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-16">
@@ -639,8 +639,8 @@ export default function PartnerProgramPage() {
         </section>
 
         {/* Dashboard Preview */}
-        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 relative overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" /></div>
+        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 relative overflow-hidden max-w-screen">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand/5 rounded-full blur-[120px]" /></div>
 
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-16">
@@ -789,8 +789,8 @@ export default function PartnerProgramPage() {
         </section>
 
         {/* Registration Form */}
-        <section id="registration-form" className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
+        <section id="registration-form" className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative overflow-hidden max-w-screen">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand/5 rounded-full blur-[200px]" /></div>
 
           <div className="max-w-3xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-12">
@@ -977,7 +977,7 @@ export default function PartnerProgramPage() {
         </section>
 
         {/* Why Join Section */}
-        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 relative overflow-hidden">
+        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 relative overflow-hidden max-w-screen">
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="text-center mb-16">
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 tracking-tighter uppercase">
@@ -1025,7 +1025,7 @@ export default function PartnerProgramPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gradient-to-r from-brand to-purple-600 relative overflow-hidden">
+        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gradient-to-r from-brand to-purple-600 relative overflow-hidden max-w-screen">
           <motion.div
             {...fadeIn}
             className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center"
@@ -1046,7 +1046,7 @@ export default function PartnerProgramPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-16 px-4 sm:px-6 md:px-8 bg-gray-50 dark:bg-[#020202] border-t border-gray-200 dark:border-white/5 overflow-hidden">
+      <footer className="w-full py-16 px-4 sm:px-6 md:px-8 bg-gray-50 dark:bg-[#020202] border-t border-gray-200 dark:border-white/5 overflow-hidden max-w-screen">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-12 mb-12">
             <div>
