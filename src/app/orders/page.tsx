@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Upload, ArrowUpRight, X, Image as ImageIcon, Share2, Camera, MapPin, Search, Palette, Globe } from 'lucide-react';
 import { useCountry } from '@/contexts/CountryContext';
 import { translations } from '@/lib/translations';
 import dynamic from 'next/dynamic';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 const PhoneInput = dynamic(() => import('react-phone-number-input'), {
   ssr: false,
@@ -60,6 +61,7 @@ export default function OrdersPage() {
   const [languageSearch, setLanguageSearch] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const [expandedSections, setExpandedSections] = useState<{ owner: boolean; social: boolean }>({ owner: false, social: false });
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const colorPalette = [
     '#7C3AED', '#10B981', '#3B82F6', '#EF4444', '#F59E0B', '#EC4899',
@@ -182,6 +184,12 @@ export default function OrdersPage() {
       return;
     }
 
+    if (!turnstileToken) {
+      setErrorMsg(isEnglish ? 'Please complete the security check.' : 'Prosím dokončete bezpečnostní ověření.');
+      setStatus('error');
+      return;
+    }
+
     setStatus('loading');
     setErrorMsg('');
 
@@ -194,6 +202,7 @@ export default function OrdersPage() {
         }
       });
       formDataToSend.append('workingHours', formattedWorkingHours);
+      formDataToSend.append('turnstileToken', turnstileToken);
       images.forEach((file, index) => {
         formDataToSend.append(`image_${index}`, file);
       });
@@ -478,8 +487,7 @@ export default function OrdersPage() {
                       <div className="text-2xl font-black" style={{ color: formData.primaryColor }}>Aa</div>
                       <p className="text-xs text-zinc-500 mt-2">{isEnglish ? 'Primary' : 'Primární'}</p>
                     </div>
-                    <button className="px-4 py-3 rounded-lg font-black text-white text-sm transition-all hover:opacity-90" style={{ backgroundColor: formData.primaryColor }}>
-                      {isEnglish ? 'Click me' : 'Klikni'}
+                    <button type="button" disabled className="px-4 py-3 rounded-lg font-black text-white text-sm transition-all opacity-50 cursor-not-allowed" style={{ backgroundColor: formData.primaryColor }}>
                     </button>
                   </div>
                 </div>
@@ -516,8 +524,7 @@ export default function OrdersPage() {
                       <div className="text-2xl font-black" style={{ color: formData.secondaryColor }}>Aa</div>
                       <p className="text-xs text-zinc-500 mt-2">{isEnglish ? 'Secondary' : 'Sekundární'}</p>
                     </div>
-                    <button className="px-4 py-3 rounded-lg font-black text-white text-sm transition-all hover:opacity-90" style={{ backgroundColor: formData.secondaryColor }}>
-                      {isEnglish ? 'Click me' : 'Klikni'}
+                    <button type="button" disabled className="px-4 py-3 rounded-lg font-black text-white text-sm transition-all opacity-50 cursor-not-allowed" style={{ backgroundColor: formData.secondaryColor }}>
                     </button>
                   </div>
                 </div>
@@ -663,6 +670,14 @@ export default function OrdersPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12 text-center">
               <h2 className="text-3xl font-black mb-4 text-brand uppercase">{isEnglish ? 'Ready to submit?' : 'Připraveni na odeslání?'}</h2>
               <p className="text-zinc-400 mb-8">{isEnglish ? 'Review your details above. Click submit to send your order.' : 'Zkontrolujte vaše údaje výše. Klikněte na odeslat pro odeslání vaší objednávky.'}</p>
+              <div className="flex justify-center">
+                <Turnstile
+                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                  onSuccess={(token) => setTurnstileToken(token)}
+                  onExpire={() => setTurnstileToken(null)}
+                  options={{ theme: 'dark' }}
+                />
+              </div>
             </motion.div>
           )}
 
