@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM_EMAIL = 'Webs.baca.cz <notifikace@websbaca.cz>';
+const FROM_EMAIL = 'Websbaca.cz <notifikace@websbaca.cz>';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://webs.baca.cz';
 
 export async function sendPreviewEmail(

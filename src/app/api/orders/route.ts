@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/supabase';
+import { sendOrderConfirmationEmail } from '@/lib/emails';
 // @ts-ignore
 import webpush from 'web-push';
 
@@ -16,10 +17,48 @@ if (publicVapidKey && privateVapidKey) {
   );
 }
 
+async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) return true; // skip if not configured
+
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ secret, response: token, remoteip: ip }),
+  });
+  const data = await res.json();
+  return data.success === true;
+}
+
+import { ratelimit } from '@/lib/ratelimit';
+
 export async function POST(request: NextRequest) {
   try {
+    const ip =
+      request.headers.get('cf-connecting-ip') ||
+      request.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+      '0.0.0.0';
+
     const formData = await request.formData();
-    
+
+    // Verify Turnstile token
+    const turnstileToken = formData.get('turnstileToken') as string | null;
+    if (!turnstileToken) {
+      return NextResponse.json({ error: 'Missing security token.' }, { status: 400 });
+    }
+    const turnstileOk = await verifyTurnstile(turnstileToken, ip);
+    if (!turnstileOk) {
+      return NextResponse.json({ error: 'Security check failed. Please try again.' }, { status: 403 });
+    }
+
+    const { success } = await ratelimit.limit(ip);
+    if (!success) {
+      return NextResponse.json(
+        { error: 'Too many orders from your IP. Please try again later.' },
+        { status: 429 }
+      );
+    }
+
     // Log which key is being used
     console.log('Service role key from env:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'NOT SET');
     console.log('Using service role key:', process.env.SUPABASE_SERVICE_ROLE_KEY?.substring(0, 20) + '...');
@@ -81,6 +120,7 @@ export async function POST(request: NextRequest) {
       principal_place_of_business: formData.get('principalPlaceOfBusiness') || null,
       authorized_signatory: formData.get('authorizedSignatory') || null,
       contract_email: formData.get('contractEmail') || null,
+      ip_address: ip,
     };
 
     console.log('Insert data:', insertData);
@@ -97,6 +137,8 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('Insert success:', data);
+
+
 
     // Send push notification if VAPID keys are configured
     if (publicVapidKey && privateVapidKey) {

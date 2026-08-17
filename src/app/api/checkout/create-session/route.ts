@@ -1,3 +1,4 @@
+import { ratelimit } from '@/lib/ratelimit';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { supabaseAdmin } from '@/supabase';
@@ -6,6 +7,15 @@ export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
+    const ip =
+      request.headers.get('cf-connecting-ip') ||
+      request.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+      '127.0.0.1';
+    const { success } = await ratelimit.limit(ip);
+    if (!success) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     const { orderId } = await request.json();
 

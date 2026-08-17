@@ -22,6 +22,8 @@ interface GeneratedSiteJson {
 
 export async function POST(request: NextRequest) {
   try {
+
+
     if (!ANTHROPIC_API_KEY) {
       return NextResponse.json({ error: 'ANTHROPIC_API_KEY is not configured' }, { status: 500 });
     }
@@ -89,7 +91,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-haiku-20240307',
         max_tokens: 4096,
         system: 'Respond ONLY with valid JSON. Do not include markdown formatting or extra text.',
         messages: [
@@ -135,7 +137,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
       .from('orders')
       .update({
         generated_site_json: generatedJson,
-        status: 'generated',
+        status: 'preview_ready',
       })
       .eq('id', order_id)
       .select()

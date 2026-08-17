@@ -24,11 +24,6 @@ export default function PartnerProgramPage() {
     name: '',
     email: '',
     socialLinks: '',
-    payoutMethod: 'bank-transfer',
-    iban: '',
-    accountNumber: '',
-    swift: '',
-    paypalEmail: '',
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formError, setFormError] = useState('');
@@ -77,17 +72,15 @@ export default function PartnerProgramPage() {
     e.preventDefault();
     setFormError('');
     try {
-      const response = await fetch('/api/partners/register', {
+      const response = await fetch('/api/influencers/stripe-onboarding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
-      if (data.success) {
-        setFormSubmitted(true);
-        setFormData({ name: '', email: '', socialLinks: '', payoutMethod: 'bank-transfer', iban: '', accountNumber: '', swift: '', paypalEmail: '' });
-        setTimeout(() => setFormSubmitted(false), 8000);
+      if (data.onboardingUrl) {
+        window.location.href = data.onboardingUrl;
       } else {
         setFormError(data.error || 'Registration failed. Please try again.');
       }
@@ -224,9 +217,9 @@ export default function PartnerProgramPage() {
     const progress = getProgressToNextTier(partner.activeClients);
 
     return (
-      <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden max-w-screen">
+      <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden">
         {/* Header */}
-        <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/40 dark:bg-black/40 backdrop-blur-xl border-b border-white/20 dark:border-white/5 max-w-screen">
+        <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/40 dark:bg-black/40 backdrop-blur-xl border-b border-white/20 dark:border-white/5">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex items-center justify-between min-w-0 overflow-hidden">
             <div className="flex items-center gap-4 group cursor-pointer" onClick={() => window.location.href = '/'}>
               <div className="relative w-10 h-10 overflow-hidden rounded-lg border-2 border-brand bg-brand/10 group-hover:border-brand-light transition-all duration-500">
@@ -452,7 +445,7 @@ export default function PartnerProgramPage() {
       <LoginModal />
 
       {/* Navigation */}
-      <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/60 dark:bg-black/40 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 transition-all duration-700 max-w-screen">
+      <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/60 dark:bg-black/40 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 transition-all duration-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 h-20 flex items-center justify-between gap-3 min-w-0 overflow-hidden">
           <div className="flex items-center gap-4 group cursor-pointer" onClick={() => window.location.href = '/'}>
             <div className="relative w-12 h-12 overflow-hidden rounded-2xl border-2 border-brand bg-brand/10 group-hover:border-brand-light transition-all duration-500">
@@ -505,9 +498,9 @@ export default function PartnerProgramPage() {
         </div>
       </nav>
 
-      <main className="w-full overflow-x-hidden max-w-screen">
+      <main className="w-full overflow-x-hidden">
         {/* Hero Section */}
-        <section className="relative w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 overflow-hidden max-w-screen">
+        <section className="relative w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
@@ -516,7 +509,7 @@ export default function PartnerProgramPage() {
               opacity: [0.3, 0.4, 0.3]
             }}
             transition={{ duration: 10, repeat: Infinity }}
-            className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-brand/10 rounded-full blur-[150px]"
+            className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[150px]"
           />
           </div>
 
@@ -549,8 +542,8 @@ export default function PartnerProgramPage() {
         </section>
 
         {/* Tier System & Commission Calculator */}
-        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative overflow-hidden max-w-screen">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand/5 rounded-full blur-[200px]" /></div>
+        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
 
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-16">
@@ -639,8 +632,8 @@ export default function PartnerProgramPage() {
         </section>
 
         {/* Dashboard Preview */}
-        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 relative overflow-hidden max-w-screen">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand/5 rounded-full blur-[120px]" /></div>
+        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 relative overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" /></div>
 
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-16">
@@ -789,8 +782,8 @@ export default function PartnerProgramPage() {
         </section>
 
         {/* Registration Form */}
-        <section id="registration-form" className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative overflow-hidden max-w-screen">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand/5 rounded-full blur-[200px]" /></div>
+        <section id="registration-form" className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
 
           <div className="max-w-3xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-12">
@@ -851,94 +844,7 @@ export default function PartnerProgramPage() {
                 />
               </div>
 
-              {/* Výplatní údaje */}
-              <div className="border-t-2 border-gray-200 dark:border-white/10 pt-6">
-                <p className="text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-4">
-                  Výplatní údaje
-                </p>
 
-                <div className="mb-4">
-                  <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-3">
-                    Způsob výplaty
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {(['bank-transfer', 'paypal'] as const).map((method) => (
-                      <button
-                        key={method}
-                        type="button"
-                        onClick={() => setFormData({ ...formData, payoutMethod: method })}
-                        className={`py-3 px-4 rounded-xl border-2 font-black text-sm uppercase tracking-widest transition-all duration-200 ${
-                          formData.payoutMethod === method
-                            ? 'bg-brand text-white border-brand'
-                            : 'bg-gray-50 dark:bg-black/20 text-gray-700 dark:text-zinc-300 border-gray-300 dark:border-white/10 hover:border-brand'
-                        }`}
-                      >
-                        {method === 'bank-transfer' ? 'Bankovní převod' : 'PayPal'}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {formData.payoutMethod === 'bank-transfer' && (
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-2">
-                        IBAN
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.iban}
-                        onChange={(e) => setFormData({ ...formData, iban: e.target.value })}
-                        className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-zinc-500 focus:outline-none focus:border-brand transition font-mono font-bold"
-                        placeholder="CZ65 0800 0000 1920 0014 5399"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-2">
-                        Číslo účtu (CZ formát)
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.accountNumber}
-                        onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
-                        className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-zinc-500 focus:outline-none focus:border-brand transition font-mono font-bold"
-                        placeholder="192000145399/0800"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-2">
-                        SWIFT / BIC
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.swift}
-                        onChange={(e) => setFormData({ ...formData, swift: e.target.value })}
-                        className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-zinc-500 focus:outline-none focus:border-brand transition font-mono font-bold"
-                        placeholder="KOMBCZPP"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {formData.payoutMethod === 'paypal' && (
-                  <div>
-                    <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-2">
-                      PayPal Email
-                    </label>
-                    <input
-                      type="email"
-                      value={formData.paypalEmail}
-                      onChange={(e) => setFormData({ ...formData, paypalEmail: e.target.value })}
-                      className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-zinc-500 focus:outline-none focus:border-brand transition font-bold"
-                      placeholder="vas@email.com"
-                    />
-                  </div>
-                )}
-
-                <p className="text-xs text-gray-500 dark:text-zinc-500 mt-3 font-bold">
-                  Výplatní údaje jsou bezpečně uloženy a slouží výhradně pro vyplacení provize.
-                </p>
-              </div>
 
               {formError && (
                 <motion.div
@@ -966,7 +872,7 @@ export default function PartnerProgramPage() {
                 type="submit"
                 className="w-full bg-brand text-white py-4 md:py-5 rounded-xl font-black text-lg hover:bg-brand-dark transition-all duration-300 uppercase tracking-tighter shadow-2xl shadow-brand/30"
               >
-                Register as Partner
+                Continue to Stripe Payout Setup ➔
               </motion.button>
 
               <p className="text-xs text-gray-600 dark:text-zinc-400 text-center font-bold">
@@ -977,7 +883,7 @@ export default function PartnerProgramPage() {
         </section>
 
         {/* Why Join Section */}
-        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 relative overflow-hidden max-w-screen">
+        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 relative overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="text-center mb-16">
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 tracking-tighter uppercase">
@@ -1025,7 +931,7 @@ export default function PartnerProgramPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gradient-to-r from-brand to-purple-600 relative overflow-hidden max-w-screen">
+        <section className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gradient-to-r from-brand to-purple-600 relative overflow-hidden">
           <motion.div
             {...fadeIn}
             className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center"
@@ -1046,7 +952,7 @@ export default function PartnerProgramPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-16 px-4 sm:px-6 md:px-8 bg-gray-50 dark:bg-[#020202] border-t border-gray-200 dark:border-white/5 overflow-hidden max-w-screen">
+      <footer className="w-full py-16 px-4 sm:px-6 md:px-8 bg-gray-50 dark:bg-[#020202] border-t border-gray-200 dark:border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-12 mb-12">
             <div>

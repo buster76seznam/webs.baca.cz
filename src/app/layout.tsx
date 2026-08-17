@@ -110,7 +110,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="cs" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased w-full overflow-x-hidden max-w-screen`}>
+    <html lang="cs" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased w-full overflow-x-hidden`}>
       <head>
         <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
         <link rel="icon" href="/icon.png?v=2" type="image/png" sizes="32x32" />

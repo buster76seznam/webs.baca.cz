@@ -20,11 +20,22 @@ export async function POST(request: NextRequest) {
   }
 
   let event: Stripe.Event;
-  try {
-    event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
-  } catch (err) {
-    console.error('Webhook signature verification failed:', err);
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+
+  // V testovacím prostředí přeskočíme ověření podpisu
+  if (process.env.STRIPE_SKIP_SIGNATURE_VERIFICATION === 'true') {
+    try {
+      event = JSON.parse(rawBody);
+    } catch (err) {
+      console.error('Webhook JSON parsing failed:', err);
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+  } else {
+    try {
+      event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+    } catch (err) {
+      console.error('Webhook signature verification failed:', err);
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+    }
   }
 
   if (event.type === 'checkout.session.completed') {
@@ -36,10 +47,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing orderId in metadata' }, { status: 400 });
     }
 
-    // Aktualizace stavu objednávky na 'paid'
+    const { data: existingOrder, error: existingOrderError } = await supabaseAdmin
+      .from('orders')
+      .select('id')
+      .eq('stripe_checkout_session_id', session.id)
+      .single();
+
+    if (existingOrder) {
+      console.log(`Webhook: received duplicate checkout session ${session.id}, skipping.`);
+      return NextResponse.json({ received: true });
+    }
+
     const { error: updateError } = await supabaseAdmin
       .from('orders')
-      .update({ status: 'paid' })
+      .update({ status: 'queued', stripe_checkout_session_id: session.id })
       .eq('id', orderId);
 
     if (updateError) {
@@ -48,65 +69,6 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`Webhook: order ${orderId} marked as paid`);
-
-    // Načíst detail objednávky pro e-maily
-    const { data: order } = await supabaseAdmin
-      .from('orders')
-      .select('company_name, company_email, domain')
-      .eq('id', orderId)
-      .single();
-
-    if (order) {
-      // Odeslat admin e-mail a potvrzovací e-mail zákazníkovi paralelně
-      await Promise.all([
-        sendAdminDomainPurchaseEmail(orderId, order.company_name, order.domain, order.company_email),
-        order.company_email
-          ? sendOrderConfirmationEmail(order.company_email, order.company_name, order.domain, orderId)
-          : Promise.resolve(),
-      ]);
-      console.log(`Webhook: emails sent for order ${orderId}`);
-    } else {
-      console.warn(`Webhook: could not load order details for ${orderId}, skipping emails`);
-    }
-
-    // Pokud byl přítomen ref_code, připsat partnerovi provizi
-    if (ref_code) {
-      const { data: partner, error: partnerError } = await supabaseAdmin
-        .from('partners')
-        .select('id, total_earned, active_clients')
-        .eq('referral_code', ref_code)
-        .single();
-
-      if (partnerError || !partner) {
-        console.warn(`Webhook: partner with ref_code "${ref_code}" not found`);
-      } else {
-        // Zjistit počet aktivních klientů pro výpočet správné provize
-        const activeClients: number = (partner.active_clients ?? 0) + 1;
-        let commission = COMMISSION_STRUCTURE[1].usd; // výchozí $15
-        if (activeClients >= 126) {
-          commission = COMMISSION_STRUCTURE[3].usd;
-        } else if (activeClients >= 51) {
-          commission = COMMISSION_STRUCTURE[2].usd;
-        }
-
-        const { error: commissionError } = await supabaseAdmin
-          .from('partners')
-          .update({
-            total_earned: (partner.total_earned ?? 0) + commission,
-            active_clients: activeClients,
-          })
-          .eq('id', partner.id);
-
-        if (commissionError) {
-          console.error('Webhook: failed to update partner commission:', commissionError);
-        } else {
-          console.log(`Webhook: added $${commission} commission to partner ${partner.id}`);
-        }
-      }
-    }
-
-    // TODO: zavolat automatický nákup domény (připravíme v dalším kroku)
-    // await purchaseDomain(orderId);
   }
 
   return NextResponse.json({ received: true });
