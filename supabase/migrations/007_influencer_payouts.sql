@@ -26,4 +26,5 @@ ALTER TABLE public.commissions ENABLE ROW LEVEL SECURITY;
 -- 4. Create RLS policies for commissions table
 DROP POLICY IF EXISTS "Allow public read-only access" ON public.commissions;
 CREATE POLICY "Allow public read-only access" ON public.commissions FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Allow authenticated user insert" ON public.commissions;
 CREATE POLICY "Allow authenticated user insert" ON public.commissions FOR INSERT WITH CHECK (auth.role() = 'authenticated');
