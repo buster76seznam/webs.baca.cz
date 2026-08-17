@@ -16,10 +16,9 @@ export async function GET(request: Request) {
   // Use `request.headers.get('authorization')` for security in production
   const cronSecret = searchParams.get('cron_secret') || request.headers.get('authorization')?.replace('Bearer ', '');
 
-  // IMPORTANT: Add back CRON_SECRET check for production
-  // if (cronSecret !== process.env.CRON_SECRET) {
-  //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  // }
+  if (cronSecret !== process.env.CRON_SECRET) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
 
   // Calculate date range for the last month
   const today = new Date();
