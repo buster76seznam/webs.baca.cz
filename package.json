@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@marsidev/react-turnstile": "^1.5.4",
+    "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.1.0",
     "@supabase/supabase-js": "^2.105.3",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.2",
@@ -23,6 +25,7 @@
     "next": "^16.3.1",
     "node-fetch": "^3.3.2",
     "pem": "^1.14.8",
+    "prettier": "^3.9.6",
     "qrcode": "^1.5.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",

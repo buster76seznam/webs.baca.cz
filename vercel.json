@@ -3,6 +3,14 @@
     {
       "path": "/api/crons/process-orders",
       "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/crons/reports/weekly",
+      "schedule": "0 7 * * 1"
+    },
+    {
+      "path": "/api/crons/reports/monthly",
+      "schedule": "0 7 1 * *"
     }
   ]
 }
