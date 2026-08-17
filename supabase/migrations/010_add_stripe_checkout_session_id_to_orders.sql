@@ -1,1 +1,1 @@
-ALTER TABLE orders ADD COLUMN stripe_checkout_session_id TEXT UNIQUE;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS stripe_checkout_session_id TEXT UNIQUE;
