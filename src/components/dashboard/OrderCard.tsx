@@ -62,11 +62,13 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
     setUpdating(true);
     setStatusOpen(false);
     try {
-      const res = await fetch(`/api/orders/${order.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus, developer_id: viewerUserId }),
-      });
+      const res = await fetch(`/api/orders/${order.id}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus, developer_id: viewerUserId }),
+        }
+      );
       if (!res.ok) {
         const data = await res.json();
         console.error('Error updating status:', data);
@@ -87,11 +89,13 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
     console.log('Saving notes:', order.id, notes);
     setSavingNotes(true);
     try {
-      const res = await fetch(`/api/orders/${order.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ notes }),
-      });
+      const res = await fetch(`/api/orders/${order.id}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ notes }),
+        }
+      );
       if (!res.ok) {
         const data = await res.json();
         console.error('Error saving notes:', data);
@@ -111,11 +115,13 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
     }
 
     try {
-      const res = await fetch(`/api/orders/${order.id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ permanent }),
-      });
+      const res = await fetch(`/api/orders/${order.id}`,
+        {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ permanent }),
+        }
+      );
       if (!res.ok) {
         const data = await res.json();
         console.error('Error deleting order:', data);
@@ -132,11 +138,13 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
 
   const handleRestore = async () => {
     try {
-      const res = await fetch(`/api/orders/${order.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'restore' }),
-      });
+      const res = await fetch(`/api/orders/${order.id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'restore' }),
+        }
+      );
       if (!res.ok) {
         const data = await res.json();
         console.error('Error restoring order:', data);
