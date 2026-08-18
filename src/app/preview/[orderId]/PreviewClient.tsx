@@ -30,6 +30,7 @@ interface OrderRow {
   company_phone: string | null;
   company_address: string | null;
   revision_count?: number | null;
+  working_hours: string;
 }
 
 interface Props {

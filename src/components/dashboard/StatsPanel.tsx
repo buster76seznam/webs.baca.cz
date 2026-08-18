@@ -11,11 +11,11 @@ interface StatsPanelProps {
 }
 
 function avgDaysToComplete(orders: Order[]): string {
-  const completed = orders.filter(o => o.status === 'dokončená');
+  const completed = orders.filter(o => o.status === 'dokončená' && o.status_updated_at);
   if (!completed.length) return '—';
   const total = completed.reduce((sum, o) => {
     const created = new Date(o.created_at).getTime();
-    const updated = new Date(o.status_updated_at).getTime();
+    const updated = new Date(o.status_updated_at!).getTime();
     return sum + (updated - created) / (1000 * 60 * 60 * 24);
   }, 0);
   return `${Math.round(total / completed.length)} dní`;
@@ -71,7 +71,7 @@ export default function StatsPanel({ orders, role, userId }: StatsPanelProps) {
           icon: Clock,
           label: 'Průměrná doba',
           value: avgDays,
-          sub: 'od zadání do „Platí"',
+          sub: 'od zadání do „Platí“',
           color: 'text-amber-400',
           bg: 'bg-amber-500/10',
         },

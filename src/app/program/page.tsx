@@ -531,7 +531,7 @@ export default function ProgramPage() {
                         <p className="text-zinc-500 text-sm mb-2">{order.industry}</p>
                         <p className="text-zinc-600 text-xs">{new Date(order.created_at).toLocaleDateString('cs-CZ')}</p>
                       </div>
-                      {order.images.length > 0 && (
+                      {order.images && order.images.length > 0 && (
                         <div className="flex items-center gap-2 text-zinc-500">
                           <ImageIcon size={16} />
                           <span className="text-xs">{order.images.length}</span>
@@ -955,7 +955,7 @@ export default function ProgramPage() {
                 </div>
 
                 {/* Images */}
-                {selectedOrder.images.length > 0 && (
+                {selectedOrder.images && selectedOrder.images.length > 0 && (
                   <div>
                     <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 block">Obrázky</label>
                     <div className="grid grid-cols-3 gap-2">
