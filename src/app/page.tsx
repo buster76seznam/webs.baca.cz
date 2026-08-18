@@ -97,7 +97,7 @@ export default function Home() {
                 opacity: [0.3, 0.4, 0.3]
               }}
               transition={{ duration: 10, repeat: Infinity }}
-              className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[150px]" 
+              className="absolute top-1/4 left-0 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[150px]" 
             />
             <motion.div 
               animate={{ 
@@ -105,7 +105,7 @@ export default function Home() {
                 opacity: [0.2, 0.3, 0.2]
               }}
               transition={{ duration: 12, repeat: Infinity, delay: 1 }}
-              className="absolute bottom-1/4 -right-1/4 w-[800px] h-[800px] bg-brand-dark/10 rounded-full blur-[150px]" 
+              className="absolute bottom-1/4 right-0 w-[800px] h-[800px] bg-brand-dark/10 rounded-full blur-[150px]" 
             />
           </div>
           
@@ -295,7 +295,7 @@ export default function Home() {
                   transition={{ delay: i * 0.2 }}
                   className="group relative"
                 >
-                  <div className="text-[180px] font-black text-white/[0.02] absolute -top-32 -left-10 select-none group-hover:text-brand/[0.05] transition-colors duration-1000">
+                  <div className="text-[180px] font-black text-white/[0.02] absolute -top-32 left-0 select-none group-hover:text-brand/[0.05] transition-colors duration-1000">
                     {item.step}
                   </div>
                   <div className="relative z-10">
