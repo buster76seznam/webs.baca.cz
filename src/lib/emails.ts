@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM_EMAIL = 'Websbaca.cz <notifikace@websbaca.cz>';
+const FROM_EMAIL = 'Webs Baca <notifikace@websbaca.cz>';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://webs.baca.cz';
 
 export async function sendPreviewEmail(
@@ -15,7 +15,7 @@ export async function sendPreviewEmail(
     const data = await resend.emails.send({
       from: FROM_EMAIL,
       to: clientEmail,
-      subject: 'Váš web je připraven k nahlédnutí! 🚀',
+      subject: 'Vas web je pripraven k nahlednuti! 🚀',
       html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
         <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Váš web je hotový! 🚀</h1>
@@ -60,7 +60,7 @@ export async function sendDomainUnavailableEmail(
     const data = await resend.emails.send({
       from: FROM_EMAIL,
       to: clientEmail,
-      subject: `Důležité: Doména ${domainName} není dostupná`,
+      subject: `Dulezite: Domena ${domainName} neni dostupna`,
       html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
         <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Doména není dostupná</h1>
@@ -111,7 +111,7 @@ export async function sendAdminDomainPurchaseEmail(
     const data = await resend.emails.send({
       from: FROM_EMAIL,
       to: adminEmail,
-      subject: `[AKCE VYŽADOVÁNA] Koupit doménu: ${domain} pro ${companyName}`,
+      subject: `[AKCE VYZADOVANA] Koupit domenu: ${domain} pro ${companyName}`,
       html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px; border: 2px solid #f59e0b; border-radius: 12px;">
         <div style="background-color: #fef3c7; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
@@ -192,7 +192,7 @@ export async function sendOrderConfirmationEmail(
     const data = await resend.emails.send({
       from: FROM_EMAIL,
       to: clientEmail,
-      subject: `Objednávka přijata — ${domain} 🎉`,
+      subject: `Objednavka prijata — ${domain} 🎉`,
       html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
         <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Platba proběhla úspěšně! 🎉</h1>
@@ -231,7 +231,7 @@ export async function sendPartnerCommissionEmail(
     const data = await resend.emails.send({
       from: FROM_EMAIL,
       to: partnerEmail,
-      subject: `Nová provize $${commissionAmount} připsána! 🎉`,
+      subject: `Nova provize $${commissionAmount} pripsana! 🎉`,
       html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
         <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Provize připsána! 🎉</h1>

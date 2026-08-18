@@ -162,8 +162,8 @@ export async function POST(request: NextRequest) {
           console.error('Error fetching subscriptions:', subError);
         } else if (subscriptions && subscriptions.length > 0) {
           const payload = JSON.stringify({
-            title: 'Nová objednávka!',
-            body: `Přišla nová objednávka od ${formData.get('companyName')}`,
+            title: 'Nova objednavka!',
+            body: `Prisla nova objednavka od ${formData.get('companyName')}`,
             icon: '/Logo.png',
             badge: '/Logo.png',
             data: {
