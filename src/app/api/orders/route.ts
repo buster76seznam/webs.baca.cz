@@ -156,6 +156,8 @@ export async function POST(request: NextRequest) {
 
 
     // Send push notification if VAPID keys are configured
+    // TEMPORARILY DISABLED TO DEBUG ENCODING ERROR
+    /*
     if (publicVapidKey && privateVapidKey) {
       try {
         // Fetch all subscriptions from database
@@ -168,8 +170,8 @@ export async function POST(request: NextRequest) {
         } else if (subscriptions && subscriptions.length > 0) {
           const companyName = (formData.get('companyName') as string || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
           const payload = JSON.stringify({
-            title: 'Nova objednavka!',
-            body: `Prisla nova objednavka od ${companyName}`,
+            title: 'New Order!',
+            body: `New order from ${companyName}`,
             icon: '/Logo.png',
             badge: '/Logo.png',
             data: {
@@ -187,10 +189,7 @@ export async function POST(request: NextRequest) {
               const subscription = typeof sub.subscription === 'string' 
                 ? JSON.parse(sub.subscription) 
                 : sub.subscription;
-              // @ts-ignore - web-push supports Buffer but TypeScript types are incorrect
-              await webpush.sendNotification(subscription, Buffer.from(payload, 'utf-8'), {
-                contentEncoding: 'aes128gcm',
-              });
+              await webpush.sendNotification(subscription, payload);
               console.log('Notification sent successfully');
             } catch (err) {
               console.error('Failed to send notification to subscriber:', err);
@@ -209,6 +208,7 @@ export async function POST(request: NextRequest) {
         // Don't fail the order creation if push fails
       }
     }
+    */
 
     return NextResponse.json({ success: true, order: data }, { status: 200 });
   } catch (error) {
