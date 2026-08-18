@@ -36,6 +36,14 @@ export interface Order {
   owner_email: string | null;
   notes: string | null;
   deleted_at: string | null;
+  status_updated_at: string | null;
+  images: string[] | null;
+  language: string | null;
+  primary_color: string | null;
+  secondary_color: string | null;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  google_maps_url: string | null;
   // Contract fields
   legal_business_name: string | null;
   state_of_incorporation: string | null;
