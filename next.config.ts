@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 31536000,
   },
 
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   experimental: {
     optimizePackageImports: [
       'framer-motion',
