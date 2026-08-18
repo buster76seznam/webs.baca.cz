@@ -880,6 +880,7 @@ export default function PartnerProgramPage() {
                 By registering, you agree to our Partner Agreement and Terms of Service.
               </p>
             </motion.form>
+            </div>
           </div>
         </section>
 
