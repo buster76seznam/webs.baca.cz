@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Upload, ArrowUpRight, X, Image as ImageIcon, Share2, Camera, MapPin, Search, Palette, Globe } from 'lucide-react';
+import { ArrowUpRight, X, Search, Palette } from 'lucide-react';
 import { useCountry } from '@/contexts/CountryContext';
 import { translations } from '@/lib/translations';
 import dynamic from 'next/dynamic';
@@ -37,16 +37,12 @@ export default function OrdersPage() {
     domain: '',
     description: '',
     advantage: '',
-    priceList: '',
     workingDays: 'mon-fri',
     workingTime: '9-17',
     workingHours: '',
     primaryColor: '#7C3AED',
     secondaryColor: '#10B981',
     language: 'cs',
-    facebookUrl: '',
-    instagramUrl: '',
-    googleMapsUrl: '',
     legalBusinessName: '',
     stateOfIncorporation: '',
     principalPlaceOfBusiness: '',
@@ -54,12 +50,11 @@ export default function OrdersPage() {
     contractEmail: '',
   });
 
-  const [images, setImages] = useState<File[]>([]);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [languageSearch, setLanguageSearch] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
-  const [expandedSections, setExpandedSections] = useState<{ owner: boolean; social: boolean }>({ owner: false, social: false });
+  const [expandedSections, setExpandedSections] = useState<{ owner: boolean }>({ owner: false });
 
   const colorPalette = [
     '#7C3AED', '#10B981', '#3B82F6', '#EF4444', '#F59E0B', '#EC4899',
@@ -131,18 +126,6 @@ export default function OrdersPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    const validFiles = files.filter(file => 
-      file.type === 'image/png' || file.type === 'image/jpeg'
-    );
-    setImages([...images, ...validFiles]);
-  };
-
-  const removeImage = (index: number) => {
-    setImages(images.filter((_, i) => i !== index));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -194,9 +177,6 @@ export default function OrdersPage() {
         }
       });
       formDataToSend.append('workingHours', formattedWorkingHours);
-      images.forEach((file, index) => {
-        formDataToSend.append(`image_${index}`, file);
-      });
 
       const res = await fetch('/api/orders', {
         method: 'POST',
@@ -222,7 +202,6 @@ export default function OrdersPage() {
         legalBusinessName: '', stateOfIncorporation: '', principalPlaceOfBusiness: '',
         authorizedSignatory: '', contractEmail: '',
       });
-      setImages([]);
       setCurrentStep(1);
     } catch {
       setErrorMsg(isEnglish ? 'Failed to submit. Try again.' : 'Nepodařilo se odeslat. Zkus to znovu.');
@@ -253,33 +232,32 @@ export default function OrdersPage() {
         {/* Progress Bar */}
         <div className="mb-12">
           <div className="flex justify-between items-center mb-4">
-            {[1, 2, 3, 4, 5].map(step => (
+            {[1, 2, 3, 4].map(step => (
               <div key={step} className="flex flex-col items-center flex-1">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black transition-all ${
-                  currentStep >= step 
-                    ? 'bg-brand text-white' 
+                  currentStep >= step
+                    ? 'bg-brand text-white'
                     : 'bg-white/10 text-white/50'
                 }`}>
                   {step}
                 </div>
                 <span className={`text-xs mt-2 text-center whitespace-nowrap text-ellipsis transition-all ${
-                  currentStep === step 
-                    ? 'text-brand font-black' 
-                    : currentStep > step 
+                  currentStep === step
+                    ? 'text-brand font-black'
+                    : currentStep > step
                     ? 'text-white/60'
                     : 'text-white/30'
                 }`}>
-                  {step === 1 ? isEnglish ? 'Company' : 'Podnik' : 
+                  {step === 1 ? isEnglish ? 'Company' : 'Podnik' :
                    step === 2 ? isEnglish ? 'Website' : 'Web' :
                    step === 3 ? isEnglish ? 'Design' : 'Design' :
-                   step === 4 ? isEnglish ? 'Social' : 'Sítě' :
                    isEnglish ? 'Submit' : 'Odeslat'}
                 </span>
               </div>
             ))}
           </div>
           <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-            <div className={`h-full bg-brand rounded-full transition-all duration-300`} style={{ width: `${(currentStep - 1) * 25}%` }} />
+            <div className={`h-full bg-brand rounded-full transition-all duration-300`} style={{ width: `${((currentStep - 1) / 3) * 100}%` }} />
           </div>
         </div>
 
@@ -346,31 +324,6 @@ export default function OrdersPage() {
           {currentStep === 2 && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12">
               <h2 className="text-xl font-black mb-6 text-brand uppercase tracking-wider">{isEnglish ? 'Website' : 'Web'}</h2>
-              
-              <div className="mb-6">
-                <label className={labelClass}>{isEnglish ? 'Images (.png, .jpg)' : 'Obrázky (.png, .jpg)'}</label>
-                <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-brand/30 transition-colors">
-                  <input type="file" multiple accept=".png,.jpg,.jpeg" onChange={handleImageUpload} className="hidden" id="image-upload" />
-                  <label htmlFor="image-upload" className="cursor-pointer">
-                    <Upload size={32} className="mx-auto mb-3 text-zinc-600" />
-                    <p className="text-zinc-500 text-sm">{isEnglish ? 'Click to upload images' : 'Klikněte pro nahrání obrázků'}</p>
-                    <p className="text-zinc-700 text-xs mt-1">.png, .jpg</p>
-                  </label>
-                </div>
-                {images.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {images.map((file, i) => (
-                      <div key={i} className="relative group">
-                        <ImageIcon size={16} className="text-brand" />
-                        <span className="text-xs text-zinc-400 ml-1">{file.name}</span>
-                        <button type="button" onClick={() => removeImage(i)} className="ml-2 text-red-400 hover:text-red-300">
-                          <X size={14} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
 
               <div className="mb-4">
                 <label className={labelClass}>{isEnglish ? 'Desired domain *' : 'Jakou doménu chcete *'}</label>
@@ -385,11 +338,6 @@ export default function OrdersPage() {
               <div className="mb-4">
                 <label className={labelClass}>{isEnglish ? 'Advantage over competition *' : 'Výhoda oproti konkurenci *'}</label>
                 <textarea name="advantage" value={formData.advantage} onChange={handleInputChange} placeholder={isEnglish ? 'What makes you different from others...' : 'Čím se odlišujete od ostatních...'} rows={3} className={`${inputClass} resize-none`} required />
-              </div>
-
-              <div className="mb-4">
-                <label className={labelClass}>{isEnglish ? 'Price list' : 'Ceník'} <span className="text-zinc-700 normal-case tracking-normal font-normal">({isEnglish ? '(optional)' : '(nepovinné)'})</span></label>
-                <textarea name="priceList" value={formData.priceList} onChange={handleInputChange} placeholder={isEnglish ? 'Optionally provide price list...' : 'Volitelně uveďte ceník...'} rows={3} className={`${inputClass} resize-none`} />
               </div>
 
               <div>
@@ -596,68 +544,11 @@ export default function OrdersPage() {
                   </div>
                 )}
               </motion.div>
-
-              {/* Social Media - Collapsible */}
-              <motion.div className="bg-[#0A0A0A] border border-white/5 rounded-3xl overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setExpandedSections({ ...expandedSections, social: !expandedSections.social })}
-                  className="w-full p-8 md:p-12 flex justify-between items-center hover:bg-white/[0.02] transition-colors"
-                >
-                  <h2 className="text-xl font-black text-zinc-400 uppercase tracking-wider">{isEnglish ? 'Social Media' : 'Sociální sítě'} <span className="text-zinc-600 normal-case text-sm">({isEnglish ? '(optional)' : '(nepovinné)'})</span></h2>
-                  <div className={`transition-transform ${expandedSections.social ? 'rotate-180' : ''}`}>▼</div>
-                </button>
-                {expandedSections.social && (
-                  <div className="px-8 md:px-12 pb-8 md:pb-12 border-t border-white/5 space-y-4">
-                    <div className="relative">
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
-                        <Share2 size={18} />
-                      </div>
-                      <input
-                        type="url"
-                        name="facebookUrl"
-                        value={formData.facebookUrl}
-                        onChange={handleInputChange}
-                        placeholder="https://facebook.com/yourpage"
-                        className={`${inputClass} pl-12`}
-                      />
-                    </div>
-                    
-                    <div className="relative">
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
-                        <Camera size={18} />
-                      </div>
-                      <input
-                        type="url"
-                        name="instagramUrl"
-                        value={formData.instagramUrl}
-                        onChange={handleInputChange}
-                        placeholder="https://instagram.com/yourprofile"
-                        className={`${inputClass} pl-12`}
-                      />
-                    </div>
-                    
-                    <div className="relative">
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
-                        <MapPin size={18} />
-                      </div>
-                      <input
-                        type="url"
-                        name="googleMapsUrl"
-                        value={formData.googleMapsUrl}
-                        onChange={handleInputChange}
-                        placeholder="https://maps.google.com/..."
-                        className={`${inputClass} pl-12`}
-                      />
-                    </div>
-                  </div>
-                )}
-              </motion.div>
             </motion.div>
           )}
 
-          {/* STEP 5: Review & Submit */}
-          {currentStep === 5 && (
+          {/* STEP 4: Review & Submit */}
+          {currentStep === 4 && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12 text-center">
               <h2 className="text-3xl font-black mb-4 text-brand uppercase">{isEnglish ? 'Ready to submit?' : 'Připraveni na odeslání?'}</h2>
               <p className="text-zinc-400 mb-8">{isEnglish ? 'Review your details above. Click submit to send your order.' : 'Zkontrolujte vaše údaje výše. Klikněte na odeslat pro odeslání vaší objednávky.'}</p>
@@ -681,14 +572,14 @@ export default function OrdersPage() {
               {isEnglish ? '← Back' : '← Zpět'}
             </button>
             <div className="flex gap-2">
-              {currentStep === 5 ? (
+              {currentStep === 4 ? (
                 <button type="submit" disabled={status === 'loading'} className="px-8 py-3 bg-brand text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-brand-dark transition-all shadow-[0_0_40px_-10px_rgba(124,58,237,0.6)] disabled:opacity-60 flex items-center gap-2">
                   {status === 'loading' ? (<><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />{isEnglish ? 'Sending...' : 'Odesílám...'}</>) : (isEnglish ? <>Submit <ArrowUpRight size={16} /></> : <>Odeslat <ArrowUpRight size={16} /></>)}
                 </button>
               ) : (
                 <button
                   type="button"
-                  onClick={() => setCurrentStep(Math.min(5, currentStep + 1))}
+                  onClick={() => setCurrentStep(Math.min(4, currentStep + 1))}
                   className="px-8 py-3 bg-brand text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-brand-dark transition-all shadow-[0_0_40px_-10px_rgba(124,58,237,0.6)]"
                 >
                   {isEnglish ? 'Next →' : 'Dál →'}

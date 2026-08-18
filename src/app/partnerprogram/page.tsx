@@ -782,7 +782,7 @@ export default function PartnerProgramPage() {
         </section>
 
         {/* Registration Form */}
-        <section id="registration-form" className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative overflow-hidden">
+        <section id="registration-form" className="w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-gray-50 dark:bg-[#050505] relative">
           <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
 
           <div className="max-w-3xl mx-auto relative z-10">
@@ -795,7 +795,7 @@ export default function PartnerProgramPage() {
               </p>
             </motion.div>
 
-            <div className="max-w-md mx-auto">
+            <div className="max-w-md mx-auto w-full">
             <motion.form
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
