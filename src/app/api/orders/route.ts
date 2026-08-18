@@ -196,8 +196,14 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, order: data }, { status: 200 });
   } catch (error) {
-    console.error('Server error:', error);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    console.error("ORDER CREATION ERROR:", error);
+    return NextResponse.json(
+      { 
+        error: error.message || 'Internal Server Error', 
+        details: JSON.stringify(error, Object.getOwnPropertyNames(error)) 
+      }, 
+      { status: 500 }
+    );
   }
 }
 
@@ -245,7 +251,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ orders: data || [] }, { status: 200 });
   } catch (error) {
-    console.error('Server error:', error);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    console.error("ORDER CREATION ERROR:", error);
+    return NextResponse.json(
+      { 
+        error: error.message || 'Internal Server Error', 
+        details: JSON.stringify(error, Object.getOwnPropertyNames(error)) 
+      }, 
+      { status: 500 }
+    );
   }
 }
