@@ -14,7 +14,8 @@ interface OrderCardProps {
   onUpdate: () => void;
 }
 
-function daysSince(dateStr: string): number {
+function daysSince(dateStr: string | null): number {
+  if (!dateStr) return 0;
   return Math.floor((Date.now() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24));
 }
 
@@ -142,7 +143,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
         >
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 flex items-center gap-1"><Camera size={10} />Fotky</p>
-            <p className="text-sm font-bold text-white">{order.images.length > 0 ? 'Ano' : 'Ne'}</p>
+            <p className="text-sm font-bold text-white">{order.images?.length > 0 ? 'Ano' : 'Ne'}</p>
           </div>
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 flex items-center gap-1"><Globe size={10} />Doména</p>
@@ -154,7 +155,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
           </div>
           <div className="sm:col-span-2">
             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2">Stav aktualizován</p>
-            <p className="text-sm font-bold text-white">{new Date(order.status_updated_at).toLocaleDateString('cs-CZ')}</p>
+            <p className="text-sm font-bold text-white">{order.status_updated_at ? new Date(order.status_updated_at).toLocaleDateString('cs-CZ') : '—'}</p>
           </div>
         </motion.div>
       )}
