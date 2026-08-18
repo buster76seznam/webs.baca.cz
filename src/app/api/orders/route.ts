@@ -42,6 +42,8 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
 
     console.log("Orders API triggered successfully");
+    console.log("Request headers:", Object.fromEntries(request.headers.entries()));
+    
     // Verify Turnstile token
     const turnstileToken = formData.get('turnstileToken') as string | null;
     if (turnstileToken) {
@@ -65,66 +67,70 @@ export async function POST(request: NextRequest) {
     // Extract images from FormData
     const imageUrls: string[] = [];
     let imageIndex = 0;
-    console.log('Starting image upload...');
-    while (formData.get(`image_${imageIndex}`) as File) {
-      const file = formData.get(`image_${imageIndex}`) as File;
-      const normalizedFileName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      const fileName = `${Date.now()}-${imageIndex}-${normalizedFileName}`;
-      console.log('Uploading image:', fileName, 'size:', file.size);
-      
-      const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
-        .from('order-images')
-        .upload(fileName, file);
-
-      if (uploadError) {
-        console.error('Image upload error:', uploadError);
-        return NextResponse.json({ 
-          error: `Failed to upload image ${file.name}: ${uploadError.message}` 
-        }, { status: 500 });
-      } else {
-        const { data: publicUrlData } = supabaseAdmin.storage
+    try {
+      console.log('Starting image upload...');
+      while (formData.get(`image_${imageIndex}`) as File) {
+        const file = formData.get(`image_${imageIndex}`) as File;
+        const normalizedFileName = (file.name || 'image').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const fileName = `${Date.now()}-${imageIndex}-${normalizedFileName}`;
+        console.log('Uploading image:', fileName, 'size:', file.size);
+        
+        const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
           .from('order-images')
-          .getPublicUrl(fileName);
-        imageUrls.push(publicUrlData.publicUrl);
-        console.log('Image uploaded successfully:', publicUrlData.publicUrl);
+          .upload(fileName, file);
+
+        if (uploadError) {
+          console.error('Image upload error:', uploadError);
+          return NextResponse.json({ 
+            error: `Failed to upload image ${file.name}: ${uploadError.message}` 
+          }, { status: 500 });
+        } else {
+          const { data: publicUrlData } = supabaseAdmin.storage
+            .from('order-images')
+            .getPublicUrl(fileName);
+          imageUrls.push(publicUrlData.publicUrl);
+          console.log('Image uploaded successfully:', publicUrlData.publicUrl);
+        }
+        imageIndex++;
       }
-      imageIndex++;
+    } catch (imgError) {
+      console.error('CRITICAL IMAGE ERROR:', imgError);
+      throw imgError;
     }
     console.log('Total images uploaded:', imageUrls.length);
 
     const insertData = {
-      company_name: formData.get('companyName'),
-      company_phone: formData.get('companyPhone'),
-      company_email: formData.get('companyEmail'),
-      company_address: formData.get('companyAddress'),
-      company_country: formData.get('companyCountry') || null,
-      industry: formData.get('industry'),
-      owner_name: formData.get('ownerName') || null,
-      owner_phone: formData.get('ownerPhone') || null,
-      owner_email: formData.get('ownerEmail') || null,
-      domain: formData.get('domain'),
-      description: formData.get('description'),
-      advantage: formData.get('advantage'),
-      price_list: formData.get('priceList') || null,
-      working_hours: formData.get('workingHours'),
-      status: 'queued', // Changed from 'čeká'
+      company_name: String(formData.get('companyName') || ''),
+      company_phone: String(formData.get('companyPhone') || ''),
+      company_email: String(formData.get('companyEmail') || ''),
+      company_address: String(formData.get('companyAddress') || ''),
+      company_country: String(formData.get('companyCountry') || '') || null,
+      industry: String(formData.get('industry') || ''),
+      owner_name: String(formData.get('ownerName') || '') || null,
+      owner_phone: String(formData.get('ownerPhone') || '') || null,
+      owner_email: String(formData.get('ownerEmail') || '') || null,
+      domain: String(formData.get('domain') || ''),
+      description: String(formData.get('description') || ''),
+      advantage: String(formData.get('advantage') || ''),
+      price_list: String(formData.get('priceList') || '') || null,
+      working_hours: String(formData.get('workingHours') || ''),
+      status: 'queued', 
       images: imageUrls,
-      primary_color: formData.get('primaryColor') || null,
-      secondary_color: formData.get('secondaryColor') || null,
-      language: formData.get('language') || null,
-      facebook_url: formData.get('facebookUrl') || null,
-      instagram_url: formData.get('instagramUrl') || null,
-      google_maps_url: formData.get('googleMapsUrl') || null,
-      legal_business_name: formData.get('legalBusinessName') || null,
-      state_of_incorporation: formData.get('stateOfIncorporation') || null,
-      principal_place_of_business: formData.get('principalPlaceOfBusiness') || null,
-      authorized_signatory: formData.get('authorizedSignatory') || null,
-      contract_email: formData.get('contractEmail') || null,
+      primary_color: String(formData.get('primaryColor') || '') || null,
+      secondary_color: String(formData.get('secondaryColor') || '') || null,
+      language: String(formData.get('language') || '') || null,
+      facebook_url: String(formData.get('facebookUrl') || '') || null,
+      instagram_url: String(formData.get('instagramUrl') || '') || null,
+      google_maps_url: String(formData.get('googleMapsUrl') || '') || null,
+      legal_business_name: String(formData.get('legalBusinessName') || '') || null,
+      state_of_incorporation: String(formData.get('stateOfIncorporation') || '') || null,
+      principal_place_of_business: String(formData.get('principalPlaceOfBusiness') || '') || null,
+      authorized_signatory: String(formData.get('authorizedSignatory') || '') || null,
+      contract_email: String(formData.get('contractEmail') || '') || null,
       ip_address: ip,
     };
 
-    console.log('Insert data with status queued:', insertData);
-
+    console.log('Inserting data into Supabase...');
     const { data, error } = await supabaseAdmin
       .from('orders')
       .insert(insertData)
@@ -136,75 +142,72 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    console.log('Insert success:', data);
+    console.log('Insert success. Triggering cron...');
 
-    console.log(`TRIGGERING RESEND EMAIL FOR ORDER: ${data.id}`);
     const host = request.headers.get('host') || 'www.websbaca.cz';
     const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
     const processOrderUrl = `${protocol}://${host}/api/crons/process-orders`;
+    
     // Immediately trigger the processing of the order
     try {
-      fetch(processOrderUrl, {
+      let safeHost = host;
+      // Remove any non-ASCII characters from host to prevent ByteString errors in fetch
+      if (/[^\x00-\x7F]/.test(safeHost)) {
+        console.warn(`Non-ASCII characters detected in host: ${safeHost}. Falling back to localhost in dev or stripping characters.`);
+        if (process.env.NODE_ENV === 'development') {
+          safeHost = '127.0.0.1:3000'; // Use IP to be even safer
+        } else {
+          safeHost = safeHost.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\x00-\x7F]/g, "");
+        }
+      }
+      
+      const safeProcessOrderUrl = `${protocol}://${safeHost}/api/crons/process-orders`;
+      console.log(`Fetching ${safeProcessOrderUrl}`);
+      
+      // Ensure CRON_SECRET is ASCII
+      const safeCronSecret = (process.env.CRON_SECRET || '').replace(/[^\x00-\x7F]/g, "");
+
+      const cronRes = await fetch(safeProcessOrderUrl, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${process.env.CRON_SECRET}`,
+          'Authorization': `Bearer ${safeCronSecret}`,
         },
       });
+      console.log('Cron triggered status:', cronRes.status);
     } catch (fetchError) {
       console.error('Error triggering process-orders cron:', fetchError);
     }
 
+    // Send push notification
+    try {
+      console.log('Checking for push subscriptions...');
+      const { data: subscriptions, error: subError } = await supabaseAdmin
+        .from('push_subscriptions')
+        .select('subscription');
 
-    // Send push notification if VAPID keys are configured
-    if (publicVapidKey && privateVapidKey) {
-      try {
-        // Fetch all subscriptions from database
-        const { data: subscriptions, error: subError } = await supabaseAdmin
-          .from('push_subscriptions')
-          .select('subscription');
+      if (!subError && subscriptions && subscriptions.length > 0) {
+        console.log(`Sending to ${subscriptions.length} subscribers`);
+        const cleanCompanyName = String(formData.get('companyName') || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\x00-\x7F]/g, "");
+        const payload = JSON.stringify({
+          title: 'New Order!',
+          body: `New order from ${cleanCompanyName}`,
+          icon: '/Logo.png',
+          badge: '/Logo.png',
+          data: { url: '/program', orderId: data.id }
+        });
 
-        if (subError) {
-          console.error('Error fetching subscriptions:', subError);
-        } else if (subscriptions && subscriptions.length > 0) {
-          const companyName = (formData.get('companyName') as string || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-          const payload = JSON.stringify({
-            title: 'New Order!',
-            body: `New order from ${companyName}`,
-            icon: '/Logo.png',
-            badge: '/Logo.png',
-            data: {
-              url: '/program',
-              orderId: data.id
-            }
-          });
-
-          console.log(`Sending push notifications to ${subscriptions.length} subscribers`);
-          
-          // Send notifications to all subscribers
-          console.log('Push notification payload:', payload);
-          for (const sub of subscriptions) {
-            try {
-              const subscription = typeof sub.subscription === 'string' 
-                ? JSON.parse(sub.subscription) 
-                : sub.subscription;
-              await webpush.sendNotification(subscription, payload);
-              console.log('Notification sent successfully');
-            } catch (err) {
-              console.error('Failed to send notification to subscriber:', err);
-              // Remove invalid subscriptions
-              if (err instanceof Error && err.message.includes('410')) {
-                await supabaseAdmin
-                  .from('push_subscriptions')
-                  .delete()
-                  .eq('subscription', sub.subscription);
-              }
-            }
+        for (const sub of subscriptions) {
+          try {
+            const subscription = typeof sub.subscription === 'string' ? JSON.parse(sub.subscription) : sub.subscription;
+            // webpush might internally use fetch or http.request, let's ensure it doesn't crash the whole flow
+            await webpush.sendNotification(subscription, payload).catch((e: any) => console.error('webpush error:', e));
+          } catch (err) {
+            console.error('Push failed for sub:', err);
           }
         }
-      } catch (pushError) {
-        console.error('Push notification error:', pushError);
-        // Don't fail the order creation if push fails
       }
+    } catch (pushError) {
+      console.error('Push notification system error:', pushError);
     }
 
     return NextResponse.json({ success: true, order: data }, { status: 200 });
