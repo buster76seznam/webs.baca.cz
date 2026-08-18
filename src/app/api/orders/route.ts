@@ -180,6 +180,7 @@ export async function POST(request: NextRequest) {
           console.log(`Sending push notifications to ${subscriptions.length} subscribers`);
           
           // Send notifications to all subscribers
+          console.log('Push notification payload:', payload);
           for (const sub of subscriptions) {
             try {
               await webpush.sendNotification(sub.subscription, payload);
