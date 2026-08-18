@@ -143,7 +143,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
         >
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 flex items-center gap-1"><Camera size={10} />Fotky</p>
-            <p className="text-sm font-bold text-white">{order.images?.length > 0 ? 'Ano' : 'Ne'}</p>
+            <p className="text-sm font-bold text-white">{order.images && order.images.length > 0 ? 'Ano' : 'Ne'}</p>
           </div>
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 flex items-center gap-1"><Globe size={10} />Doména</p>
