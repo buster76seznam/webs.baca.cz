@@ -14,8 +14,9 @@ interface OrderCardProps {
   onUpdate: () => void;
 }
 
-function daysSince(dateStr: string): number {
-  return Math.floor((Date.now() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24));
+function daysSince(dateStr: string | null): number {
+    if (!dateStr) return 0;
+    return Math.floor((Date.now() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24));
 }
 
 export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }: OrderCardProps) {
@@ -52,7 +53,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
 
   const isUrgent =
     order.status === 'čeká' &&
-    !!order.status_updated_at &&
+    order.status_updated_at &&
     daysSince(order.status_updated_at) >= 14;
 
   const handleStatusChange = async (newStatus: OrderStatus) => {
@@ -168,7 +169,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
         <div className="flex items-center gap-3 px-6 py-3 bg-amber-500/10 border-b border-amber-500/20">
           <AlertTriangle size={14} className="text-amber-400 shrink-0" />
           <p className="text-amber-300 text-xs font-black uppercase tracking-wider">
-            Čeká na podklady již {daysSince(order.status_updated_at!)} dnů — kontaktuj klienta s upomínkou!
+            Čeká na podklady již {daysSince(order.status_updated_at)} dnů — kontaktuj klienta s upomínkou!
           </p>
         </div>
       )}
@@ -263,8 +264,8 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                 <Camera size={14} />
                 <span className="text-[10px] font-black uppercase tracking-widest">Fotky</span>
               </div>
-              <span className={`text-xs font-bold ${order.images && order.images.length > 0 ? 'text-emerald-400' : 'text-zinc-500'}`}>
-                {order.images && order.images.length > 0 ? 'K dispozici' : 'Nemá / zajistíme'}
+              <span className={`text-xs font-bold ${order.images?.length ? 'text-emerald-400' : 'text-zinc-500'}`}>
+                {order.images?.length ? 'K dispozici' : 'Nemá / zajistíme'}
               </span>
             </div>
             <div>
