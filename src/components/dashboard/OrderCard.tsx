@@ -52,8 +52,8 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
 
   const isUrgent =
     order.status === 'čeká' &&
-    order.status_updated_at &&
-    daysSince(order.status_updated_at!) >= 14;
+    !!order.status_updated_at &&
+    daysSince(order.status_updated_at) >= 14;
 
   const handleStatusChange = async (newStatus: OrderStatus) => {
     alert(`Changing status to: ${newStatus}`);
@@ -263,8 +263,8 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                 <Camera size={14} />
                 <span className="text-[10px] font-black uppercase tracking-widest">Fotky</span>
               </div>
-              <span className={`text-xs font-bold ${order.images!.length > 0 ? 'text-emerald-400' : 'text-zinc-500'}`}>
-                {order.images!.length > 0 ? 'K dispozici' : 'Nemá / zajistíme'}
+              <span className={`text-xs font-bold ${order.images && order.images.length > 0 ? 'text-emerald-400' : 'text-zinc-500'}`}>
+                {order.images && order.images.length > 0 ? 'K dispozici' : 'Nemá / zajistíme'}
               </span>
             </div>
             <div>
