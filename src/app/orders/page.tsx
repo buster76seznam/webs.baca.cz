@@ -7,6 +7,7 @@ import { useCountry } from '@/contexts/CountryContext';
 import { translations } from '@/lib/translations';
 import dynamic from 'next/dynamic';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 const PhoneInput = dynamic(() => import('react-phone-number-input'), {
   ssr: false,
@@ -48,6 +49,7 @@ export default function OrdersPage() {
     principalPlaceOfBusiness: '',
     authorizedSignatory: '',
     contractEmail: '',
+    priceList: '',
   });
 
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -55,6 +57,7 @@ export default function OrdersPage() {
   const [languageSearch, setLanguageSearch] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const [expandedSections, setExpandedSections] = useState<{ owner: boolean }>({ owner: false });
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const colorPalette = [
     '#7C3AED', '#10B981', '#3B82F6', '#EF4444', '#F59E0B', '#EC4899',
@@ -177,6 +180,7 @@ export default function OrdersPage() {
         }
       });
       formDataToSend.append('workingHours', formattedWorkingHours);
+      formDataToSend.append('turnstileToken', turnstileToken || '');
 
       const res = await fetch('/api/orders', {
         method: 'POST',
@@ -552,6 +556,7 @@ export default function OrdersPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12 text-center">
               <h2 className="text-3xl font-black mb-4 text-brand uppercase">{isEnglish ? 'Ready to submit?' : 'Připraveni na odeslání?'}</h2>
               <p className="text-zinc-400 mb-8">{isEnglish ? 'Review your details above. Click submit to send your order.' : 'Zkontrolujte vaše údaje výše. Klikněte na odeslat pro odeslání vaší objednávky.'}</p>
+              <Turnstile siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''} onVerify={setTurnstileToken} />
             </motion.div>
           )}
 
