@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:influencer": "ts-node scripts/test-influencer-flow.ts",
-    "vercel-build": "npm install --legacy-peer-deps && next build"
+    "test:influencer": "ts-node scripts/test-influencer-flow.ts"
   },
   "dependencies": {
     "@marsidev/react-turnstile": "^1.5.4",
