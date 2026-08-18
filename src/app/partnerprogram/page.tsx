@@ -795,12 +795,13 @@ export default function PartnerProgramPage() {
               </p>
             </motion.div>
 
+            <div className="max-w-md mx-auto">
             <motion.form
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
               onSubmit={handleRegisterSubmit}
-              className="bg-white dark:bg-white/5 border-2 border-gray-200 dark:border-white/10 rounded-3xl p-8 md:p-12 space-y-6 max-w-md mx-auto"
+              className="bg-white dark:bg-white/5 border-2 border-gray-200 dark:border-white/10 rounded-3xl p-8 md:p-12 space-y-6 w-full"
             >
               <div>
                 <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-3">

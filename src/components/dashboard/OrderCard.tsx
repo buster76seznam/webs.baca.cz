@@ -316,70 +316,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
             </div>
           )}
 
-          {/* Images section */}
-          {order.images && order.images.length > 0 && (
-            <div>
-              <div className="flex items-center gap-2 mb-3 text-[#7C3AED]">
-                <Camera size={14} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Nahrané obrázky</span>
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {order.images?.map((url, i) => (
-                  <a
-                    key={i}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="aspect-square bg-white/5 border border-white/10 rounded overflow-hidden hover:border-white/20 transition-colors"
-                  >
-                    <img src={url} alt={`Obrázek ${i + 1}`} className="w-full h-full object-cover" />
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {/* Social media section */}
-          {(order.facebook_url || order.instagram_url || order.google_maps_url) && (
-            <div>
-              <div className="flex items-center gap-2 mb-3 text-[#7C3AED]">
-                <Share2 size={14} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Sociální sítě</span>
-              </div>
-              <div className="space-y-2">
-                {order.facebook_url && (
-                  <a
-                    href={order.facebook_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-xs text-zinc-400 hover:text-white transition-colors"
-                  >
-                    Facebook
-                  </a>
-                )}
-                {order.instagram_url && (
-                  <a
-                    href={order.instagram_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-xs text-zinc-400 hover:text-white transition-colors"
-                  >
-                    Instagram
-                  </a>
-                )}
-                {order.google_maps_url && (
-                  <a
-                    href={order.google_maps_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-xs text-zinc-400 hover:text-white transition-colors"
-                  >
-                    Google Maps
-                  </a>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* Owner section */}
           {(order.owner_name || order.owner_phone || order.owner_email) && (
@@ -404,12 +341,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                     <p className="text-xs text-zinc-300">{order.advantage}</p>
                   </div>
                 )}
-                {order.price_list && (
-                  <div>
-                    <div className="text-[10px] font-bold text-zinc-500 mb-1">Ceník</div>
-                    <p className="text-xs text-zinc-300 whitespace-pre-wrap">{order.price_list}</p>
-                  </div>
-                )}
+
                 {order.working_hours && (
                   <div>
                     <div className="text-[10px] font-bold text-zinc-500 mb-1">Pracovní doba</div>
