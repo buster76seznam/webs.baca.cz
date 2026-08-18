@@ -138,8 +138,11 @@ export async function POST(request: NextRequest) {
     console.log('Insert success:', data);
 
     console.log(`TRIGGERING RESEND EMAIL FOR ORDER: ${data.id}`);
+    const host = request.headers.get('host') || 'www.websbaca.cz';
+    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+    const processOrderUrl = `${protocol}://${host}/api/crons/process-orders`;
     // Immediately trigger the processing of the order
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/crons/process-orders`, {
+    fetch(processOrderUrl, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${process.env.CRON_SECRET}`,
