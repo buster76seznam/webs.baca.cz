@@ -20,13 +20,13 @@ function thisMonthCount(orders: Order[]) {
 export default function AdminTeamStats({ orders, users }: AdminTeamStatsProps) {
   const byUser = useMemo(() => {
     return users
-      .filter(u => u.role !== 'Správce')
+      .filter(u => u.role !== 'Spravce')
       .map(u => {
         const userOrders =
-          u.role === 'Obchodní zástupce'
+          u.role === 'Obchodni zastupce'
             ? orders.filter(o => o.sales_user_id === u.id)
             : orders;
-        const paid = userOrders.filter(o => o.status === 'dokončená').length;
+        const paid = userOrders.filter(o => o.status === 'completed').length;
         return {
           user: u,
           total: userOrders.length,

@@ -35,7 +35,7 @@ export default function OnlineUsersBar({ currentUserId }: OnlineUsersBarProps) {
       <div className="flex items-center gap-2 mb-4">
         <Users size={16} className="text-emerald-400" />
         <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">
-          Právě online ({online.length})
+          Prave online ({online.length})
         </span>
       </div>
       <div className="flex flex-wrap gap-2">

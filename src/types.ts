@@ -1,4 +1,4 @@
-export type Role = 'Obchodní zástupce' | 'Vývojář' | 'Správce';
+export type Role = 'Obchodni zastupce' | 'Vyvojar' | 'Spravce';
 
 export interface AgenturaUser {
   id: string;
@@ -11,7 +11,7 @@ export interface AgenturaUser {
   last_seen?: string | null;
 }
 
-export type OrderStatus = 'čeká' | 'vývoj' | 'dokončená';
+export type OrderStatus = 'queued' | 'development' | 'completed';
 
 export type PricingType = 'dle_domluvy' | 'doda';
 
@@ -55,13 +55,13 @@ export interface Order {
 }
 
 export const ORDER_STATUSES: OrderStatus[] = [
-  'čeká',
-  'vývoj',
-  'dokončená',
+  'queued',
+  'development',
+  'completed',
 ];
 
 export const STATUS_COLORS: Record<OrderStatus, string> = {
-  'čeká': 'bg-amber-500/10 text-amber-400',
-  'vývoj': 'bg-blue-500/10 text-blue-400',
-  'dokončená': 'bg-emerald-500/10 text-emerald-400',
+  'queued': 'bg-amber-500/10 text-amber-400',
+  'development': 'bg-blue-500/10 text-blue-400',
+  'completed': 'bg-emerald-500/10 text-emerald-400',
 };

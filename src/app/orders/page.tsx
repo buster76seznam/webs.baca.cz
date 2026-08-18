@@ -118,7 +118,7 @@ export default function OrdersPage() {
     { code: 'NO', name: 'Norsko', en: 'Norway' },
     { code: 'FI', name: 'Finsko', en: 'Finland' },
     { code: 'PT', name: 'Portugalsko', en: 'Portugal' },
-    { code: 'GR', name: 'Řecko', en: 'Greece' },
+    { code: 'GR', name: 'Recko', en: 'Greece' },
     { code: 'UA', name: 'Ukrajina', en: 'Ukraine' },
     { code: 'RU', name: 'Rusko', en: 'Russia' },
     { code: 'TR', name: 'Turecko', en: 'Turkey' },

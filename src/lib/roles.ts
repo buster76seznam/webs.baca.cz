@@ -1,15 +1,15 @@
 import { Role } from '@/types';
 
 export function isAdmin(role: Role): boolean {
-  return role === 'Správce';
+  return role === 'Spravce';
 }
 
 export function isSales(role: Role): boolean {
-  return role === 'Obchodní zástupce';
+  return role === 'Obchodni zastupce';
 }
 
 export function isDeveloper(role: Role): boolean {
-  return role === 'Vývojář';
+  return role === 'Vyvojar';
 }
 
 export function canChangeOrderStatus(role: Role): boolean {
@@ -20,12 +20,12 @@ export function canCreateOrders(role: Role): boolean {
   return isSales(role) || isAdmin(role);
 }
 
-export const ROLES: Role[] = ['Obchodní zástupce', 'Vývojář', 'Správce'];
+export const ROLES: Role[] = ['Obchodni zastupce', 'Vyvojar', 'Spravce'];
 
 export const ROLE_LABELS: Record<Role, string> = {
-  'Obchodní zástupce': 'Obchodní zástupce',
-  Vývojář: 'Vývojář',
-  Správce: 'Správce',
+  'Obchodni zastupce': 'Obchodní zástupce',
+  Vyvojar: 'Vývojář',
+  Spravce: 'Správce',
 };
 
 /** Online = aktivita v posledních 3 minutách */

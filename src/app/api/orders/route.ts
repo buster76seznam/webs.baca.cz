@@ -81,8 +81,9 @@ export async function POST(request: NextRequest) {
 
         if (uploadError) {
           console.error('Image upload error:', uploadError);
+          const cleanFileName = (file.name || 'image').replace(/[^\x00-\x7F]/g, "");
           return NextResponse.json({ 
-            error: `Failed to upload image ${file.name}: ${uploadError.message}` 
+            error: `Failed to upload image ${cleanFileName}: ${uploadError.message}` 
           }, { status: 500 });
         } else {
           const { data: publicUrlData } = supabaseAdmin.storage

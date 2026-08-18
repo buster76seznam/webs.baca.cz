@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     const { error } = await supabaseAdmin
       .from('orders')
-      .update({ status: 'vývoj' })
+      .update({ status: 'development' })
       .eq('id', orderId);
 
     if (error) {

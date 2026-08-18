@@ -57,7 +57,7 @@ const TIER_COLORS: Record<number, string> = {
   3: 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400',
 };
 
-// ------- PŘIHLAŠOVACÍ FORMULÁŘ -------
+// ------- PRIHLASOVACI FORMULAR -------
 function LoginForm({ onLogin }: { onLogin: () => void }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -340,7 +340,7 @@ function PartnerDetailView({ partnerId, onBack }: { partnerId: string; onBack: (
   );
 }
 
-// ------- DASHBOARD PŘEHLED -------
+// ------- DASHBOARD PREHLED -------
 function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [partners, setPartners] = useState<PartnerSummary[]>([]);
   const [totals, setTotals] = useState<Totals | null>(null);

@@ -20,7 +20,7 @@ export default function UserManagementPanel({ currentUserId }: UserManagementPan
   const [users, setUsers] = useState<AgenturaUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [edit, setEdit] = useState<EditState>({ username: '', role: 'Obchodní zástupce', password_suffix: '' });
+  const [edit, setEdit] = useState<EditState>({ username: '', role: 'Obchodni zastupce', password_suffix: '' });
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 

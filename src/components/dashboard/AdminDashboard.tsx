@@ -45,14 +45,14 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
 
   useAgenturaPresence(userId);
 
-  const salesUsers = teamUsers.filter(u => u.role === 'Obchodní zástupce');
+  const salesUsers = teamUsers.filter(u => u.role === 'Obchodni zastupce');
 
   const fetchTeamUsers = useCallback(async () => {
     const { data } = await supabase.from('agentura_users').select('*').order('username');
     if (data) {
       const list = data as AgenturaUser[];
       setTeamUsers(list);
-      const sales = list.filter(u => u.role === 'Obchodní zástupce');
+      const sales = list.filter(u => u.role === 'Obchodni zastupce');
       if (sales.length) setSelectedSalesId(prev => prev || sales[0].id);
     }
   }, []);
@@ -73,8 +73,8 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
 
     if (!error && data) {
       const sorted = [...data].sort((a, b) => {
-        const aUrgent = a.status === 'čeká' && a.status_updated_at && daysSince(a.status_updated_at) >= 14;
-        const bUrgent = b.status === 'čeká' && b.status_updated_at && daysSince(b.status_updated_at) >= 14;
+        const aUrgent = a.status === 'queued' && a.status_updated_at && daysSince(a.status_updated_at) >= 14;
+        const bUrgent = b.status === 'queued' && b.status_updated_at && daysSince(b.status_updated_at) >= 14;
         if (aUrgent && !bUrgent) return -1;
         if (!aUrgent && bUrgent) return 1;
         return 0;
@@ -210,10 +210,10 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
         {(tab === 'overview' || tab === 'sales' || tab === 'developer') && (
           <>
             {(tab === 'overview' || tab === 'developer') && (
-              <StatsPanel orders={orders} role="Vývojář" userId={userId} />
+              <StatsPanel orders={orders} role="Vyvojar" userId={userId} />
             )}
             {tab === 'sales' && selectedSalesId && (
-              <StatsPanel orders={orders} role="Obchodní zástupce" userId={selectedSalesId} />
+              <StatsPanel orders={orders} role="Obchodni zastupce" userId={selectedSalesId} />
             )}
 
             {tab === 'sales' && (
@@ -278,7 +278,7 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
                   <OrderCard
                     key={order.id}
                     order={order}
-                    viewerRole={canEditStatus ? 'Vývojář' : 'Obchodní zástupce'}
+                    viewerRole={canEditStatus ? 'Vyvojar' : 'Obchodni zastupce'}
                     viewerUserId={userId}
                     onUpdate={fetchOrders}
                   />

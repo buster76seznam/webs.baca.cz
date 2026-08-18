@@ -13,7 +13,7 @@ export default function ProgramPage() {
   const [error, setError] = useState('');
   const [orders, setOrders] = useState<Order[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'čeká' | 'vývoj' | 'dokončená'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'queued' | 'development' | 'completed'>('all');
   const [loading, setLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [activeTab, setActiveTab] = useState<'orders' | 'trash' | 'outreach'>('orders');
@@ -288,7 +288,7 @@ export default function ProgramPage() {
     }
   };
 
-  const handleStatusChange = async (orderId: string, newStatus: 'čeká' | 'vývoj' | 'dokončená') => {
+  const handleStatusChange = async (orderId: string, newStatus: 'queued' | 'development' | 'completed') => {
     try {
       const res = await fetch(`/api/orders/${orderId}`, {
         method: 'PATCH',
@@ -488,9 +488,9 @@ export default function ProgramPage() {
                 className="bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white outline-none focus:border-[#7C3AED]/60 transition-all duration-300 text-sm"
               >
                 <option value="all">Všechny statusy</option>
-                <option value="čeká">Čeká</option>
-                <option value="vývoj">Vývoj</option>
-                <option value="dokončená">Dokončená</option>
+                <option value="queued">Čeká</option>
+                <option value="development">Vývoj</option>
+                <option value="completed">Dokončená</option>
               </select>
             </div>
           </div>
@@ -521,8 +521,8 @@ export default function ProgramPage() {
                         <div className="flex items-center gap-3 mb-2">
                           <h3 className="text-lg font-black">{order.company_name}</h3>
                           <span className={`px-3 py-1 rounded-full text-xs font-black uppercase ${
-                            order.status === 'čeká' ? 'bg-amber-500/10 text-amber-400' :
-                            order.status === 'vývoj' ? 'bg-blue-500/10 text-blue-400' :
+                            order.status === 'queued' ? 'bg-amber-500/10 text-amber-400' :
+                            order.status === 'development' ? 'bg-blue-500/10 text-blue-400' :
                             'bg-emerald-500/10 text-emerald-400'
                           }`}>
                             {order.status}
@@ -867,9 +867,9 @@ export default function ProgramPage() {
                     onChange={(e) => handleStatusChange(selectedOrder.id, e.target.value as any)}
                     className="w-full bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white outline-none focus:border-[#7C3AED]/60 transition-all duration-300 text-sm"
                   >
-                    <option value="čeká">Čeká</option>
-                    <option value="vývoj">Vývoj</option>
-                    <option value="dokončená">Dokončená</option>
+                    <option value="queued">Čeká</option>
+                    <option value="development">Vývoj</option>
+                    <option value="completed">Dokončená</option>
                   </select>
                 </div>
 

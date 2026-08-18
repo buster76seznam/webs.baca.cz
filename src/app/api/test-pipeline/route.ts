@@ -130,7 +130,7 @@ export async function GET(request: NextRequest) {
       .from('orders')
       .insert({
         ref_code: 'TEST_HONZA',
-        status: 'čeká',
+        status: 'queued',
         ...testFormData,
       })
       .select()
@@ -203,10 +203,10 @@ Write all text content in English. Make it professional and compelling.`;
       throw new Error(`Chybějící klíče v JSON: ${missingKeys.join(', ')}`);
     }
 
-    // Uložit do Supabase – status 'vývoj' = generováno (dle CHECK constraint v DB)
+    // Uložit do Supabase – status 'development' = generováno (dle CHECK constraint v DB)
     const { error: updateError } = await supabaseAdmin
       .from('orders')
-      .update({ generated_site_json: generatedJson, status: 'vývoj' })
+      .update({ generated_site_json: generatedJson, status: 'development' })
       .eq('id', orderId!);
 
     if (updateError) throw new Error(`Supabase update chyba: ${updateError.message}`);
@@ -336,16 +336,16 @@ Write all text content in English. Make it professional and compelling.`;
 
   // ─── KROK 5: Simulace Stripe Webhook – checkout.session.completed ──────────
   const step5 = await runStep(5, 'Stripe Webhook Simulace – checkout.session.completed', async () => {
-    // 5a: Aktualizace statusu objednávky na 'dokončená' (status 'paid' neexistuje v CHECK constraint)
+    // 5a: Aktualizace statusu objednávky na 'completed' (status 'paid' neexistuje v CHECK constraint)
     const { error: updateOrderError } = await supabaseAdmin
       .from('orders')
-      .update({ status: 'dokončená' })
+      .update({ status: 'completed' })
       .eq('id', orderId!);
 
     if (updateOrderError) {
       throw new Error(`Nepodařilo se nastavit status 'paid': ${updateOrderError.message}`);
     }
-    console.log(`[TEST-PIPELINE] 5a: objednávka ${orderId} → status = dokončená`);
+    console.log(`[TEST-PIPELINE] 5a: objednávka ${orderId} → status = completed`);
 
     // 5b: Nalezení partnera 'TEST_HONZA' a přičtení provize
     const { data: partner, error: partnerError } = await supabaseAdmin
