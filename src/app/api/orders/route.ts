@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/supabase';
-import { sendOrderConfirmationEmail } from '@/lib/emails';
+
 // @ts-ignore
 import webpush from 'web-push';
 
@@ -142,12 +142,16 @@ export async function POST(request: NextRequest) {
     const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
     const processOrderUrl = `${protocol}://${host}/api/crons/process-orders`;
     // Immediately trigger the processing of the order
-    fetch(processOrderUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${process.env.CRON_SECRET}`,
-      },
-    });
+    try {
+      fetch(processOrderUrl, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${process.env.CRON_SECRET}`,
+        },
+      });
+    } catch (fetchError) {
+      console.error('Error triggering process-orders cron:', fetchError);
+    }
 
 
     // Send push notification if VAPID keys are configured
@@ -163,7 +167,7 @@ export async function POST(request: NextRequest) {
         } else if (subscriptions && subscriptions.length > 0) {
           const payload = JSON.stringify({
             title: 'Nova objednavka!',
-            body: `Prisla nova objednavka od ${formData.get('companyName')}`,
+            body: `Prisla nova objednavka od ${(formData.get('companyName') as string).normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`,
             icon: '/Logo.png',
             badge: '/Logo.png',
             data: {
@@ -199,11 +203,12 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, order: data }, { status: 200 });
   } catch (error) {
-    console.error("ORDER CREATION ERROR:", error);
+    const errorAsError = error as Error;
+    console.error("ORDER CREATION ERROR:", errorAsError);
     return NextResponse.json(
       { 
-        error: error.message || 'Internal Server Error', 
-        details: JSON.stringify(error, Object.getOwnPropertyNames(error)) 
+        error: errorAsError.message || 'Internal Server Error', 
+        details: JSON.stringify(errorAsError, Object.getOwnPropertyNames(errorAsError)) 
       }, 
       { status: 500 }
     );
@@ -254,11 +259,12 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ orders: data || [] }, { status: 200 });
   } catch (error) {
-    console.error("ORDER CREATION ERROR:", error);
+    const errorAsError = error as Error;
+    console.error("ORDER CREATION ERROR:", errorAsError);
     return NextResponse.json(
       { 
-        error: error.message || 'Internal Server Error', 
-        details: JSON.stringify(error, Object.getOwnPropertyNames(error)) 
+        error: errorAsError.message || 'Internal Server Error', 
+        details: JSON.stringify(errorAsError, Object.getOwnPropertyNames(errorAsError)) 
       }, 
       { status: 500 }
     );
