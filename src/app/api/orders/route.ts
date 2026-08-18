@@ -156,8 +156,6 @@ export async function POST(request: NextRequest) {
 
 
     // Send push notification if VAPID keys are configured
-    // TEMPORARILY DISABLED TO DEBUG ENCODING ERROR
-    /*
     if (publicVapidKey && privateVapidKey) {
       try {
         // Fetch all subscriptions from database
@@ -208,7 +206,6 @@ export async function POST(request: NextRequest) {
         // Don't fail the order creation if push fails
       }
     }
-    */
 
     return NextResponse.json({ success: true, order: data }, { status: 200 });
   } catch (error) {
