@@ -14,8 +14,9 @@ function avgDaysToComplete(orders: Order[]): string {
   const completed = orders.filter(o => o.status === 'dokončená' && o.status_updated_at != null);
   if (!completed.length) return '—';
   const total = completed.reduce((sum, o) => {
+    if (!o.status_updated_at) return sum;
     const created = new Date(o.created_at).getTime();
-    const updated = new Date(o.status_updated_at as string).getTime();
+    const updated = new Date(o.status_updated_at).getTime();
     return sum + (updated - created) / (1000 * 60 * 60 * 24);
   }, 0);
   return `${Math.round(total / completed.length)} dní`;
