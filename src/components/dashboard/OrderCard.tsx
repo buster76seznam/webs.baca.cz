@@ -62,7 +62,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
     setUpdating(true);
     setStatusOpen(false);
     try {
-      const res = await fetch(`/api/orders/${order.id}`,
+      const res = await fetch(`/api/orders/${order.id ?? ''}`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -177,7 +177,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
         <div className="flex items-center gap-3 px-6 py-3 bg-amber-500/10 border-b border-amber-500/20">
           <AlertTriangle size={14} className="text-amber-400 shrink-0" />
           <p className="text-amber-300 text-xs font-black uppercase tracking-wider">
-            Čeká na podklady již {daysSince(order.status_updated_at)} dnů — kontaktuj klienta s upomínkou!
+            Čeká na podklady již {daysSince(order.status_updated_at ?? null)} dnů — kontaktuj klienta s upomínkou!
           </p>
         </div>
       )}
@@ -324,7 +324,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                 <span className="text-[10px] font-black uppercase tracking-widest">Nahrané obrázky</span>
               </div>
               <div className="grid grid-cols-3 gap-2">
-                {order.images.map((url, i) => (
+                {order.images?.map((url, i) => (
                   <a
                     key={i}
                     href={url}

@@ -11,7 +11,7 @@ interface StatsPanelProps {
 }
 
 function avgDaysToComplete(orders: Order[]): string {
-  const completed = orders.filter(o => o.status === 'dokončená' && o.status_updated_at);
+  const completed = orders.filter(o => o.status === 'dokončená' && o.status_updated_at != null);
   if (!completed.length) return '—';
   const total = completed.reduce((sum, o) => {
     const created = new Date(o.created_at).getTime();
