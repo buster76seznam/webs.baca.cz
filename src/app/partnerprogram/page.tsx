@@ -441,7 +441,7 @@ export default function PartnerProgramPage() {
 
   // Main Partner Program Page
   return (
-    <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-gray-900 dark:text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-gray-900 dark:text-white selection:bg-brand selection:text-white antialiased">
       <LoginModal />
 
       {/* Navigation */}
@@ -498,7 +498,7 @@ export default function PartnerProgramPage() {
         </div>
       </nav>
 
-      <main className="w-full overflow-x-hidden">
+      <main className="w-full">
         {/* Hero Section */}
         <section className="relative w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
