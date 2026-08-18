@@ -192,7 +192,7 @@ export default function PartnerProgramPage() {
               </motion.button>
 
               <p className="text-center text-sm text-gray-500 dark:text-zinc-500 font-bold">
-                Don&apos;t have an ID?{' '}
+                Don't have an ID?{' '}
                 <button
                   type="button"
                   onClick={() => {
@@ -641,7 +641,7 @@ export default function PartnerProgramPage() {
                 Partner <span className="text-brand">Dashboard</span> <br />Preview
               </h2>
               <p className="text-lg md:text-xl text-gray-600 dark:text-zinc-400 font-bold max-w-2xl mx-auto">
-                See exactly what you&apos;ll get access to when you join our partner program.
+                See exactly what you'll get access to when you join our partner program.
               </p>
             </motion.div>
 
@@ -791,7 +791,7 @@ export default function PartnerProgramPage() {
                 Join Our <span className="text-brand">Partner Program</span>
               </h2>
               <p className="text-lg text-gray-600 dark:text-zinc-400 font-bold">
-                Fill out the form below and we&apos;ll get you started in minutes.
+                Fill out the form below and we'll get you started in minutes.
               </p>
             </motion.div>
 
@@ -800,7 +800,7 @@ export default function PartnerProgramPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
               onSubmit={handleRegisterSubmit}
-              className="bg-white dark:bg-white/5 border-2 border-gray-200 dark:border-white/10 rounded-3xl p-8 md:p-12 space-y-6"
+              className="bg-white dark:bg-white/5 border-2 border-gray-200 dark:border-white/10 rounded-3xl p-8 md:p-12 space-y-6 max-w-md mx-auto"
             >
               <div>
                 <label className="block text-sm font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-3">

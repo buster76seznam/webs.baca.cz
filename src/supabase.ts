@@ -1,15 +1,22 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://tpmagqetpsesrxmehane.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwbWFncWV0cHNlc3J4bWVoYW5lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5MzEwOTEsImV4cCI6MjA5MzUwNzA5MX0.sP6Ek6IdWVK83tdWeGo0LYdadChYwPw111J4tISbLLs';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Supabase URL and Anon Key must be defined in environment variables.');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Service role client for admin operations (bypasses RLS)
-// You need to get this from Supabase dashboard -> Settings -> API -> service_role (secret)
-// For now, we'll use the anon key but disable RLS for admin operations
-// TODO: Replace with actual service role key from Supabase dashboard
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseServiceRoleKey) {
+  console.error('Service role key from env: NOT SET');
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set. This is required for admin operations.');
+}
+
+console.log('Using service role key: ...'); // Do not log the key itself
 
 export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
   auth: {

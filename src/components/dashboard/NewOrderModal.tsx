@@ -22,27 +22,22 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
+  const [days, setDays] = useState('');
+  const [workingHours, setWorkingHours] = useState('');
 
   // Industry detail – autoservisy
-  const [hasPhotos, setHasPhotos] = useState<boolean | null>(null);
   const [services, setServices] = useState('');
   const [websiteUrl, setWebsiteUrl] = useState('');
-  const [pricingType, setPricingType] = useState<PricingType | null>(null);
 
-  const handleBasicNext = () => {
+  const handleSubmit = async () => {
     if (!companyName.trim()) { setError('Vyplň název podniku.'); return; }
     if (!phone.trim()) { setError('Vyplň telefon.'); return; }
     if (!email.trim()) { setError('Vyplň e-mail.'); return; }
     if (!address.trim()) { setError('Vyplň adresu.'); return; }
-    setError('');
-    setStep('industry_detail');
-  };
-
-  const handleSubmit = async () => {
-    if (hasPhotos === null) { setError('Zvol zda má klient fotky.'); return; }
+    if (!days.trim()) { setError('Vyplň pracovní dny.'); return; }
+    if (!workingHours.trim()) { setError('Vyplň pracovní dobu.'); return; }
     if (!services.trim()) { setError('Vyplň služby.'); return; }
     if (!websiteUrl.trim()) { setError('Vyplň adresu webu.'); return; }
-    if (!pricingType) { setError('Zvol typ ceníku.'); return; }
 
     setLoading(true);
     setError('');
@@ -53,11 +48,10 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
       phone: phone.trim(),
       email: email.trim(),
       address: address.trim(),
+      working_hours: `${days.trim()} ${workingHours.trim()}`,
       industry: 'autoservisy',
-      has_photos: hasPhotos,
       services: services.trim(),
       website_url: websiteUrl.trim(),
-      pricing_type: pricingType,
       status: 'Čeká ve frontě',
       status_updated_at: new Date().toISOString(),
     });
@@ -78,20 +72,6 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
 
   const labelClass = 'text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 block';
 
-  const ToggleBtn = ({ value, current, label, onClick }: {
-    value: string | boolean; current: string | boolean | null; label: string; onClick: () => void;
-  }) => (
-    <button
-      onClick={onClick}
-      className={`flex-1 py-4 rounded-none font-black text-sm uppercase tracking-wider border transition-all duration-300
-        ${current === value
-          ? 'bg-[#7C3AED] border-[#7C3AED] text-white shadow-[0_0_20px_-5px_rgba(124,58,237,0.6)]'
-          : 'bg-white/[0.02] border-white/10 text-zinc-500 hover:border-white/20'}`}
-    >
-      {label}
-    </button>
-  );
-
   return (
     <AnimatePresence>
       <motion.div
@@ -109,9 +89,6 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
             <div className="flex items-center justify-between mb-10">
               <div>
                 <h2 className="text-3xl font-black italic tracking-tighter uppercase">Nové zadání</h2>
-                <p className="text-zinc-600 text-[10px] font-black uppercase tracking-widest mt-1">
-                  Krok {step === 'basic' ? '1' : '2'} z 2
-                </p>
               </div>
               <button onClick={onClose} className="p-3 rounded-none hover:bg-white/5 transition-colors">
                 <X size={20} className="text-zinc-500" />
@@ -124,126 +101,112 @@ export default function NewOrderModal({ salesUserId, onClose, onSuccess }: NewOr
               </div>
             )}
 
-            {step === 'basic' ? (
-              <div className="space-y-6">
-                <div>
-                  <label className={labelClass}>Název podniku</label>
-                  <div className="relative">
-                    <Building2 size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600" />
-                    <input
-                      className={`${inputClass} pl-12`}
-                      placeholder="Např. Autoservis Rychlý"
-                      value={companyName}
-                      onChange={e => setCompanyName(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className={labelClass}>Telefon</label>
-                    <div className="relative">
-                      <Phone size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600" />
-                      <input
-                        className={`${inputClass} pl-12`}
-                        placeholder="+420..."
-                        value={phone}
-                        onChange={e => setPhone(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className={labelClass}>E-mail</label>
-                    <div className="relative">
-                      <Mail size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600" />
-                      <input
-                        className={`${inputClass} pl-12`}
-                        placeholder="klient@seznam.cz"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className={labelClass}>Adresa provozovny</label>
-                  <div className="relative">
-                    <MapPin size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600" />
-                    <input
-                      className={`${inputClass} pl-12`}
-                      placeholder="Ulice, město, PSČ"
-                      value={address}
-                      onChange={e => setAddress(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleBasicNext}
-                  className="w-full bg-white text-black py-5 rounded-none font-black text-sm uppercase tracking-wider hover:bg-zinc-200 transition-all mt-4"
-                >
-                  Další krok
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                <div>
-                  <label className={labelClass}>Má klient kvalitní fotky?</label>
-                  <div className="flex gap-4">
-                    <ToggleBtn value={true} current={hasPhotos} label="Ano" onClick={() => setHasPhotos(true)} />
-                    <ToggleBtn value={false} current={hasPhotos} label="Ne" onClick={() => setHasPhotos(false)} />
-                  </div>
-                </div>
-
-                <div>
-                  <label className={labelClass}>Hlavní nabízené služby</label>
-                  <div className="relative">
-                    <Wrench size={16} className="absolute left-5 top-5 text-zinc-600" />
-                    <textarea
-                      className={`${inputClass} pl-12 h-24 resize-none`}
-                      placeholder="Např. diagnostika, pneuservis, opravy motorů..."
-                      value={services}
-                      onChange={e => setServices(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className={labelClass}>Preferovaná adresa webu</label>
+            <div className="space-y-6">
+              <div>
+                <label className={labelClass}>Název podniku</label>
+                <div className="relative">
+                  <Building2 size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600" />
                   <input
-                    className={inputClass}
-                    placeholder="napr-autoservis.cz"
-                    value={websiteUrl}
-                    onChange={e => setWebsiteUrl(e.target.value)}
+                    className={`${inputClass} pl-12`}
+                    placeholder="Např. Autoservis Rychlý"
+                    value={companyName}
+                    onChange={e => setCompanyName(e.target.value)}
                   />
                 </div>
+              </div>
 
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className={labelClass}>Typ ceníku</label>
-                  <div className="flex gap-4">
-                    <ToggleBtn value="doda" current={pricingType} label="Dodá klient" onClick={() => setPricingType('doda')} />
-                    <ToggleBtn value="dle_domluvy" current={pricingType} label="Dle domluvy" onClick={() => setPricingType('dle_domluvy')} />
+                  <label className={labelClass}>Telefon</label>
+                  <div className="relative">
+                    <Phone size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600" />
+                    <input
+                      className={`${inputClass} pl-12`}
+                      placeholder="+420..."
+                      value={phone}
+                      onChange={e => setPhone(e.target.value)}
+                    />
                   </div>
                 </div>
-
-                <div className="flex gap-4 mt-6">
-                  <button
-                    onClick={() => setStep('basic')}
-                    className="flex-1 border border-white/5 bg-white/[0.02] text-zinc-500 py-5 rounded-none font-black text-sm uppercase tracking-wider hover:bg-white/5 transition-all"
-                  >
-                    Zpět
-                  </button>
-                  <button
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    className="flex-[2] bg-[#7C3AED] text-white py-5 rounded-none font-black text-sm uppercase tracking-wider hover:bg-[#6D28D9] transition-all shadow-[0_10px_20px_-5px_rgba(124,58,237,0.4)]"
-                  >
-                    {loading ? 'Odesílám...' : 'Odeslat zadání'}
-                  </button>
+                <div>
+                  <label className={labelClass}>E-mail</label>
+                  <div className="relative">
+                    <Mail size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600" />
+                    <input
+                      className={`${inputClass} pl-12`}
+                      placeholder="klient@seznam.cz"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
-            )}
+
+              <div>
+                <label className={labelClass}>Adresa provozovny</label>
+                <div className="relative">
+                  <MapPin size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600" />
+                  <input
+                    className={`${inputClass} pl-12`}
+                    placeholder="Ulice, město, PSČ"
+                    value={address}
+                    onChange={e => setAddress(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className={labelClass}>Pracovní dny</label>
+                  <input
+                    className={inputClass}
+                    placeholder="Např. Po - Pá"
+                    value={days}
+                    onChange={e => setDays(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>Pracovní doba</label>
+                  <input
+                    className={inputClass}
+                    placeholder="Např. 8:00 - 16:00"
+                    value={workingHours}
+                    onChange={e => setWorkingHours(e.target.value)}
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className={labelClass}>Hlavní nabízené služby</label>
+                <div className="relative">
+                  <Wrench size={16} className="absolute left-5 top-5 text-zinc-600" />
+                  <textarea
+                    className={`${inputClass} pl-12 h-24 resize-none`}
+                    placeholder="Např. diagnostika, pneuservis, opravy motorů..."
+                    value={services}
+                    onChange={e => setServices(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className={labelClass}>Preferovaná adresa webu</label>
+                <input
+                  className={inputClass}
+                  placeholder="napr-autoservis.cz"
+                  value={websiteUrl}
+                  onChange={e => setWebsiteUrl(e.target.value)}
+                />
+              </div>
+
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full bg-[#7C3AED] text-white py-5 rounded-none font-black text-sm uppercase tracking-wider hover:bg-[#6D28D9] transition-all shadow-[0_10px_20px_-5px_rgba(124,58,237,0.4)]"
+              >
+                {loading ? 'Odesílám...' : 'Odeslat zadání'}
+              </button>
+            </div>
           </div>
         </motion.div>
       </motion.div>

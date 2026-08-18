@@ -22,7 +22,7 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
       console.log(`Emails sent for order ${order.id}`);
     } catch (error) {
       console.error(`Failed to send emails for order ${order.id}:`, error);
-      await supabaseAdmin.from('orders').update({ status: 'failed_retry' }).eq('id', order.id);
+      await supabaseAdmin.from('orders').update({ status: 'failed_email' }).eq('id', order.id);
       return;
     }
 
@@ -53,7 +53,7 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
 
         if (commissionError) {
           console.error(`Failed to create commission for order ${order.id}:`, commissionError);
-          await supabaseAdmin.from('orders').update({ status: 'failed_retry' }).eq('id', order.id);
+          await supabaseAdmin.from('orders').update({ status: 'failed_email' }).eq('id', order.id);
           return;
         } else {
           console.log(`Created pending commission for order ${order.id}`);
@@ -69,14 +69,14 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
 
     if (updateError) {
       console.error(`Failed to update order status for order ${order.id}:`, updateError);
-      await supabaseAdmin.from('orders').update({ status: 'failed_retry' }).eq('id', order.id);
+      await supabaseAdmin.from('orders').update({ status: 'failed_email' }).eq('id', order.id);
       return;
     }
 
     console.log(`Finished processing order ${order.id}`);
   } catch (error) {
     console.error(`An unexpected error occurred while processing order ${order.id}:`, error);
-    await supabaseAdmin.from('orders').update({ status: 'failed_retry' }).eq('id', order.id);
+    await supabaseAdmin.from('orders').update({ status: 'failed_email' }).eq('id', order.id);
   }
 }
 

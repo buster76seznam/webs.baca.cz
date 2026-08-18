@@ -1,6 +1,6 @@
 'use client';
 
-import { MapPin, Phone, Mail, CheckCircle, Star, ArrowRight } from 'lucide-react';
+import { MapPin, Phone, Mail, CheckCircle, Star, ArrowRight, Clock } from 'lucide-react';
 import { useState } from 'react';
 
 import HeroVariant1Split from '@/components/templates/hero/HeroVariant1Split';
@@ -34,6 +34,7 @@ interface OrderRow {
   company_email: string | null;
   company_phone: string | null;
   company_address: string | null;
+  working_hours: string | null;
 }
 
 interface Props {
@@ -175,6 +176,15 @@ export default function SiteRenderer({ data, order, isPaid }: Props) {
                   </div>
                 </div>
               )}
+              {order.working_hours && (
+                <div className="flex items-start gap-4">
+                  <Clock className="mt-1 flex-shrink-0" size={22} style={{ color: primaryColor }} />
+                  <div>
+                    <p className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-1">Otevírací doba</p>
+                    <p className="text-gray-600">{order.working_hours}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -257,9 +267,9 @@ export default function SiteRenderer({ data, order, isPaid }: Props) {
                 </span>
               </div>
             )}
-            {order.google_maps_url && isPaid ? (
+            {order.company_address && isPaid ? (
               <iframe
-                src={order.google_maps_url.replace('/maps/place/', '/maps/embed?q=').replace('https://www.google.com/maps/', 'https://www.google.com/maps/embed?q=')}
+                src={`https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${encodeURIComponent(order.company_address)}`}
                 width="100%"
                 height="400"
                 className="block"

@@ -61,7 +61,6 @@ export async function POST(request: NextRequest) {
 
     // Log which key is being used
     console.log('Service role key from env:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'NOT SET');
-    console.log('Using service role key:', process.env.SUPABASE_SERVICE_ROLE_KEY?.substring(0, 20) + '...');
 
     // Extract images from FormData
     const imageUrls: string[] = [];
@@ -107,7 +106,7 @@ export async function POST(request: NextRequest) {
       advantage: formData.get('advantage'),
       price_list: formData.get('priceList') || null,
       working_hours: formData.get('workingHours'),
-      status: 'čeká',
+      status: 'queued', // Changed from 'čeká'
       images: imageUrls,
       primary_color: formData.get('primaryColor') || null,
       secondary_color: formData.get('secondaryColor') || null,
@@ -123,7 +122,7 @@ export async function POST(request: NextRequest) {
       ip_address: ip,
     };
 
-    console.log('Insert data:', insertData);
+    console.log('Insert data with status queued:', insertData);
 
     const { data, error } = await supabaseAdmin
       .from('orders')
@@ -138,6 +137,14 @@ export async function POST(request: NextRequest) {
 
     console.log('Insert success:', data);
 
+    console.log(`TRIGGERING RESEND EMAIL FOR ORDER: ${data.id}`);
+    // Immediately trigger the processing of the order
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/crons/process-orders`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${process.env.CRON_SECRET}`,
+      },
+    });
 
 
     // Send push notification if VAPID keys are configured

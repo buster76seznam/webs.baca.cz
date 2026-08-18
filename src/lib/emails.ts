@@ -10,11 +10,13 @@ export async function sendPreviewEmail(
   previewUrl: string,
   orderId: string
 ) {
-  return resend.emails.send({
-    from: FROM_EMAIL,
-    to: clientEmail,
-    subject: 'Váš web je připraven k nahlédnutí! 🚀',
-    html: `
+  console.log(`Sending preview email for order ${orderId} to ${clientEmail}`);
+  try {
+    const data = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: clientEmail,
+      subject: 'Váš web je připraven k nahlédnutí! 🚀',
+      html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
         <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Váš web je hotový! 🚀</h1>
         <p style="color: #444; font-size: 16px; line-height: 1.6;">
@@ -38,7 +40,13 @@ export async function sendPreviewEmail(
         </p>
       </div>
     `,
-  });
+    });
+    console.log(`Preview email sent successfully for order ${orderId}:`, data);
+    return data;
+  } catch (error) {
+    console.error(`FAILED TO SEND PREVIEW EMAIL for order ${orderId}:`, error);
+    throw error;
+  }
 }
 
 export async function sendDomainUnavailableEmail(
@@ -47,12 +55,13 @@ export async function sendDomainUnavailableEmail(
   domainName: string
 ) {
   const fixUrl = `${BASE_URL}/fix-domain/${orderId}`;
-
-  return resend.emails.send({
-    from: FROM_EMAIL,
-    to: clientEmail,
-    subject: `Důležité: Doména ${domainName} není dostupná`,
-    html: `
+  console.log(`Sending domain unavailable email for order ${orderId} to ${clientEmail}`);
+  try {
+    const data = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: clientEmail,
+      subject: `Důležité: Doména ${domainName} není dostupná`,
+      html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
         <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Doména není dostupná</h1>
         <p style="color: #444; font-size: 16px; line-height: 1.6;">
@@ -76,7 +85,13 @@ export async function sendDomainUnavailableEmail(
         </p>
       </div>
     `,
-  });
+    });
+    console.log(`Domain unavailable email sent successfully for order ${orderId}:`, data);
+    return data;
+  } catch (error) {
+    console.error(`FAILED TO SEND DOMAIN UNAVAILABLE EMAIL for order ${orderId}:`, error);
+    throw error;
+  }
 }
 
 export async function sendAdminDomainPurchaseEmail(
@@ -91,11 +106,13 @@ export async function sendAdminDomainPurchaseEmail(
   const supabaseOrderUrl = `https://supabase.com/dashboard/project/${process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('https://', '').split('.')[0]}/editor?table=orders&filter=id%3Aeq%3A${orderId}`;
   const dnsGuideUrl = `${BASE_URL}/admin/dns-guide`;
 
-  return resend.emails.send({
-    from: FROM_EMAIL,
-    to: adminEmail,
-    subject: `[AKCE VYŽADOVÁNA] Koupit doménu: ${domain} pro ${companyName}`,
-    html: `
+  console.log(`Sending admin domain purchase email for order ${orderId} to ${adminEmail}`);
+  try {
+    const data = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: adminEmail,
+      subject: `[AKCE VYŽADOVÁNA] Koupit doménu: ${domain} pro ${companyName}`,
+      html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px; border: 2px solid #f59e0b; border-radius: 12px;">
         <div style="background-color: #fef3c7; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
           <p style="color: #92400e; font-size: 14px; font-weight: 700; margin: 0;">⚡ AKCE VYŽADOVÁNA — Zákazník zaplatil, je potřeba koupit doménu</p>
@@ -155,7 +172,13 @@ export async function sendAdminDomainPurchaseEmail(
         </p>
       </div>
     `,
-  });
+    });
+    console.log(`Admin domain purchase email sent successfully for order ${orderId}:`, data);
+    return data;
+  } catch (error) {
+    console.error(`FAILED TO SEND ADMIN DOMAIN PURCHASE EMAIL for order ${orderId}:`, error);
+    throw error;
+  }
 }
 
 export async function sendOrderConfirmationEmail(
@@ -164,11 +187,13 @@ export async function sendOrderConfirmationEmail(
   domain: string,
   orderId: string
 ) {
-  return resend.emails.send({
-    from: FROM_EMAIL,
-    to: clientEmail,
-    subject: `Objednávka přijata — ${domain} 🎉`,
-    html: `
+  console.log(`Sending order confirmation email for order ${orderId} to ${clientEmail}`);
+  try {
+    const data = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: clientEmail,
+      subject: `Objednávka přijata — ${domain} 🎉`,
+      html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
         <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Platba proběhla úspěšně! 🎉</h1>
         <p style="color: #444; font-size: 16px; line-height: 1.6;">
@@ -187,7 +212,13 @@ export async function sendOrderConfirmationEmail(
         </p>
       </div>
     `,
-  });
+    });
+    console.log(`Order confirmation email sent successfully for order ${orderId}:`, data);
+    return data;
+  } catch (error) {
+    console.error(`FAILED TO SEND ORDER CONFIRMATION EMAIL for order ${orderId}:`, error);
+    throw error;
+  }
 }
 
 export async function sendPartnerCommissionEmail(
@@ -195,11 +226,13 @@ export async function sendPartnerCommissionEmail(
   commissionAmount: number,
   clientDomain: string
 ) {
-  return resend.emails.send({
-    from: FROM_EMAIL,
-    to: partnerEmail,
-    subject: `Nová provize $${commissionAmount} připsána! 🎉`,
-    html: `
+  console.log(`Sending partner commission email to ${partnerEmail} for domain ${clientDomain}`);
+  try {
+    const data = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: partnerEmail,
+      subject: `Nová provize $${commissionAmount} připsána! 🎉`,
+      html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
         <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Provize připsána! 🎉</h1>
         <p style="color: #444; font-size: 16px; line-height: 1.6;">
@@ -223,5 +256,11 @@ export async function sendPartnerCommissionEmail(
         </p>
       </div>
     `,
-  });
+    });
+    console.log(`Partner commission email sent successfully to ${partnerEmail}:`, data);
+    return data;
+  } catch (error) {
+    console.error(`FAILED TO SEND PARTNER COMMISSION EMAIL to ${partnerEmail}:`, error);
+    throw error;
+  }
 }
