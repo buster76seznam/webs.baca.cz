@@ -503,14 +503,7 @@ export default function PartnerProgramPage() {
         <section className="relative w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.3, 0.4, 0.3]
-            }}
-            transition={{ duration: 10, repeat: Infinity }}
-            className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[150px]"
-          />
+
           </div>
 
           <div className="max-w-7xl mx-auto w-full relative z-10">
