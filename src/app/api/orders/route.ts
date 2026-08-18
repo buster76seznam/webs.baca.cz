@@ -166,9 +166,10 @@ export async function POST(request: NextRequest) {
         if (subError) {
           console.error('Error fetching subscriptions:', subError);
         } else if (subscriptions && subscriptions.length > 0) {
+          const companyName = (formData.get('companyName') as string || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
           const payload = JSON.stringify({
             title: 'Nova objednavka!',
-            body: `Prisla nova objednavka od ${(formData.get('companyName') as string).normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`,
+            body: `Prisla nova objednavka od ${companyName}`,
             icon: '/Logo.png',
             badge: '/Logo.png',
             data: {
@@ -183,7 +184,13 @@ export async function POST(request: NextRequest) {
           console.log('Push notification payload:', payload);
           for (const sub of subscriptions) {
             try {
-              await webpush.sendNotification(sub.subscription, payload);
+              const subscription = typeof sub.subscription === 'string' 
+                ? JSON.parse(sub.subscription) 
+                : sub.subscription;
+              // @ts-ignore - web-push supports Buffer but TypeScript types are incorrect
+              await webpush.sendNotification(subscription, Buffer.from(payload, 'utf-8'), {
+                contentEncoding: 'aes128gcm',
+              });
               console.log('Notification sent successfully');
             } catch (err) {
               console.error('Failed to send notification to subscriber:', err);
