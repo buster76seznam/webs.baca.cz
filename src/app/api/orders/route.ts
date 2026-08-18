@@ -68,7 +68,8 @@ export async function POST(request: NextRequest) {
     console.log('Starting image upload...');
     while (formData.get(`image_${imageIndex}`) as File) {
       const file = formData.get(`image_${imageIndex}`) as File;
-      const fileName = `${Date.now()}-${imageIndex}-${file.name}`;
+      const normalizedFileName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const fileName = `${Date.now()}-${imageIndex}-${normalizedFileName}`;
       console.log('Uploading image:', fileName, 'size:', file.size);
       
       const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
