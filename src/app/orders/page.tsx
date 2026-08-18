@@ -50,6 +50,9 @@ export default function OrdersPage() {
     authorizedSignatory: '',
     contractEmail: '',
     priceList: '',
+    facebookUrl: '',
+    instagramUrl: '',
+    googleMapsUrl: '',
   });
 
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -556,7 +559,7 @@ export default function OrdersPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12 text-center">
               <h2 className="text-3xl font-black mb-4 text-brand uppercase">{isEnglish ? 'Ready to submit?' : 'Připraveni na odeslání?'}</h2>
               <p className="text-zinc-400 mb-8">{isEnglish ? 'Review your details above. Click submit to send your order.' : 'Zkontrolujte vaše údaje výše. Klikněte na odeslat pro odeslání vaší objednávky.'}</p>
-              <Turnstile siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''} onVerify={setTurnstileToken} />
+              <Turnstile siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''} onSuccess={setTurnstileToken} />
             </motion.div>
           )}
 
@@ -578,7 +581,7 @@ export default function OrdersPage() {
             </button>
             <div className="flex gap-2">
               {currentStep === 4 ? (
-                <button type="submit" disabled={status === 'loading'} className="px-8 py-3 bg-brand text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-brand-dark transition-all shadow-[0_0_40px_-10px_rgba(124,58,237,0.6)] disabled:opacity-60 flex items-center gap-2">
+                <button type="submit" className="px-8 py-3 bg-brand text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-brand-dark transition-all shadow-[0_0_40px_-10px_rgba(124,58,237,0.6)] disabled:opacity-60 flex items-center gap-2">
                   {status === 'loading' ? (<><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />{isEnglish ? 'Sending...' : 'Odesílám...'}</>) : (isEnglish ? <>Submit <ArrowUpRight size={16} /></> : <>Odeslat <ArrowUpRight size={16} /></>)}
                 </button>
               ) : (

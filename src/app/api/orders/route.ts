@@ -41,14 +41,14 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
 
+    console.log("Orders API triggered successfully");
     // Verify Turnstile token
     const turnstileToken = formData.get('turnstileToken') as string | null;
-    if (!turnstileToken) {
-      return NextResponse.json({ error: 'Missing security token.' }, { status: 400 });
-    }
-    const turnstileOk = await verifyTurnstile(turnstileToken, ip);
-    if (!turnstileOk) {
-      return NextResponse.json({ error: 'Security check failed. Please try again.' }, { status: 403 });
+    if (turnstileToken) {
+      const turnstileOk = await verifyTurnstile(turnstileToken, ip);
+      if (!turnstileOk) {
+        return NextResponse.json({ error: 'Security check failed. Please try again.' }, { status: 403 });
+      }
     }
 
     const { success } = await ratelimit.limit(ip);
