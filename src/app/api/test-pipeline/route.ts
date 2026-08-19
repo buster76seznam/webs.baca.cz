@@ -306,7 +306,7 @@ Write all text content in English. Make it professional and compelling.`;
   // ─── KROK 4: Stripe Checkout Session (Test Mode) ───────────────────────────
   const step4 = await runStep(4, 'Stripe Checkout – vytvoření testovací session', async () => {
     const stripe = new Stripe(STRIPE_SECRET_KEY);
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://webs.baca.cz';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://websbaca.cz';
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -408,7 +408,7 @@ Write all text content in English. Make it professional and compelling.`;
     // 5c: Odeslání testovacích e-mailů přes Resend (admin + zákazník paralelně)
     let emailResult: Record<string, unknown> = {};
     try {
-      const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://webs.baca.cz'}/preview/${orderId}`;
+      const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://websbaca.cz'}/preview/${orderId}`;
       const [adminEmailResponse, confirmationEmailResponse] = await Promise.all([
         sendAdminDomainPurchaseEmail(
           orderId!,

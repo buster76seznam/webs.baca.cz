@@ -109,7 +109,7 @@ export async function GET(request: Request) {
 
     // 3. Send email
     await resend.emails.send({
-      from: 'System <system@webs.baca.cz>',
+      from: 'System <system@websbaca.cz>',
       to: ['webs.baca@gmail.com'],
       subject: `Webs Bača - Executive Monthly Report: ${firstDayOfLastMonth.toLocaleDateString()} – ${lastDayOfLastMonth.toLocaleDateString()}`,
       react: <ReportEmail
