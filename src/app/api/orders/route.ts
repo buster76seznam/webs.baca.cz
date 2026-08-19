@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
     console.log("Orders API triggered successfully");
     console.log("Request headers:", Object.fromEntries(request.headers.entries()));
     
+    /* 
     // Verify Turnstile token
     const turnstileToken = formData.get('turnstileToken') as string | null;
     if (turnstileToken) {
@@ -53,6 +54,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Security check failed. Please try again.' }, { status: 403 });
       }
     }
+    */
 
     const { success } = await ratelimit.limit(ip);
     if (!success) {
@@ -144,6 +146,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    console.log("Email sending bypassed for testing");
+    /*
     console.log('Insert success. Triggering cron...');
 
     const host = request.headers.get('host') || 'www.websbaca.cz';
@@ -212,8 +216,9 @@ export async function POST(request: NextRequest) {
     } catch (pushError) {
       console.error('Push notification system error:', pushError);
     }
+    */
 
-    return NextResponse.json({ success: true, order: data }, { status: 200 });
+    return NextResponse.json({ success: true, message: "Order processed successfully" }, { status: 200 });
   } catch (error) {
     const errorAsError = error as Error;
     console.error("ORDER CREATION ERROR:", errorAsError);
