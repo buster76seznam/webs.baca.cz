@@ -95,6 +95,46 @@ export default function OrdersPage() {
     lang.native.toLowerCase().includes(languageSearch.toLowerCase())
   );
 
+  const [progress, setProgress] = useState(0);
+  const [showProgress, setShowProgress] = useState(false);
+  const [progressStep, setProgressStep] = useState(0);
+
+  useEffect(() => {
+    if (status === 'success') {
+      const startTimer = setTimeout(() => {
+        setShowProgress(true);
+        const duration = 10000; // 10 seconds
+        const interval = 100; // update every 100ms
+        const step = 100 / (duration / interval);
+        
+        const timer = setInterval(() => {
+          setProgress(prev => {
+            if (prev >= 100) {
+              clearInterval(timer);
+              return 100;
+            }
+            return Math.min(prev + step, 100);
+          });
+        }, interval);
+
+        return () => clearInterval(timer);
+      }, 1500); // 1.5s delay
+
+      return () => clearTimeout(startTimer);
+    } else {
+      setProgress(0);
+      setShowProgress(false);
+    }
+  }, [status]);
+
+  const getStatusText = (pct: number) => {
+    if (pct <= 25) return isEnglish ? '🤖 Analyzing your request and domain...' : '🤖 Analyzujeme váš požadavek a doménu...';
+    if (pct <= 60) return isEnglish ? '🎨 Designing layout and generating AI components...' : '🎨 Navrhujeme layout a generujeme AI komponenty...';
+    if (pct <= 90) return isEnglish ? '⚡ Finalizing web preview and setup...' : '⚡ Dokončujeme náhled webu a nastavení...';
+    if (pct < 100) return isEnglish ? '✉️ Sending preview link to your email...' : '✉️ Odesíláme odkaz na náhled na váš e-mail...';
+    return isEnglish ? '🚀 Your website design is ready! Check your inbox for the preview link.' : '🚀 Váš návrh webu je připraven! Zkontrolujte svou e-mailovou schránku.';
+  };
+
   const countries = [
     { code: 'CZ', name: 'Ceska republika', en: 'Czech Republic' },
     { code: 'SK', name: 'Slovensko', en: 'Slovakia' },
@@ -221,12 +261,86 @@ export default function OrdersPage() {
 
   if (status === 'success') {
     return (
-      <div className="min-h-screen bg-[#1a1a1a] text-white flex items-center justify-center px-6">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-emerald-500/10 border border-emerald-500/20 rounded-3xl p-16 text-center max-w-lg">
-          <div className="text-5xl mb-5">✅</div>
-          <h3 className="text-2xl font-black mb-2 tracking-tight">{isEnglish ? 'Order Sent!' : 'Objednávka odeslána!'}</h3>
-          <p className="text-zinc-400 font-medium mb-8">{isEnglish ? 'We will contact you as soon as possible.' : 'Ozveme se vám co nejdříve.'}</p>
-          <button onClick={() => setStatus('idle')} className="text-xs font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-400 transition-colors">{isEnglish ? 'Submit another order' : 'Odeslat další objednávku'}</button>
+      <div className="min-h-screen bg-[#1a1a1a] text-white flex items-center justify-center px-6 py-20">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }} 
+          animate={{ opacity: 1, scale: 1 }} 
+          className="bg-emerald-500/10 border border-emerald-500/20 rounded-3xl p-8 md:p-16 text-center max-w-2xl w-full"
+        >
+          <div className="text-5xl mb-5 transition-transform duration-500 hover:scale-110">
+            {progress === 100 ? '🚀' : '✅'}
+          </div>
+          
+          <h3 className="text-2xl md:text-3xl font-black mb-2 tracking-tight">
+            {progress === 100 
+              ? (isEnglish ? 'Design Ready!' : 'Návrh připraven!')
+              : (isEnglish ? 'Order Sent!' : 'Objednávka odeslána!')
+            }
+          </h3>
+          
+          <p className="text-zinc-400 font-medium mb-8">
+            {progress === 100 
+              ? (isEnglish ? 'Your website design is ready! Check your inbox for the preview link.' : 'Váš návrh webu je připraven! Zkontrolujte svou e-mailovou schránku.')
+              : (isEnglish ? 'We will contact you as soon as possible.' : 'Ozveme se vám co nejdříve.')
+            }
+          </p>
+
+          {showProgress && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} 
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <div className="flex flex-col gap-2">
+                <div className="flex justify-between items-end">
+                  <span className="text-xs font-black uppercase tracking-widest text-brand transition-all duration-300">
+                    {getStatusText(progress)}
+                  </span>
+                  <span className="text-xs font-mono text-zinc-500">{Math.round(progress)}%</span>
+                </div>
+                <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden border border-white/5 p-0.5">
+                  <motion.div 
+                    className={`h-full rounded-full transition-colors duration-500 ${progress === 100 ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'bg-brand'}`}
+                    initial={{ width: '0%' }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ ease: "linear" }}
+                  />
+                </div>
+              </div>
+
+              {progress === 100 && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 5 }} 
+                  animate={{ opacity: 1, y: 0 }}
+                  className="pt-4 border-t border-white/5 space-y-4"
+                >
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button 
+                      onClick={() => window.location.href = 'https://mail.google.com'}
+                      className="px-6 py-3 bg-emerald-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                    >
+                      {isEnglish ? 'Open Inbox' : 'Otevřít schránku'}
+                    </button>
+                    <button 
+                      onClick={() => setStatus('idle')}
+                      className="px-6 py-3 bg-white/5 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all"
+                    >
+                      {isEnglish ? 'Submit another' : 'Další objednávka'}
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-tighter">
+                    {isEnglish ? 'Didn\'t receive it? Check spam folder.' : 'Nedostali jste e-mail? Zkontrolujte složku spam.'}
+                  </p>
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+
+          {!showProgress && (
+            <button onClick={() => setStatus('idle')} className="text-xs font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-400 transition-colors">
+              {isEnglish ? 'Submit another order' : 'Odeslat další objednávku'}
+            </button>
+          )}
         </motion.div>
       </div>
     );
