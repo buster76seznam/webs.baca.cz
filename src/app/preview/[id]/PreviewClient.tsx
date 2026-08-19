@@ -67,7 +67,6 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
       setCurrentStatus('approved');
       setSuccessMsg('Web byl schválen! Přesměrovávám k platbě...');
       
-      // Redirect to payment (simulated for now, or use Stripe if ready)
       setTimeout(() => {
         router.push(`/api/checkout/create-session?orderId=${order.id}`);
       }, 2000);
@@ -98,7 +97,6 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
         return;
       }
 
-      // If the API returns updated data immediately
       if (data.generated_site_json) {
         setCurrentSiteJson(data.generated_site_json);
       }
@@ -116,7 +114,6 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Control Panel Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-50 px-4 py-3 shadow-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -146,15 +143,12 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
       </div>
 
       <div className="flex flex-1 flex-col lg:flex-row">
-        {/* Main Content: Iframe/Renderer */}
         <div className="flex-1 bg-gray-100 overflow-hidden relative">
-            {/* We use SiteRenderer but could also use iframe if we wanted to isolate styles better */}
             <div className="w-full h-full overflow-y-auto">
                 <SiteRenderer data={currentSiteJson} order={order} isPaid={isPaid} />
             </div>
         </div>
 
-        {/* Sidebar: Revision Panel */}
         {!isApproved && (
           <div className="w-full lg:w-80 bg-white border-l border-gray-200 p-6 overflow-y-auto">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Chci úpravu</h2>
