@@ -1,137 +1,39 @@
-import { NextResponse, after } from 'next/server';
+import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { Resend } from 'resend';
-import { SITE_URL } from '@/lib/site';
-import { generateObject } from 'ai';
-import { anthropic } from '@ai-sdk/anthropic';
-import { z } from 'zod';
-import { sendPreviewEmail } from '@/lib/emails';
 
 export const maxDuration = 60;
 
-// NUCLEAR FIX: Ensure NO non-ASCII characters in headers or logs
-const forceAscii = (str: string) => {
-  if (!str) return '';
-  return String(str).replace(/[^\x00-\x7F]/g, '');
-};
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Vercel AI SDK automatically picks up ANTHROPIC_API_KEY from process.env
-
-const sanitize = (str: string) => {
-  if (!str) return '';
-  return String(str).replace(/[^\x00-\x7F]/g, (char) => {
-    const map: Record<string, string> = {
-      'š': 's', 'č': 'c', 'ř': 'r', 'ž': 'z', 'ý': 'y', 'á': 'a',
-      'í': 'i', 'é': 'e', 'ú': 'u', 'ů': 'u', 'ď': 'd', 'ť': 't',
-      'ň': 'n', 'Š': 'S', 'Č': 'C', 'Ř': 'R', 'Ž': 'Z', 'Ý': 'Y',
-      'Á': 'A', 'Í': 'I', 'É': 'E', 'Ú': 'U', 'Ů': 'U', 'Ď': 'D',
-      'Ť': 'T', 'Ň': 'N'
-    };
-    return map[char] || '';
-  });
-};
-
-async function generateWebWithClaude(orderId: string, email: string, domain: string, formData: any) {
-  console.log("STARTING CLAUDE GENERATION FOR:", forceAscii(email));
-
-  try {
-    const { object: generatedJson } = await generateObject({
-      model: anthropic('claude-sonnet-4-5-20250929'),
-      schema: z.object({
-        hero: z.object({
-          title: z.string(),
-          subtitle: z.string(),
-          ctaText: z.string()
-        }),
-        about: z.object({
-          title: z.string(),
-          text: z.string()
-        }),
-        services: z.array(z.object({
-          title: z.string(),
-          description: z.string()
-        })),
-        contact: z.object({
-          address: z.string(),
-          phone: z.string(),
-          hours: z.string()
-        }),
-        theme: z.object({
-          primaryColor: z.string(),
-          secondaryColor: z.string()
-        })
-      }),
-      system: 'Respond strictly with raw JSON. Do NOT use emoji. Use only ASCII characters (no diacritics).',
-      prompt: `Generate a complete website content JSON for the following business:
-Company Name: ${sanitize(formData.companyName || '')}
-Industry: ${sanitize(formData.industry || '')}
-Description: ${sanitize(formData.description || '')}
-Advantages / Unique Selling Points: ${sanitize(formData.advantage || '')}
-Services / Price List: ${sanitize(formData.priceList || '')}
-Working Hours: ${sanitize(formData.workingHours || '')}
-Email: ${sanitize(formData.companyEmail || '')}
-Phone: ${sanitize(formData.companyPhone || '')}
-Address: ${sanitize(formData.companyAddress || '')}
-Country: ${sanitize(formData.companyCountry || '')}
-Preferred Primary Color: ${sanitize(formData.primaryColor || '')}
-Preferred Secondary Color: ${sanitize(formData.secondaryColor || '')}
-Language: ${sanitize(formData.language || 'cs')}
-
-Write all text content in the language specified (${sanitize(formData.language || 'cs')}). Use only ASCII characters (no diacritics).`,
-    });
-
-    const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || SITE_URL}/preview/${orderId}`;
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
-    
-    const updateHeaders = new Headers();
-    updateHeaders.set('content-type', 'application/json');
-    updateHeaders.set('apikey', supabaseKey);
-    updateHeaders.set('Authorization', `Bearer ${supabaseKey}`);
-
-    const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
-      method: 'PATCH',
-      headers: updateHeaders,
-      body: JSON.stringify({
-        generated_site_json: generatedJson,
-        status: 'preview_ready',
-        preview_url: previewUrl,
-      })
-    });
-
-    if (!updateResponse.ok) {
-      console.error('Error updating order with direct fetch');
-      return;
-    }
-
-    if (email) {
-      await sendPreviewEmail(email, previewUrl, orderId);
-    }
-  } catch (err: any) {
-    console.error("ANTHROPIC CRASH ERROR");
-    console.error("ERROR MESSAGE:", forceAscii(err?.message));
-  }
-}
-
 export async function POST(request: Request) {
+  console.log('--- ENDPOINT A: POST /api/orders START ---');
   try {
-    let body: any = {};
-    try {
-      const contentType = request.headers.get('content-type') || '';
-      if (contentType.includes('multipart/form-data')) {
-        const formData = await request.formData();
-        body = Object.fromEntries(formData.entries());
-      } else {
-        const text = await request.text();
-        body = text ? JSON.parse(text) : {};
-      }
-    } catch (e) {
-      console.error("Failed to parse request body:", e);
-    }
+    // 1. Validace dat z body
+    const body = await request.json();
+    console.log('Received body:', JSON.stringify(body, null, 2));
 
-    const turnstileToken = body.turnstileToken;
+    const {
+      companyName,
+      companyPhone,
+      companyEmail,
+      companyAddress,
+      industry,
+      ownerName,
+      ownerPhone,
+      ownerEmail,
+      domain,
+      description,
+      advantage,
+      priceList,
+      workingHours,
+      primaryColor,
+      secondaryColor,
+      language,
+      facebookUrl,
+      instagramUrl,
+      googleMapsUrl,
+      turnstileToken
+    } = body;
+
+    // Turnstile validace (volitelná, ale ponecháme ji pokud tam byla)
     if (turnstileToken) {
       try {
         const secretKey = process.env.TURNSTILE_SECRET_KEY;
@@ -148,110 +50,70 @@ export async function POST(request: Request) {
           );
         }
       } catch (tsErr) {
-        // Fail-safe
+        console.error('Turnstile verification failed (non-blocking):', tsErr);
       }
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '').trim();
+    // 2. Vložení do Supabase se stavem "draft"
+    const { data: order, error: insertError } = await supabase
+      .from('orders')
+      .insert([
+        {
+          company_name: companyName,
+          company_phone: companyPhone,
+          company_email: companyEmail,
+          company_address: companyAddress,
+          industry,
+          owner_name: ownerName,
+          owner_phone: ownerPhone,
+          owner_email: ownerEmail,
+          domain,
+          description,
+          advantage,
+          price_list: priceList,
+          working_hours: workingHours,
+          primary_color: primaryColor,
+          secondary_color: secondaryColor,
+          language,
+          facebook_url: facebookUrl,
+          instagram_url: instagramUrl,
+          google_maps_url: googleMapsUrl,
+          status: 'draft',
+        }
+      ])
+      .select()
+      .single();
 
-    const insertHeaders = new Headers();
-    insertHeaders.set('content-type', 'application/json');
-    insertHeaders.set('apikey', supabaseKey);
-    insertHeaders.set('Authorization', `Bearer ${supabaseKey}`);
-    insertHeaders.set('Prefer', 'return=representation');
-
-    const insertResponse = await fetch(`${supabaseUrl}/rest/v1/orders`, {
-      method: 'POST',
-      headers: insertHeaders,
-      body: JSON.stringify({
-        company_name: body.companyName,
-        company_phone: body.companyPhone,
-        company_email: body.companyEmail,
-        company_address: body.companyAddress,
-        industry: body.industry,
-        owner_name: body.ownerName,
-        owner_phone: body.ownerPhone,
-        owner_email: body.ownerEmail,
-        domain: body.domain,
-        description: body.description,
-        advantage: body.advantage,
-        price_list: body.priceList,
-        working_hours: body.workingHours,
-        primary_color: body.primaryColor,
-        secondary_color: body.secondaryColor,
-        language: body.language,
-        facebook_url: body.facebookUrl,
-        instagram_url: body.instagramUrl,
-        google_maps_url: body.googleMapsUrl,
-        status: 'draft',
-      })
-    });
-
-    if (!insertResponse.ok) {
-      const errorText = await insertResponse.text();
-      console.error("Database insert failed:", insertResponse.status, errorText);
+    if (insertError) {
+      console.error('Supabase insert error:', insertError);
       return NextResponse.json(
-        { success: false, error: `Database error: ${insertResponse.status}` },
+        { success: false, error: 'Database insertion failed' },
         { status: 500 }
       );
     }
 
-    const responseText = await insertResponse.text();
-    let insertedOrders = [];
-    try {
-      insertedOrders = responseText ? JSON.parse(responseText) : [];
-    } catch (parseErr) {
-      console.error("Failed to parse database response:", responseText);
-      throw new Error("Invalid JSON response from database");
-    }
+    const orderId = order.id;
+    console.log('Order created successfully:', orderId);
+
+    // 3. Volání Endpoint B na pozadí (nečekáme na výsledek)
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (request.headers.get('host') ? `https://${request.headers.get('host')}` : 'http://localhost:3000');
     
-    const order = insertedOrders[0];
+    // Asynchronní volání bez await
+    fetch(`${baseUrl}/api/orders/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ orderId }),
+    }).catch(err => console.error('Error triggering background generation:', err));
 
-    if (!order) {
-      throw new Error('Failed to create order');
-    }
+    // 4. Ihned vrátit odpověď
+    return NextResponse.json({ success: true, orderId });
 
-    // Email sending is wrapped in its own try/catch to prevent 500 if it fails
-    try {
-      const FROM_EMAIL = 'Webs Baca <info@websbaca.cz>';
-      const companyName = forceAscii(body.companyName || 'Customer');
-      const domain = forceAscii(body.domain || 'your new website');
-      const orderId = order?.id || 'N/A';
-
-      console.log("TRIGGERING RESEND EMAIL FOR ORDER:", orderId);
-      await resend.emails.send({
-        from: FROM_EMAIL,
-        to: body.companyEmail,
-        subject: `Order received - ${domain}`,
-        html: `Order received for ${companyName}. Domain: ${domain}. Order ID: ${orderId}`,
-      });
-    } catch (emailErr) {
-      console.error("FAILED TO SEND INITIAL EMAIL (Non-blocking):", emailErr);
-    }
-
-    after(async () => {
-      try {
-        await generateWebWithClaude(
-          order.id, 
-          body.companyEmail, 
-          body.domain, 
-          body
-        );
-      } catch (err) {
-        // Fail-safe
-        console.error("ERROR IN AFTER() HOOK:", err);
-      }
-    });
-
-    return NextResponse.json(
-      { success: true, message: 'Order created' },
-      { status: 200 }
-    );
   } catch (error) {
-    console.error("❌ UNHANDLED SERVER ERROR IN POST /api/orders:", error);
+    console.error('❌ ERROR IN POST /api/orders:', error);
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : "Internal Server Error" },
+      { success: false, error: error instanceof Error ? error.message : 'Internal Server Error' },
       { status: 500 }
     );
   }
