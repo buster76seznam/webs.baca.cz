@@ -11,6 +11,7 @@ import { sendPreviewEmail } from '@/lib/emails';
 export const maxDuration = 60;
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+console.log("🔑 ANTHROPIC KEY PRESENT:", !!process.env.ANTHROPIC_API_KEY);
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
   // Zabezpečení čistých HTTP hlaviček pro fetch v Node.js
@@ -18,13 +19,11 @@ const anthropic = new Anthropic({
     if (init && init.headers) {
       // Odstranění jakýchkoliv ne-ASCII znaků z hlaviček před odesláním
       const cleanHeaders: Record<string, string> = {};
-      const headersObj = init.headers as Record<string, string>;
-
-      for (const [key, value] of Object.entries(headersObj)) {
-        if (typeof value === 'string') {
-          cleanHeaders[key] = value.replace(/[^\x00-\x7F]/g, '');
-        }
-      }
+      const headers = new Headers(init.headers as any);
+      
+      headers.forEach((value, key) => {
+        cleanHeaders[key] = value.replace(/[^\x00-\x7F]/g, '');
+      });
       init.headers = cleanHeaders;
     }
     return fetch(url, init);
