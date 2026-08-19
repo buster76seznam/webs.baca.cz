@@ -133,11 +133,14 @@ Write all text content in the language specified (${formData.language || 'cs'}).
     }
 
     // Save generated JSON to Supabase and update status
+    const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/preview/${order_id}`;
+    
     const { data: updatedOrder, error: updateError } = await supabaseAdmin
       .from('orders')
       .update({
         generated_site_json: generatedJson,
         status: 'preview_ready',
+        preview_url: previewUrl,
       })
       .eq('id', order_id)
       .select()
@@ -152,7 +155,6 @@ Write all text content in the language specified (${formData.language || 'cs'}).
 
     // Send preview email to client
     if (order.company_email) {
-      const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/preview/${order_id}`;
       sendPreviewEmail(order.company_email, previewUrl, order_id).catch((err) =>
         console.error('Failed to send preview email:', err)
       );

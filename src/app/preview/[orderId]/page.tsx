@@ -42,7 +42,7 @@ export default async function PreviewPage({
   const { data: order, error } = await supabaseAdmin
     .from('orders')
     .select(
-      'id, company_name, status, generated_site_json, primary_color, language, google_maps_url, facebook_url, instagram_url, company_email, company_phone, company_address, revision_count, working_hours'
+      'id, company_name, status, generated_site_json, primary_color, language, google_maps_url, facebook_url, instagram_url, company_email, company_phone, company_address, revision_count, working_hours, feedback_history, preview_url'
     )
     .eq('id', orderId)
     .single<OrderRow>();

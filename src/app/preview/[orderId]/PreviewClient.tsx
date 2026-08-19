@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import SiteRenderer from '@/components/SiteRenderer';
+import { useRouter } from 'next/navigation';
 
 interface GeneratedSiteJson {
   hero: { title: string; subtitle: string; cta_text: string };
@@ -31,6 +32,7 @@ interface OrderRow {
   company_address: string | null;
   revision_count?: number | null;
   working_hours: string;
+  preview_url: string | null;
 }
 
 interface Props {
@@ -43,18 +45,46 @@ interface Props {
 const MAX_REVISIONS = 3;
 
 export default function PreviewClient({ order, siteJson, isPaid, revisionCount }: Props) {
+  const router = useRouter();
   const [currentSiteJson, setCurrentSiteJson] = useState<GeneratedSiteJson>(siteJson);
   const [currentRevisionCount, setCurrentRevisionCount] = useState<number>(revisionCount);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState<string>(order.status);
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const revisionsRemaining = MAX_REVISIONS - currentRevisionCount;
+  const isApproved = currentStatus === 'approved' || currentStatus === 'paid' || currentStatus === 'active';
+
+  async function handleApprove() {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/orders/${order.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'approved' }),
+      });
+
+      if (!res.ok) throw new Error('Failed to approve');
+      
+      setCurrentStatus('approved');
+      setSuccessMsg('Web byl schválen! Přesměrovávám k platbě...');
+      
+      // Redirect to payment (simulated for now, or use Stripe if ready)
+      setTimeout(() => {
+        router.push(`/api/checkout/create-session?orderId=${order.id}`);
+      }, 2000);
+    } catch (err) {
+      setError('Nepodařilo se schválit návrh.');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleRevisionSubmit() {
-    if (!prompt.trim()) return;
+    if (!prompt.trim() || revisionsRemaining <= 0) return;
     setLoading(true);
     setError(null);
     setSuccessMsg(null);
@@ -73,100 +103,131 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
         return;
       }
 
-      setCurrentSiteJson(data.generated_site_json);
-      setCurrentRevisionCount(data.revision_count);
-      setSuccessMsg(`Revize provedena. Zbývá ${data.revisions_remaining} z ${MAX_REVISIONS} revizí.`);
+      // If the API returns updated data immediately
+      if (data.generated_site_json) {
+        setCurrentSiteJson(data.generated_site_json);
+      }
+      
+      setCurrentRevisionCount(prev => prev + 1);
+      setCurrentStatus('revision_requested');
+      setSuccessMsg('Vaše připomínky byly odeslány. Claude právě upravuje váš web.');
       setPrompt('');
-      setModalOpen(false);
     } catch {
-      setError('Nastala neočekávaná chyba.');
+      setError('Nastala neočekávaná chyba při odesílání revize.');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <>
-      <SiteRenderer data={currentSiteJson} order={order} isPaid={isPaid} />
-
-      {/* Plovoucí tlačítko pro revize */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
-        {successMsg && (
-          <div className="bg-green-600 text-white text-sm px-4 py-2 rounded-lg shadow-lg max-w-xs">
-            {successMsg}
+    <div className="flex flex-col min-h-screen">
+      {/* Control Panel Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-50 px-4 py-3 shadow-sm">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-lg font-bold text-gray-900 leading-tight">{order.company_name}</h1>
+            <p className="text-sm text-gray-500">Náhled webu — {isApproved ? 'Schváleno' : `Revize: ${currentRevisionCount}/${MAX_REVISIONS}`}</p>
           </div>
-        )}
-        {revisionsRemaining > 0 ? (
-          <button
-            onClick={() => { setModalOpen(true); setError(null); setSuccessMsg(null); }}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-3 rounded-xl shadow-xl transition-colors"
-          >
-            Požádat o úpravu webu
-            <span className="ml-2 text-xs bg-indigo-500 rounded-full px-2 py-0.5">
-              {revisionsRemaining}/{MAX_REVISIONS}
-            </span>
-          </button>
-        ) : (
-          <div className="bg-gray-700 text-white text-sm px-4 py-3 rounded-xl shadow-xl">
-            Byl dosažen limit revizí ({MAX_REVISIONS}/{MAX_REVISIONS})
+
+          <div className="flex items-center gap-3">
+            {!isApproved && (
+              <>
+                <button
+                  onClick={handleApprove}
+                  disabled={loading}
+                  className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors shadow-sm disabled:opacity-50"
+                >
+                  {loading && currentStatus !== 'revision_requested' ? 'Zpracovávám...' : 'Schválit návrh'}
+                </button>
+              </>
+            )}
+            {isApproved && (
+              <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-semibold flex items-center gap-2">
+                <span className="text-xl">✅</span> Schváleno
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-1 flex-col lg:flex-row">
+        {/* Main Content: Iframe/Renderer */}
+        <div className="flex-1 bg-gray-100 overflow-hidden relative">
+            {/* We use SiteRenderer but could also use iframe if we wanted to isolate styles better */}
+            <div className="w-full h-full overflow-y-auto">
+                <SiteRenderer data={currentSiteJson} order={order} isPaid={isPaid} />
+            </div>
+        </div>
+
+        {/* Sidebar: Revision Panel */}
+        {!isApproved && (
+          <div className="w-full lg:w-80 bg-white border-l border-gray-200 p-6 overflow-y-auto">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Chci úpravu</h2>
+            
+            {revisionsRemaining > 0 ? (
+              <div className="space-y-4">
+                <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
+                  <p className="text-sm text-blue-800">
+                    Zbývají vám <strong>{revisionsRemaining}</strong> ze 3 bezplatných úprav.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Vaše připomínky
+                  </label>
+                  <textarea
+                    className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    rows={6}
+                    placeholder="Např. Změňte barvu na modrou, přidejte fotku týmu a upravte text v sekci O nás..."
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    disabled={loading}
+                  />
+                </div>
+
+                {error && <p className="text-xs text-red-600 bg-red-50 p-2 rounded">{error}</p>}
+                {successMsg && <p className="text-xs text-green-600 bg-green-50 p-2 rounded">{successMsg}</p>}
+
+                <button
+                  onClick={handleRevisionSubmit}
+                  disabled={loading || !prompt.trim()}
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {loading ? 'Odesílám...' : 'Odeslat připomínky'}
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="bg-amber-50 border border-amber-100 rounded-lg p-4">
+                  <p className="text-sm text-amber-800 font-medium">
+                    Vyčerpali jste maximální počet 3 bezplatných úprav.
+                  </p>
+                  <p className="text-xs text-amber-700 mt-2">
+                    Pro další změny schvalte návrh a pokračujte k dokončení objednávky.
+                  </p>
+                </div>
+                
+                <button
+                  disabled
+                  className="w-full bg-gray-200 text-gray-500 font-semibold py-3 rounded-lg cursor-not-allowed"
+                >
+                  Úpravy zablokovány
+                </button>
+              </div>
+            )}
+
+            <div className="mt-8 pt-6 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Jak to funguje?</h3>
+              <ul className="text-xs text-gray-500 space-y-2">
+                <li>1. Napíšete, co chcete změnit.</li>
+                <li>2. Claude během chvilky web upraví.</li>
+                <li>3. Dostanete e-mail s novou verzí.</li>
+              </ul>
+            </div>
           </div>
         )}
       </div>
-
-      {/* Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-800">Požádat o úpravu webu</h2>
-              <button
-                onClick={() => setModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
-                aria-label="Zavřít"
-              >
-                &times;
-              </button>
-            </div>
-
-            <p className="text-sm text-gray-500 mb-3">
-              Zbývá <strong>{revisionsRemaining}</strong> z <strong>{MAX_REVISIONS}</strong> revizí.
-            </p>
-
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Popište požadované změny
-            </label>
-            <textarea
-              className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              rows={5}
-              placeholder="Např. Změň primární barvu na červenou a přidej do služeb čištění střech."
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              disabled={loading}
-            />
-
-            {error && (
-              <p className="mt-2 text-sm text-red-600">{error}</p>
-            )}
-
-            <div className="mt-4 flex gap-3 justify-end">
-              <button
-                onClick={() => setModalOpen(false)}
-                className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
-                disabled={loading}
-              >
-                Zrušit
-              </button>
-              <button
-                onClick={handleRevisionSubmit}
-                disabled={loading || !prompt.trim()}
-                className="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {loading ? 'Zpracovávám...' : 'Odeslat úpravu'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    </div>
   );
 }

@@ -97,6 +97,7 @@ export type Database = {
           description: string
           domain: string
           facebook_url: string | null
+          feedback_history: Json | null
           generated_site_json: Json | null
           google_maps_url: string | null
           id: string
@@ -111,6 +112,7 @@ export type Database = {
           owner_phone: string | null
           price: number | null
           price_list: string | null
+          preview_url: string | null
           primary_color: string | null
           principal_place_of_business: string | null
           ref_code: string | null
@@ -135,6 +137,7 @@ export type Database = {
           description: string
           domain: string
           facebook_url?: string | null
+          feedback_history?: Json | null
           generated_site_json?: Json | null
           google_maps_url?: string | null
           id?: string
@@ -149,6 +152,7 @@ export type Database = {
           owner_phone?: string | null
           price?: number | null
           price_list?: string | null
+          preview_url?: string | null
           primary_color?: string | null
           principal_place_of_business?: string | null
           ref_code?: string | null
@@ -173,6 +177,7 @@ export type Database = {
           description?: string
           domain?: string
           facebook_url?: string | null
+          feedback_history?: Json | null
           generated_site_json?: Json | null
           google_maps_url?: string | null
           id?: string
@@ -187,6 +192,7 @@ export type Database = {
           owner_phone?: string | null
           price?: number | null
           price_list?: string | null
+          preview_url?: string | null
           primary_color?: string | null
           principal_place_of_business?: string | null
           ref_code?: string | null

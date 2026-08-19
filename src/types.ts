@@ -11,7 +11,7 @@ export interface AgenturaUser {
   last_seen?: string | null;
 }
 
-export type OrderStatus = 'queued' | 'development' | 'completed';
+export type OrderStatus = 'draft' | 'queued' | 'development' | 'completed' | 'preview_ready' | 'revision_requested' | 'approved' | 'paid' | 'active' | 'failed_email';
 
 export type PricingType = 'dle_domluvy' | 'doda';
 
@@ -44,6 +44,9 @@ export interface Order {
   facebook_url: string | null;
   instagram_url: string | null;
   google_maps_url: string | null;
+  preview_url: string | null;
+  revision_count: number;
+  feedback_history: any[] | null;
   // Contract fields
   legal_business_name: string | null;
   state_of_incorporation: string | null;
@@ -55,13 +58,27 @@ export interface Order {
 }
 
 export const ORDER_STATUSES: OrderStatus[] = [
+  'draft',
   'queued',
   'development',
   'completed',
+  'preview_ready',
+  'revision_requested',
+  'approved',
+  'paid',
+  'active',
+  'failed_email',
 ];
 
 export const STATUS_COLORS: Record<OrderStatus, string> = {
+  'draft': 'bg-gray-500/10 text-gray-400',
   'queued': 'bg-amber-500/10 text-amber-400',
   'development': 'bg-blue-500/10 text-blue-400',
   'completed': 'bg-emerald-500/10 text-emerald-400',
+  'preview_ready': 'bg-indigo-500/10 text-indigo-400',
+  'revision_requested': 'bg-purple-500/10 text-purple-400',
+  'approved': 'bg-green-500/10 text-green-400',
+  'paid': 'bg-emerald-600/10 text-emerald-500',
+  'active': 'bg-sky-500/10 text-sky-400',
+  'failed_email': 'bg-red-500/10 text-red-400',
 };
