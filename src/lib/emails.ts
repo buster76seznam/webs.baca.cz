@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM_EMAIL = 'Webs Baca <info@websbaca.cz>';
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://webs.baca.cz';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://websbaca.cz';
 
 export async function sendPreviewEmail(
   clientEmail: string,
@@ -36,7 +36,7 @@ export async function sendPreviewEmail(
         </p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
         <p style="color: #aaa; font-size: 12px;">
-          Order No. ${orderId} · <a href="${BASE_URL}" style="color: #aaa;">webs.baca.cz</a>
+          Order No. ${orderId} · <a href="${BASE_URL}" style="color: #aaa;">websbaca.cz</a>
         </p>
       </div>
     `,
@@ -81,7 +81,7 @@ export async function sendDomainUnavailableEmail(
         </p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
         <p style="color: #aaa; font-size: 12px;">
-          Order No. ${orderId} · <a href="${BASE_URL}" style="color: #aaa;">webs.baca.cz</a>
+          Order No. ${orderId} · <a href="${BASE_URL}" style="color: #aaa;">websbaca.cz</a>
         </p>
       </div>
     `,
@@ -168,7 +168,7 @@ export async function sendAdminDomainPurchaseEmail(
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;">
         <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-          Order No. <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${orderId}</code> · <a href="${BASE_URL}" style="color: #9ca3af;">webs.baca.cz</a>
+          Order No. <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${orderId}</code> · <a href="${BASE_URL}" style="color: #9ca3af;">websbaca.cz</a>
         </p>
       </div>
     `,
@@ -208,7 +208,7 @@ export async function sendOrderConfirmationEmail(
         </div>
         <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
         <p style="color: #aaa; font-size: 12px;">
-          Order No. ${orderId} · <a href="${BASE_URL}" style="color: #aaa;">webs.baca.cz</a>
+          Order No. ${orderId} · <a href="${BASE_URL}" style="color: #aaa;">websbaca.cz</a>
         </p>
       </div>
     `,
@@ -252,7 +252,7 @@ export async function sendPartnerCommissionEmail(
         </div>
         <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
         <p style="color: #aaa; font-size: 12px;">
-          <a href="${BASE_URL}" style="color: #aaa;">webs.baca.cz</a> — Partner Program
+          <a href="${BASE_URL}" style="color: #aaa;">websbaca.cz</a> — Partner Program
         </p>
       </div>
     `,
