@@ -35,13 +35,19 @@ export default async function PreviewPage({
 }) {
   const { id } = await params;
 
+  console.log("🔍 FETCHING ORDER WITH ID:", id);
+
   const { data: order, error } = await supabaseAdmin
     .from('orders')
-    .select(
-      'id, company_name, status, generated_site_json, primary_color, language, google_maps_url, facebook_url, instagram_url, company_email, company_phone, company_address, revision_count, working_hours, feedback_history, preview_url'
-    )
+    .select('*')
     .eq('id', id)
-    .single<OrderRow>();
+    .single();
+
+  if (error) {
+    console.error("❌ SUPABASE FETCH ERROR:", error);
+  }
+
+  console.log("📦 SUPABASE DATA RECEIVED:", order ? "YES (ID: " + order.id + ")" : "NO");
 
   if (error || !order) {
     return (
@@ -87,10 +93,20 @@ export default async function PreviewPage({
 
   const isPaid = order.status === 'paid' || order.status === 'active';
 
+  // Handle cases where generated_site_json might be a string (stored as text in DB)
+  let siteJson = order.generated_site_json;
+  if (typeof siteJson === 'string') {
+    try {
+      siteJson = JSON.parse(siteJson);
+    } catch (e) {
+      console.error("❌ FAILED TO PARSE generated_site_json:", e);
+    }
+  }
+
   return (
     <PreviewClient
       order={order}
-      siteJson={order.generated_site_json as GeneratedSiteJson}
+      siteJson={siteJson as GeneratedSiteJson}
       isPaid={isPaid}
       revisionCount={order.revision_count ?? 0}
     />
