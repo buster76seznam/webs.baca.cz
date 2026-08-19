@@ -191,6 +191,7 @@ export async function POST(request: Request) {
     insertHeaders.set('content-type', 'application/json');
     insertHeaders.set('apikey', supabaseKey);
     insertHeaders.set('Authorization', `Bearer ${supabaseKey}`);
+    insertHeaders.set('Prefer', 'return=representation');
 
     const insertResponse = await fetch(`${supabaseUrl}/rest/v1/orders`, {
       method: 'POST',
@@ -220,13 +221,23 @@ export async function POST(request: Request) {
     });
 
     if (!insertResponse.ok) {
+      const errorText = await insertResponse.text();
+      console.error("Database insert failed:", insertResponse.status, errorText);
       return NextResponse.json(
-        { success: false, error: 'Database error' },
+        { success: false, error: `Database error: ${insertResponse.status}` },
         { status: 500 }
       );
     }
 
-    const insertedOrders = await insertResponse.json();
+    const responseText = await insertResponse.text();
+    let insertedOrders = [];
+    try {
+      insertedOrders = responseText ? JSON.parse(responseText) : [];
+    } catch (parseErr) {
+      console.error("Failed to parse database response:", responseText);
+      throw new Error("Invalid JSON response from database");
+    }
+    
     const order = insertedOrders[0];
 
     if (!order) {
