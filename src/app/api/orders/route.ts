@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, after } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
 export const maxDuration = 60;
@@ -139,17 +139,31 @@ export async function POST(request: Request) {
     const orderId = order.id;
     console.log('Order created successfully:', orderId);
 
-    // 3. Volání Endpoint B na pozadí (nečekáme na výsledek)
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (request.headers.get('host') ? `https://${request.headers.get('host')}` : 'http://localhost:3000');
-    
-    // Asynchronní volání bez await
-    fetch(`${baseUrl}/api/orders/generate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ orderId }),
-    }).catch(err => console.error('Error triggering background generation:', err));
+    // 3. Spolehlivé volání Endpoint B na pozadí pomocí after()
+    const protocol = request.headers.get('x-forwarded-proto') || 'https';
+    const host = request.headers.get('host');
+    const generateUrl = `${protocol}://${host}/api/orders/generate`;
+
+    after(async () => {
+      try {
+        console.log("🚀 TRIGGERING GENERATE ENDPOINT FOR ORDER:", orderId);
+        const genRes = await fetch(generateUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ orderId }),
+        });
+        
+        if (!genRes.ok) {
+          console.error("❌ GENERATE ENDPOINT RETURNED ERROR:", genRes.status);
+        } else {
+          console.log("✅ GENERATE ENDPOINT TRIGGERED SUCCESSFULLY");
+        }
+      } catch (err) {
+        console.error("❌ FAILED TO TRIGGER GENERATE ENDPOINT:", err);
+      }
+    });
 
     // 4. Ihned vrátit odpověď
     return NextResponse.json({ success: true, orderId });
