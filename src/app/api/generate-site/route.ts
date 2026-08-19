@@ -73,6 +73,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
     // Call Anthropic Claude API
     console.log("Key check:", process.env.ANTHROPIC_API_KEY ? "EXISTS (starts with " + process.env.ANTHROPIC_API_KEY.slice(0, 7) + ")" : "MISSING!");
 
+    console.log("🤖 CLAUDE MODEL SENT:", "claude-4-5-haiku");
     let anthropicResponse;
     try {
       anthropicResponse = await fetch(ANTHROPIC_API_URL, {
@@ -83,7 +84,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
           'anthropic-version': '2023-06-01',
         },
         body: JSON.stringify({
-          model: 'claude-3-5-sonnet-20241022',
+          model: 'claude-4-5-haiku',
           max_tokens: 4096,
           system: 'Respond ONLY with valid JSON. Do not include markdown formatting or extra text.',
           messages: [

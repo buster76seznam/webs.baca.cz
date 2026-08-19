@@ -41,6 +41,7 @@ async function callClaude(systemPrompt: string, userPrompt: string): Promise<str
 
   let response;
   try {
+    console.log("🤖 CLAUDE MODEL SENT:", "claude-4-5-haiku");
     response = await fetch(ANTHROPIC_API_URL, {
       method: 'POST',
       headers: {
@@ -49,7 +50,7 @@ async function callClaude(systemPrompt: string, userPrompt: string): Promise<str
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-4-5-haiku',
         max_tokens: 4096,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
