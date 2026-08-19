@@ -35,22 +35,31 @@ interface PipelineResult {
 
 // ─── Pomocná funkce: volání Claude API ─────────────────────────────────────────
 async function callClaude(systemPrompt: string, userPrompt: string): Promise<string> {
+  console.log("Key check:", process.env.ANTHROPIC_API_KEY ? "EXISTS (starts with " + process.env.ANTHROPIC_API_KEY.slice(0, 7) + ")" : "MISSING!");
+  
   if (!ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY není nastaven');
 
-  const response = await fetch(ANTHROPIC_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-5',
-      max_tokens: 4096,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userPrompt }],
-    }),
-  });
+  let response;
+  try {
+    response = await fetch(ANTHROPIC_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5',
+        max_tokens: 4096,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }],
+      }),
+    });
+  } catch (claudeErr: any) {
+    console.error("❌ ANTHROPIC API ERROR FULL:", JSON.stringify(claudeErr, null, 2));
+    console.error("❌ ANTHROPIC MESSAGE:", claudeErr?.message);
+    throw claudeErr;
+  }
 
   if (!response.ok) {
     const errorText = await response.text();

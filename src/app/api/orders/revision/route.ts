@@ -58,25 +58,37 @@ Description: ${order.description}
 Update the JSON to reflect the user's feedback while maintaining the structure. Ensure colors are in valid hex format if changed. Output the full updated JSON.`;
 
     // Call Anthropic Claude API
-    const anthropicResponse = await fetch(ANTHROPIC_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 4096,
-        system: systemPrompt,
-        messages: [
-          {
-            role: 'user',
-            content: userPrompt,
-          },
-        ],
-      }),
-    });
+    console.log("Key check:", process.env.ANTHROPIC_API_KEY ? "EXISTS (starts with " + process.env.ANTHROPIC_API_KEY.slice(0, 7) + ")" : "MISSING!");
+
+    let anthropicResponse;
+    try {
+      anthropicResponse = await fetch(ANTHROPIC_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': ANTHROPIC_API_KEY!,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'claude-3-haiku-20240307',
+          max_tokens: 4096,
+          system: systemPrompt,
+          messages: [
+            {
+              role: 'user',
+              content: userPrompt,
+            },
+          ],
+        }),
+      });
+    } catch (claudeErr: any) {
+      console.error("❌ ANTHROPIC API ERROR FULL:", JSON.stringify(claudeErr, null, 2));
+      console.error("❌ ANTHROPIC MESSAGE:", claudeErr?.message);
+      return NextResponse.json(
+        { error: 'Claude API call failed', details: claudeErr?.message },
+        { status: 502 }
+      );
+    }
 
     if (!anthropicResponse.ok) {
       const errorText = await anthropicResponse.text();
