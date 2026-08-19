@@ -1,10 +1,118 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/supabase';
 import { ratelimit } from '@/lib/ratelimit';
 import { Resend } from 'resend';
 import { SITE_URL } from '@/lib/site';
+import Anthropic from '@anthropic-ai/sdk';
+import { sendPreviewEmail } from '@/lib/emails';
+
+export const maxDuration = 60;
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
+
+async function generateWebWithClaude(orderId: string, email: string, domain: string, formData: any) {
+  console.log("🚀 STARTING CLAUDE GENERATION FOR:", email);
+  console.log("SENDING REQUEST TO ANTHROPIC...");
+
+  try {
+    const userPrompt = `Generate a complete website content JSON for the following business:
+
+Company Name: ${formData.companyName || ''}
+Industry: ${formData.industry || ''}
+Description: ${formData.description || ''}
+Advantages / Unique Selling Points: ${formData.advantage || ''}
+Services / Price List: ${formData.priceList || ''}
+Working Hours: ${formData.workingHours || ''}
+Email: ${formData.companyEmail || ''}
+Phone: ${formData.companyPhone || ''}
+Address: ${formData.companyAddress || ''}
+Country: ${formData.companyCountry || ''}
+Preferred Primary Color: ${formData.primaryColor || ''}
+Preferred Secondary Color: ${formData.secondaryColor || ''}
+Language: ${formData.language || 'cs'}
+
+Generate the JSON with these exact keys:
+- hero: { title, subtitle, cta_text }
+- about: { title, content }
+- services: array of { title, description, icon } (use simple emoji or icon name for icon)
+- advantages: array of { title, description }
+- contact: { email, phone, address }
+- theme: { primary_color (hex), secondary_color (hex), font_style }
+- layout: { hero_variant (one of: "variant_1", "variant_2", "variant_3"), services_variant (one of: "grid", "list") }
+
+For layout: choose hero_variant and services_variant that best match the industry and brand personality:
+- variant_1 (Split): good for service companies, local businesses
+- variant_2 (Centered/Full-width): good for bold brands, tech, creative agencies
+- variant_3 (Minimal): good for luxury, premium, design-focused brands
+- grid: good when there are 3+ distinct services to display
+- list: good when services have longer descriptions or fewer items (1-4)
+
+Write all text content in the language specified (${formData.language || 'cs'}). Make it professional and compelling.`;
+
+    const response = await anthropic.messages.create({
+      model: 'claude-3-5-sonnet-20240620',
+      max_tokens: 4000,
+      system: 'Respond ONLY with valid JSON. Do not include markdown formatting or extra text.',
+      messages: [
+        {
+          role: 'user',
+          content: userPrompt,
+        },
+      ],
+    });
+
+    console.log("✅ ANTHROPIC RESPONSE RECEIVED SUCCESSFULLY!");
+
+    const rawContent = response.content[0].type === 'text' ? response.content[0].text : '';
+
+    if (!rawContent) {
+      console.error('No content in Anthropic response');
+      return;
+    }
+
+    // Parse JSON
+    let generatedJson;
+    try {
+      generatedJson = JSON.parse(rawContent);
+    } catch (parseError) {
+      console.error('Failed to parse Claude JSON response:', rawContent);
+      return;
+    }
+
+    // Save to Supabase
+    const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || SITE_URL}/preview/${orderId}`;
+    
+    const { error: updateError } = await supabaseAdmin
+      .from('orders')
+      .update({
+        generated_site_json: generatedJson,
+        status: 'preview_ready',
+        preview_url: previewUrl,
+      })
+      .eq('id', orderId);
+
+    if (updateError) {
+      console.error('Error updating order with AI content:', updateError);
+      return;
+    }
+
+    console.log('Site generated successfully for order:', orderId);
+
+    // Send preview email
+    if (email) {
+      await sendPreviewEmail(email, previewUrl, orderId);
+      console.log('Preview email sent to:', email);
+    }
+  } catch (err: any) {
+    console.error("❌ ANTHROPIC CRASH ERROR:", err);
+    console.error("❌ ERROR MESSAGE:", err?.message);
+    console.error("❌ ERROR STATUS:", err?.status);
+  }
+}
 
 export async function POST(request: Request) {
   // 1. Redis Rate Limiter (Fail-Safe)
@@ -151,32 +259,14 @@ export async function POST(request: Request) {
     }
 
     // 6. Trigger AI Site Generation via Claude API
-    try {
-      console.log("🚀 STARTING CLAUDE GENERATION FOR:", body.companyEmail);
-      
-      // We trigger the generation asynchronously to not block the response
-      // but we still want to log the start. In a production environment with Vercel, 
-      // you might want to use a background job or Vercel's waitUntil.
-      fetch(`${SITE_URL}/api/generate-site`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ order_id: order.id }),
-      }).then(async (res) => {
-        if (res.ok) {
-          console.log("✅ CLAUDE GENERATION SUCCESS");
-        } else {
-          const errorText = await res.text();
-          console.error("❌ CLAUDE GENERATION FAILED:", errorText);
-        }
-      }).catch((claudeError) => {
-        console.error("❌ CLAUDE GENERATION FAILED:", claudeError);
-      });
-
-    } catch (claudeError) {
-      console.error("❌ CLAUDE GENERATION FAILED:", claudeError);
-    }
+    // We trigger the generation asynchronously to not block the response.
+    // In Next.js App Router on Vercel, this is best combined with maxDuration.
+    generateWebWithClaude(
+      order.id, 
+      body.companyEmail, 
+      body.domain, 
+      body
+    ).catch(err => console.error("Error in background generation:", err));
 
     // 7. Final Response (No custom headers with user text)
     return NextResponse.json(
