@@ -97,8 +97,8 @@ export async function POST(request: Request) {
       }
     }
 
-    // 2. Vložení do Supabase se stavem "draft"
-    const { data: order, error: insertError } = await supabase
+    // 2. Vložení do Supabase se stavem "draft" - Striktní zápis
+    const { data: newOrder, error: insertError } = await supabase
       .from('orders')
       .insert([
         {
@@ -129,15 +129,23 @@ export async function POST(request: Request) {
       .single();
 
     if (insertError) {
-      console.error('Supabase insert error:', insertError);
+      console.error("❌ CRITICAL SUPABASE INSERT ERROR:", insertError);
       return NextResponse.json(
-        { success: false, error: 'Database insertion failed' },
+        { success: false, error: insertError.message },
         { status: 500 }
       );
     }
 
-    const orderId = order.id;
-    console.log('Order created successfully:', orderId);
+    if (!newOrder || !newOrder.id) {
+      console.error("❌ SUPABASE INSERT SUCCESSFUL BUT NO ID RETURNED");
+      return NextResponse.json(
+        { success: false, error: 'Failed to retrieve new order ID' },
+        { status: 500 }
+      );
+    }
+
+    const orderId = newOrder.id;
+    console.log("✅ ORDER SUCCESSFULLY CREATED IN SUPABASE WITH ID:", orderId);
 
     // 3. Spolehlivé volání Endpoint B na pozadí pomocí after()
     const protocol = request.headers.get('x-forwarded-proto') || 'https';
