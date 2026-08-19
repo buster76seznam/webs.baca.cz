@@ -1,7 +1,40 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
 export const maxDuration = 60;
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const isTrash = searchParams.get('trash') === 'true';
+
+    let query = supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (isTrash) {
+      query = query.not('deleted_at', 'is', null);
+    } else {
+      query = query.is('deleted_at', null);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Error fetching orders:', error);
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, orders: data });
+  } catch (error) {
+    console.error('❌ ERROR IN GET /api/orders:', error);
+    return NextResponse.json(
+      { success: false, error: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(request: Request) {
   console.log('--- ENDPOINT A: POST /api/orders START ---');
@@ -89,6 +122,7 @@ export async function POST(request: Request) {
           instagram_url: instagramUrl,
           google_maps_url: googleMapsUrl,
           status: 'draft',
+          created_at: new Date().toISOString(),
         }
       ])
       .select()
