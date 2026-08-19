@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   keywords: ["tvorba webů", "webové stránky", "hosting", "web design", "autoservis web", "webs bača"],
   authors: [{ name: "Webs Bača" }],
   creator: "Webs Bača",
-  metadataBase: new URL("https://webs.baca.cz"),
+  metadataBase: new URL("https://www.websbaca.cz"),
   openGraph: {
     title: "Webs Bača – Hosting & Web",
     description: "Návrh do 60 minut. Spuštění do 24 hodin. Vše za 1 700 Kč/měsíc.",
-    url: "https://webs.baca.cz",
+    url: "https://www.websbaca.cz",
     siteName: "Webs Bača",
     images: [
       {

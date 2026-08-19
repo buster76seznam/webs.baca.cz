@@ -82,7 +82,8 @@ Jazyk: ${order.language || 'cs'}`
     console.log('Content generated successfully');
 
     // 4. Uložení vygenerovaného obsahu do Supabase a změna stavu na "preview_ready"
-    const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || SITE_URL}/preview/${orderId}`;
+    const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.websbaca.cz';
+    const previewUrl = `${BASE_URL}/preview/${orderId}`;
     
     const { error: updateError } = await supabase
       .from('orders')
