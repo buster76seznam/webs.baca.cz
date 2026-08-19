@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     // Build revision prompt
     const currentJson = JSON.stringify(order.generated_site_json, null, 2);
-    const systemPrompt = 'You are a web designer expert. You will receive a website content JSON and a user feedback. Your task is to update the JSON based on the feedback. Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like ```json.';
+    const systemPrompt = 'You are a web designer expert. You will receive a website content JSON and a user feedback. Your task is to update the JSON based on the feedback. Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like ```json. CRITICAL: Do NOT use emoji in the text. Do NOT use Czech characters š, č, and ř (use s, c, r instead) to avoid header encoding issues.';
     
     const userPrompt = `
 Current Website JSON:

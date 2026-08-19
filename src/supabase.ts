@@ -22,6 +22,14 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false
+  },
+  global: {
+    // Prevent header inheritance by using a clean fetch
+    fetch: (url, options) => {
+      const headers = new Headers(options?.headers);
+      // Ensure only standard headers are sent
+      return fetch(url, { ...options, headers });
+    }
   }
 });
 

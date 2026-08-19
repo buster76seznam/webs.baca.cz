@@ -86,7 +86,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
         body: JSON.stringify({
           model: 'claude-sonnet-4-5-20250929',
           max_tokens: 4096,
-          system: 'Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like ```json.',
+          system: 'Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like ```json. CRITICAL: Do NOT use emoji in the text. Do NOT use Czech characters š, č, and ř (use s, c, r instead) to avoid header encoding issues.',
           messages: [
             {
               role: 'user',
