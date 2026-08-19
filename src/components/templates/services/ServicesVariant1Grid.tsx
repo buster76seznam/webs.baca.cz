@@ -3,7 +3,7 @@
 interface Service {
   title: string;
   description: string;
-  icon: string;
+  icon?: string;
 }
 
 interface Props {
@@ -40,7 +40,7 @@ export default function ServicesVariant1Grid({ services }: Props) {
                 className="text-3xl mb-5 w-14 h-14 rounded-xl flex items-center justify-center"
                 style={{ backgroundColor: 'var(--color-primary-12)' }}
               >
-                {service.icon}
+                {service.icon || '✨'}
               </div>
               <h3
                 className="text-lg font-black mb-3"

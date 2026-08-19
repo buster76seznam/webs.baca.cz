@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 interface HeroData {
   title: string;
   subtitle: string;
-  cta_text: string;
+  ctaText: string;
 }
 
 interface Props {
@@ -66,7 +66,7 @@ export default function HeroVariant3Minimal({ hero, companyName }: Props) {
           className="inline-flex items-center gap-3 text-base font-black uppercase tracking-widest transition-all group"
           style={{ color: 'var(--color-primary)' }}
         >
-          {hero?.cta_text || 'Kontaktujte nás'}
+          {hero?.ctaText || 'Kontaktujte nás'}
           <ArrowRight
             size={18}
             className="transition-transform group-hover:translate-x-1"

@@ -55,7 +55,15 @@ Company: ${order.company_name}
 Industry: ${order.industry}
 Description: ${order.description}
 
-Update the JSON to reflect the user's feedback while maintaining the structure. Ensure colors are in valid hex format if changed. Output the full updated JSON.`;
+Update the JSON to reflect the user's feedback while maintaining the structure. Output the full updated JSON.
+Structure must be exactly:
+{
+  "hero": { "title": "...", "subtitle": "...", "ctaText": "..." },
+  "about": { "title": "...", "text": "..." },
+  "services": [ { "title": "...", "description": "..." } ],
+  "contact": { "address": "...", "phone": "...", "hours": "..." },
+  "theme": { "primaryColor": "#...", "secondaryColor": "#..." }
+}`;
 
     // Call Anthropic Claude API
     console.log("Key check:", process.env.ANTHROPIC_API_KEY ? "EXISTS (starts with " + process.env.ANTHROPIC_API_KEY.slice(0, 7) + ")" : "MISSING!");

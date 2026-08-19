@@ -3,7 +3,7 @@
 interface Service {
   title: string;
   description: string;
-  icon: string;
+  icon?: string;
 }
 
 interface Props {
@@ -48,7 +48,7 @@ export default function ServicesVariant2List({ services }: Props) {
                       border: isEven ? '1px solid var(--color-primary-20)' : '1px solid var(--color-secondary-20)',
                     }}
                   >
-                    {service.icon}
+                    {service.icon || '✨'}
                   </div>
                 </div>
 

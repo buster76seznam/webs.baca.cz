@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 interface HeroData {
   title: string;
   subtitle: string;
-  cta_text: string;
+  ctaText: string;
 }
 
 interface Props {
@@ -49,7 +49,7 @@ export default function HeroVariant1Split({ hero, companyName }: Props) {
               className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-white font-bold text-lg transition-all hover:opacity-90 hover:scale-105 shadow-xl"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
-              {hero?.cta_text || 'Kontaktujte nás'}
+              {hero?.ctaText || 'Kontaktujte nás'}
               <ArrowRight size={20} />
             </a>
           </div>

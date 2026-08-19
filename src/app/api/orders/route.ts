@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { supabaseAdmin } from '@/supabase';
 import { ratelimit } from '@/lib/ratelimit';
@@ -36,25 +36,18 @@ Preferred Secondary Color: ${formData.secondaryColor || ''}
 Language: ${formData.language || 'cs'}
 
 Generate the JSON with these exact keys:
-- hero: { title, subtitle, cta_text }
-- about: { title, content }
-- services: array of { title, description, icon } (use simple emoji or icon name for icon)
-- advantages: array of { title, description }
-- contact: { email, phone, address }
-- theme: { primary_color (hex), secondary_color (hex), font_style }
-- layout: { hero_variant (one of: "variant_1", "variant_2", "variant_3"), services_variant (one of: "grid", "list") }
-
-For layout: choose hero_variant and services_variant that best match the industry and brand personality:
-- variant_1 (Split): good for service companies, local businesses
-- variant_2 (Centered/Full-width): good for bold brands, tech, creative agencies
-- variant_3 (Minimal): good for luxury, premium, design-focused brands
-- grid: good when there are 3+ distinct services to display
-- list: good when services have longer descriptions or fewer items (1-4)
+{
+  "hero": { "title": "...", "subtitle": "...", "ctaText": "..." },
+  "about": { "title": "...", "text": "..." },
+  "services": [ { "title": "...", "description": "..." } ],
+  "contact": { "address": "...", "phone": "...", "hours": "..." },
+  "theme": { "primaryColor": "#...", "secondaryColor": "#..." }
+}
 
 Write all text content in the language specified (${formData.language || 'cs'}). Make it professional and compelling.`;
 
     const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20240620',
+      model: 'claude-3-haiku-20240307',
       max_tokens: 4000,
       system: 'Respond ONLY with valid JSON. Do not include markdown formatting or extra text.',
       messages: [
@@ -259,14 +252,19 @@ export async function POST(request: Request) {
     }
 
     // 6. Trigger AI Site Generation via Claude API
-    // We trigger the generation asynchronously to not block the response.
-    // In Next.js App Router on Vercel, this is best combined with maxDuration.
-    generateWebWithClaude(
-      order.id, 
-      body.companyEmail, 
-      body.domain, 
-      body
-    ).catch(err => console.error("Error in background generation:", err));
+    // Using after() for background processing (Next.js 15 feature)
+    after(async () => {
+      try {
+        await generateWebWithClaude(
+          order.id, 
+          body.companyEmail, 
+          body.domain, 
+          body
+        );
+      } catch (err) {
+        console.error("Error in background generation:", err);
+      }
+    });
 
     // 7. Final Response (No custom headers with user text)
     return NextResponse.json(

@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 interface HeroData {
   title: string;
   subtitle: string;
-  cta_text: string;
+  ctaText: string;
 }
 
 interface Props {
@@ -59,10 +59,10 @@ export default function HeroVariant2Centered({ hero, companyName }: Props) {
         </p>
         <a
           href="#contact"
-          className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 shadow-2xl"
+          className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 shadow-xl"
           style={{ backgroundColor: 'white', color: 'var(--color-primary)' }}
         >
-          {hero?.cta_text || 'Kontaktujte nás'}
+          {hero?.ctaText || 'Kontaktujte nás'}
           <ArrowRight size={20} />
         </a>
       </div>

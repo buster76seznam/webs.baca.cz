@@ -10,16 +10,11 @@ import ServicesVariant1Grid from '@/components/templates/services/ServicesVarian
 import ServicesVariant2List from '@/components/templates/services/ServicesVariant2List';
 
 interface GeneratedSiteJson {
-  hero: { title: string; subtitle: string; cta_text: string };
-  about: { title: string; content: string };
-  services: Array<{ title: string; description: string; icon: string }>;
-  advantages: Array<{ title: string; description: string }>;
-  contact: { email: string; phone: string; address: string };
-  theme: { primary_color: string; secondary_color: string; font_style: string };
-  layout?: {
-    hero_variant?: 'variant_1' | 'variant_2' | 'variant_3';
-    services_variant?: 'grid' | 'list';
-  };
+  hero: { title: string; subtitle: string; ctaText: string };
+  about: { title: string; text: string };
+  services: Array<{ title: string; description: string }>;
+  contact: { address: string; phone: string; hours: string };
+  theme: { primaryColor: string; secondaryColor: string };
 }
 
 interface OrderRow {
@@ -56,13 +51,13 @@ function hexAlpha(hex: string, alpha: number): string {
 export default function SiteRenderer({ data, order, isPaid }: Props) {
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
 
-  const primaryColor = data.theme?.primary_color || order.primary_color || '#7C3AED';
-  const secondaryColor = data.theme?.secondary_color || '#10B981';
+  const primaryColor = data.theme?.primaryColor || order.primary_color || '#7C3AED';
+  const secondaryColor = data.theme?.secondaryColor || '#10B981';
 
-  const heroVariant = data.layout?.hero_variant || 'variant_1';
-  const servicesVariant = data.layout?.services_variant || 'grid';
+  const heroVariant = 'variant_1';
+  const servicesVariant = 'grid';
 
-  const { hero, about, services, advantages, contact } = data;
+  const { hero, about, services, contact } = data;
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,19 +137,19 @@ export default function SiteRenderer({ data, order, isPaid }: Props) {
                 {about?.title}
               </h2>
               <p className="text-gray-600 leading-relaxed text-lg whitespace-pre-line">
-                {about?.content}
+                {about?.text}
               </p>
             </div>
             <div
               className="rounded-3xl p-10 flex flex-col gap-6"
               style={{ backgroundColor: hexAlpha(primaryColor, 0.08), border: `1px solid ${hexAlpha(primaryColor, 0.2)}` }}
             >
-              {contact?.address && (
+              {(contact?.address || order.company_address) && (
                 <div className="flex items-start gap-4">
                   <MapPin className="mt-1 flex-shrink-0" size={22} style={{ color: primaryColor }} />
                   <div>
                     <p className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-1">Adresa</p>
-                    <p className="text-gray-600">{contact.address}</p>
+                    <p className="text-gray-600">{contact?.address || order.company_address}</p>
                   </div>
                 </div>
               )}
@@ -167,21 +162,21 @@ export default function SiteRenderer({ data, order, isPaid }: Props) {
                   </div>
                 </div>
               )}
-              {(contact?.email || order.company_email) && (
+              {order.company_email && (
                 <div className="flex items-start gap-4">
                   <Mail className="mt-1 flex-shrink-0" size={22} style={{ color: primaryColor }} />
                   <div>
                     <p className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-1">Email</p>
-                    <p className="text-gray-600">{contact?.email || order.company_email}</p>
+                    <p className="text-gray-600">{order.company_email}</p>
                   </div>
                 </div>
               )}
-              {order.working_hours && (
+              {(contact?.hours || order.working_hours) && (
                 <div className="flex items-start gap-4">
                   <Clock className="mt-1 flex-shrink-0" size={22} style={{ color: primaryColor }} />
                   <div>
                     <p className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-1">Otevírací doba</p>
-                    <p className="text-gray-600">{order.working_hours}</p>
+                    <p className="text-gray-600">{contact?.hours || order.working_hours}</p>
                   </div>
                 </div>
               )}
@@ -192,48 +187,7 @@ export default function SiteRenderer({ data, order, isPaid }: Props) {
 
       {/* ─── SERVICES ─── */}
       {services && services.length > 0 && (
-        servicesVariant === 'list'
-          ? <ServicesVariant2List services={services} />
-          : <ServicesVariant1Grid services={services} />
-      )}
-
-      {/* ─── ADVANTAGES ─── */}
-      {advantages && advantages.length > 0 && (
-        <section id="advantages" className="py-24 px-6 bg-white">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16">
-              <div
-                className="text-xs font-black uppercase tracking-widest mb-4"
-                style={{ color: primaryColor }}
-              >
-                Proč my
-              </div>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-gray-900">
-                Naše výhody
-              </h2>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-6">
-              {advantages.map((adv, i) => (
-                <div
-                  key={i}
-                  className="flex gap-5 p-6 rounded-2xl"
-                  style={{ backgroundColor: hexAlpha(primaryColor, 0.06), border: `1px solid ${hexAlpha(primaryColor, 0.15)}` }}
-                >
-                  <div
-                    className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center font-black text-white text-sm"
-                    style={{ backgroundColor: primaryColor }}
-                  >
-                    <Star size={18} />
-                  </div>
-                  <div>
-                    <h3 className="font-black text-gray-900 mb-2">{adv.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{adv.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ServicesVariant1Grid services={services} />
       )}
 
       {/* ─── MAP ─── */}

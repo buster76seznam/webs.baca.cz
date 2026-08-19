@@ -5,16 +5,11 @@ import SiteRenderer from '@/components/SiteRenderer';
 import { useRouter } from 'next/navigation';
 
 interface GeneratedSiteJson {
-  hero: { title: string; subtitle: string; cta_text: string };
-  about: { title: string; content: string };
-  services: Array<{ title: string; description: string; icon: string }>;
-  advantages: Array<{ title: string; description: string }>;
-  contact: { email: string; phone: string; address: string };
-  theme: { primary_color: string; secondary_color: string; font_style: string };
-  layout?: {
-    hero_variant?: 'variant_1' | 'variant_2' | 'variant_3';
-    services_variant?: 'grid' | 'list';
-  };
+  hero: { title: string; subtitle: string; ctaText: string };
+  about: { title: string; text: string };
+  services: Array<{ title: string; description: string }>;
+  contact: { address: string; phone: string; hours: string };
+  theme: { primaryColor: string; secondaryColor: string };
 }
 
 interface OrderRow {
