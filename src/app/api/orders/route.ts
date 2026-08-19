@@ -12,21 +12,39 @@ export const maxDuration = 60;
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 console.log("🔑 ANTHROPIC KEY PRESENT:", !!process.env.ANTHROPIC_API_KEY);
+const apiKey = process.env.ANTHROPIC_API_KEY;
+if (!apiKey) {
+  throw new Error("ANTHROPIC_API_KEY is missing!");
+}
+
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-  // Zabezpečení čistých HTTP hlaviček pro fetch v Node.js
-  fetch: (url, init) => {
-    if (init && init.headers) {
-      // Odstranění jakýchkoliv ne-ASCII znaků z hlaviček před odesláním
-      const cleanHeaders: Record<string, string> = {};
-      const headers = new Headers(init.headers as any);
+  apiKey: apiKey,
+  fetch: async (url, init) => {
+    const cleanHeaders: Record<string, string> = {};
+
+    // 1. Zkopíruj pouze bezpečné ASCII znaky ze všech předávaných hlaviček
+    if (init?.headers) {
+      const entries = init.headers instanceof Headers
+        ? Array.from(init.headers.entries())
+        : Object.entries(init.headers as Record<string, string>);
       
-      headers.forEach((value, key) => {
-        cleanHeaders[key] = value.replace(/[^\x00-\x7F]/g, '');
-      });
-      init.headers = cleanHeaders;
+      for (const [key, value] of entries) {
+        if (typeof value === 'string') {
+          // Odstraní jakýkoliv znak mimo ASCII rozsah (charCode > 127)
+          cleanHeaders[key.toLowerCase()] = value.replace(/[^\x00-\x7F]/g, '');
+        }
+      }
     }
-    return fetch(url, init);
+
+    // 2. Vynutit správné a čisté klíčové hlavičky
+    cleanHeaders['x-api-key'] = apiKey.trim();
+    cleanHeaders['anthropic-version'] = '2023-06-01';
+    cleanHeaders['content-type'] = 'application/json';
+
+    return fetch(url, {
+      ...init,
+      headers: cleanHeaders,
+    });
   }
 });
 
