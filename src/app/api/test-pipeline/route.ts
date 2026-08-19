@@ -49,7 +49,7 @@ async function callClaude(systemPrompt: string, userPrompt: string): Promise<str
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
+        model: 'claude-3-haiku-20240307',
         max_tokens: 4096,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],

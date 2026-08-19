@@ -8,16 +8,11 @@ const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 
 interface GeneratedSiteJson {
-  hero: { title: string; subtitle: string; cta_text: string };
-  about: { title: string; content: string };
-  services: Array<{ title: string; description: string; icon: string }>;
-  advantages: Array<{ title: string; description: string }>;
-  contact: { email: string; phone: string; address: string };
-  theme: { primary_color: string; secondary_color: string; font_style: string };
-  layout: {
-    hero_variant: 'variant_1' | 'variant_2' | 'variant_3';
-    services_variant: 'grid' | 'list';
-  };
+  hero: { title: string; subtitle: string; ctaText: string };
+  about: { title: string; text: string };
+  services: Array<{ title: string; description: string }>;
+  contact: { address: string; phone: string; hours: string };
+  theme: { primaryColor: string; secondaryColor: string };
 }
 
 export async function POST(request: NextRequest) {
@@ -65,20 +60,13 @@ Preferred Secondary Color: ${formData.secondary_color || ''}
 Language: ${formData.language || 'cs'}
 
 Generate the JSON with these exact keys:
-- hero: { title, subtitle, cta_text }
-- about: { title, content }
-- services: array of { title, description, icon } (use simple emoji or icon name for icon)
-- advantages: array of { title, description }
-- contact: { email, phone, address }
-- theme: { primary_color (hex), secondary_color (hex), font_style }
-- layout: { hero_variant (one of: "variant_1", "variant_2", "variant_3"), services_variant (one of: "grid", "list") }
-
-For layout: choose hero_variant and services_variant that best match the industry and brand personality:
-- variant_1 (Split): good for service companies, local businesses
-- variant_2 (Centered/Full-width): good for bold brands, tech, creative agencies
-- variant_3 (Minimal): good for luxury, premium, design-focused brands
-- grid: good when there are 3+ distinct services to display
-- list: good when services have longer descriptions or fewer items (1-4)
+{
+  "hero": { "title": "...", "subtitle": "...", "ctaText": "..." },
+  "about": { "title": "...", "text": "..." },
+  "services": [ { "title": "...", "description": "..." } ],
+  "contact": { "address": "...", "phone": "...", "hours": "..." },
+  "theme": { "primaryColor": "#...", "secondaryColor": "#..." }
+}
 
 Write all text content in the language specified (${formData.language || 'cs'}). Make it professional and compelling.`;
 
