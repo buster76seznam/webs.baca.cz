@@ -42,13 +42,16 @@ async function callClaude(systemPrompt: string, userPrompt: string): Promise<str
   let response;
   try {
     console.log("🤖 CLAUDE MODEL SENT:", "claude-sonnet-4-5-20250929");
+    
+    // Vytvořit čisté hlavičky pro ochranu před non-ASCII znaky z requestu
+    const cleanHeaders = new Headers();
+    cleanHeaders.set('content-type', 'application/json');
+    cleanHeaders.set('x-api-key', (ANTHROPIC_API_KEY || '').trim());
+    cleanHeaders.set('anthropic-version', '2023-06-01');
+
     response = await fetch(ANTHROPIC_API_URL, {
       method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: cleanHeaders,
       body: JSON.stringify({
         model: 'claude-sonnet-4-5-20250929',
         max_tokens: 4096,

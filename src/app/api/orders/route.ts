@@ -20,16 +20,22 @@ if (!apiKey) {
 const anthropic = new Anthropic({
   apiKey: apiKey,
   fetch: async (url, init) => {
-    // Vynutit EXKLUZIVNĚ pouze 3 povolené ASCII hlavičky
-    const cleanHeaders: Record<string, string> = {
-      'x-api-key': apiKey.trim(),
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json'
-    };
+    // Vytvořit úplně nové hlavičky, aby se zabránilo dědičnosti non-ASCII hlaviček z Next.js requestu
+    const headers = new Headers();
+    headers.set('x-api-key', apiKey.trim());
+    headers.set('anthropic-version', '2023-06-01');
+    headers.set('content-type', 'application/json');
 
-    return fetch(url, {
-      ...init,
-      headers: cleanHeaders,
+    // Pokud je url Request objekt, extrahujeme pouze string URL, 
+    // abychom zabránili přenosu původních hlaviček v Request objektu
+    const targetUrl = typeof url === 'string' ? url : (url as any).url;
+
+    return fetch(targetUrl, {
+      method: init?.method || 'POST',
+      headers: headers,
+      body: init?.body,
+      signal: init?.signal,
+      // Důležité: nepoužívat ...init, abychom se vyhnuli dědění problémových vlastností
     });
   }
 });
@@ -120,7 +126,7 @@ Write all text content in the language specified (${sanitize(formData.language |
     // Save to Supabase using direct fetch to avoid header inheritance issues with the SDK
     const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || SITE_URL}/preview/${orderId}`;
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
     
     const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
       method: 'PATCH',
@@ -228,8 +234,8 @@ export async function POST(request: Request) {
     const insertResponse = await fetch(`${supabaseUrl}/rest/v1/orders`, {
       method: 'POST',
       headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
+        'apikey': supabaseKey.trim(),
+        'Authorization': `Bearer ${supabaseKey.trim()}`,
         'Content-Type': 'application/json',
         'Prefer': 'return=representation'
       },
@@ -281,10 +287,13 @@ export async function POST(request: Request) {
       const domain = body.domain || 'your new website';
       const orderId = order?.id || 'N/A';
 
+      // Sanitizace domény pro subjekt emailu (odstranění non-ASCII pro hlavičky)
+      const safeSubjectDomain = String(domain).replace(/[^\x00-\x7F]/g, '');
+      
       await resend.emails.send({
         from: FROM_EMAIL,
         to: body.companyEmail,
-        subject: `Order received — ${domain} 🎉`,
+        subject: `Order received — ${safeSubjectDomain} 🎉`,
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px; color: #111;">
             <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Order received! 🎉</h1>

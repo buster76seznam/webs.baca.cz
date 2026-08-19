@@ -85,13 +85,15 @@ Structure must be exactly:
     console.log("🤖 CLAUDE MODEL SENT:", "claude-sonnet-4-5-20250929");
     let anthropicResponse;
     try {
+      // Vytvořit čisté hlavičky bez dědičnosti z okolního prostředí
+      const cleanHeaders = new Headers();
+      cleanHeaders.set('content-type', 'application/json');
+      cleanHeaders.set('x-api-key', (ANTHROPIC_API_KEY || '').trim());
+      cleanHeaders.set('anthropic-version', '2023-06-01');
+
       anthropicResponse = await fetch(ANTHROPIC_API_URL, {
         method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          'x-api-key': ANTHROPIC_API_KEY!,
-          'anthropic-version': '2023-06-01',
-        },
+        headers: cleanHeaders,
         body: JSON.stringify({
           model: 'claude-sonnet-4-5-20250929',
           max_tokens: 4096,
@@ -143,8 +145,8 @@ Structure must be exactly:
     const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
       method: 'PATCH',
       headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
+        'apikey': supabaseKey.trim(),
+        'Authorization': `Bearer ${supabaseKey.trim()}`,
         'Content-Type': 'application/json',
         'Prefer': 'return=representation'
       },

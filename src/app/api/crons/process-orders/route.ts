@@ -9,7 +9,7 @@ import { Database } from '@/types/supabase';
 
 async function processOrder(order: Database['public']['Tables']['orders']['Row']) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
 
   try {
     console.log(`Processing order ${order.id}`);
@@ -147,15 +147,16 @@ export async function GET(request: Request) {
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
+
+  const headers = new Headers();
+  headers.set('apikey', supabaseKey);
+  headers.set('Authorization', `Bearer ${supabaseKey}`);
+  headers.set('Accept', 'application/json');
 
   const fetchQueued = await fetch(`${supabaseUrl}/rest/v1/orders?status=eq.draft&limit=3&select=*`, {
     method: 'GET',
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-      'Accept': 'application/json'
-    }
+    headers
   });
 
   if (!fetchQueued.ok) {
