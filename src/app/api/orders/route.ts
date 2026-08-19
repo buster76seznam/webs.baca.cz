@@ -53,21 +53,37 @@ async function generateWebWithClaude(orderId: string, email: string, domain: str
   console.log("SENDING REQUEST TO ANTHROPIC...");
 
   try {
+    // Helper function to remove non-ASCII characters
+    const sanitize = (str: string) => {
+      if (!str) return '';
+      return str.replace(/[^\x00-\x7F]/g, (char) => {
+        // Replace common Czech characters with ASCII equivalents
+        const map: Record<string, string> = {
+          'š': 's', 'č': 'c', 'ř': 'r', 'ž': 'z', 'ý': 'y', 'á': 'a',
+          'í': 'i', 'é': 'e', 'ú': 'u', 'ů': 'u', 'ď': 'd', 'ť': 't',
+          'ň': 'n', 'Š': 'S', 'Č': 'C', 'Ř': 'R', 'Ž': 'Z', 'Ý': 'Y',
+          'Á': 'A', 'Í': 'I', 'É': 'E', 'Ú': 'U', 'Ů': 'U', 'Ď': 'D',
+          'Ť': 'T', 'Ň': 'N'
+        };
+        return map[char] || '';
+      });
+    };
+
     const userPrompt = `Generate a complete website content JSON for the following business:
 
-Company Name: ${(formData.companyName || '').normalize('NFC')}
-Industry: ${(formData.industry || '').normalize('NFC')}
-Description: ${(formData.description || '').normalize('NFC')}
-Advantages / Unique Selling Points: ${(formData.advantage || '').normalize('NFC')}
-Services / Price List: ${(formData.priceList || '').normalize('NFC')}
-Working Hours: ${(formData.workingHours || '').normalize('NFC')}
-Email: ${(formData.companyEmail || '').normalize('NFC')}
-Phone: ${(formData.companyPhone || '').normalize('NFC')}
-Address: ${(formData.companyAddress || '').normalize('NFC')}
-Country: ${(formData.companyCountry || '').normalize('NFC')}
-Preferred Primary Color: ${(formData.primaryColor || '').normalize('NFC')}
-Preferred Secondary Color: ${(formData.secondaryColor || '').normalize('NFC')}
-Language: ${(formData.language || 'cs').normalize('NFC')}
+Company Name: ${sanitize(formData.companyName || '')}
+Industry: ${sanitize(formData.industry || '')}
+Description: ${sanitize(formData.description || '')}
+Advantages / Unique Selling Points: ${sanitize(formData.advantage || '')}
+Services / Price List: ${sanitize(formData.priceList || '')}
+Working Hours: ${sanitize(formData.workingHours || '')}
+Email: ${sanitize(formData.companyEmail || '')}
+Phone: ${sanitize(formData.companyPhone || '')}
+Address: ${sanitize(formData.companyAddress || '')}
+Country: ${sanitize(formData.companyCountry || '')}
+Preferred Primary Color: ${sanitize(formData.primaryColor || '')}
+Preferred Secondary Color: ${sanitize(formData.secondaryColor || '')}
+Language: ${sanitize(formData.language || 'cs')}
 
 Generate the JSON with these exact keys:
 {
@@ -78,7 +94,7 @@ Generate the JSON with these exact keys:
   "theme": { "primaryColor": "#...", "secondaryColor": "#..." }
 }
 
-Write all text content in the language specified (${formData.language || 'cs'}). Make it professional and compelling.`;
+Write all text content in the language specified (${sanitize(formData.language || 'cs')}). Make it professional and compelling. Use only ASCII characters (no diacritics).`;
 
     console.log("🤖 CLAUDE MODEL SENT:", "claude-sonnet-4-5-20250929");
     const response = await anthropic.messages.create({
