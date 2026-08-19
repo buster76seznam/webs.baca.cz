@@ -8,6 +8,9 @@ export const dynamic = 'force-dynamic';
 import { Database } from '@/types/supabase';
 
 async function processOrder(order: Database['public']['Tables']['orders']['Row']) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+
   try {
     console.log(`Processing order ${order.id}`);
 
@@ -22,38 +25,69 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
       console.log(`Emails sent for order ${order.id}`);
     } catch (error) {
       console.error(`Failed to send emails for order ${order.id}:`, error);
-      await supabaseAdmin.from('orders').update({ status: 'failed_email' }).eq('id', order.id);
+      
+      await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order.id}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: 'failed_email' })
+      });
       return;
     }
 
     // 2. Create commission
     if (order.ref_code) {
-      const { data: partner, error: partnerError } = await supabaseAdmin
-        .from('partners')
-        .select('id, commission_pct')
-        .eq('referral_code', order.ref_code)
-        .single();
+      const partnerFetch = await fetch(`${supabaseUrl}/rest/v1/partners?referral_code=eq.${order.ref_code}&select=id,commission_pct`, {
+        method: 'GET',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Accept': 'application/json'
+        }
+      });
 
-      if (partnerError || !partner) {
+      const partners = await partnerFetch.json();
+      const partner = partners[0];
+
+      if (!partner) {
         console.warn(`Partner with ref_code "${order.ref_code}" not found for order ${order.id}`);
       } else {
         const orderAmount = order.price! / 100;
         const commissionAmount = orderAmount * partner.commission_pct;
 
-        const { error: commissionError } = await supabaseAdmin
-          .from('commissions')
-          .insert({
+        const commissionInsert = await fetch(`${supabaseUrl}/rest/v1/commissions`, {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
             influencer_id: partner.id,
             order_id: order.id,
             order_amount: orderAmount,
             commission_pct: partner.commission_pct,
             commission_amount: commissionAmount,
             status: 'pending'
-          });
+          })
+        });
 
-        if (commissionError) {
-          console.error(`Failed to create commission for order ${order.id}:`, commissionError);
-          await supabaseAdmin.from('orders').update({ status: 'failed_email' }).eq('id', order.id);
+        if (!commissionInsert.ok) {
+          const errorText = await commissionInsert.text();
+          console.error(`Failed to create commission for order ${order.id}:`, errorText);
+          
+          await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order.id}`, {
+            method: 'PATCH',
+            headers: {
+              'apikey': supabaseKey,
+              'Authorization': `Bearer ${supabaseKey}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: 'failed_email' })
+          });
           return;
         } else {
           console.log(`Created pending commission for order ${order.id}`);
@@ -62,21 +96,45 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
     }
 
     // 3. Mark order as processed
-    const { error: updateError } = await supabaseAdmin
-      .from('orders')
-      .update({ status: 'paid' })
-      .eq('id', order.id);
+    const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order.id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ status: 'paid' })
+    });
 
-    if (updateError) {
-      console.error(`Failed to update order status for order ${order.id}:`, updateError);
-      await supabaseAdmin.from('orders').update({ status: 'failed_email' }).eq('id', order.id);
+    if (!updateResponse.ok) {
+      const errorText = await updateResponse.text();
+      console.error(`Failed to update order status for order ${order.id}:`, errorText);
+      
+      await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order.id}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: 'failed_email' })
+      });
       return;
     }
 
     console.log(`Finished processing order ${order.id}`);
   } catch (error) {
     console.error(`An unexpected error occurred while processing order ${order.id}:`, error);
-    await supabaseAdmin.from('orders').update({ status: 'failed_email' }).eq('id', order.id);
+    
+    await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order.id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ status: 'failed_email' })
+    });
   }
 }
 
@@ -88,16 +146,25 @@ export async function GET(request: Request) {
     });
   }
 
-  const { data: orders, error } = await supabaseAdmin
-    .from('orders')
-    .select('*')
-    .eq('status', 'draft')
-    .limit(3); // Concurrency limit
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-  if (error) {
-    console.error('Failed to fetch queued orders:', error);
+  const fetchQueued = await fetch(`${supabaseUrl}/rest/v1/orders?status=eq.draft&limit=3&select=*`, {
+    method: 'GET',
+    headers: {
+      'apikey': supabaseKey,
+      'Authorization': `Bearer ${supabaseKey}`,
+      'Accept': 'application/json'
+    }
+  });
+
+  if (!fetchQueued.ok) {
+    const errorText = await fetchQueued.text();
+    console.error('Failed to fetch queued orders:', errorText);
     return NextResponse.json({ error: 'Failed to fetch queued orders' }, { status: 500 });
   }
+
+  const orders = await fetchQueued.json();
 
   if (!orders || orders.length === 0) {
     return NextResponse.json({ message: 'No queued orders to process' });

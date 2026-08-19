@@ -19,15 +19,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'orderId and prompt are required' }, { status: 400 });
     }
 
-    // Fetch order from Supabase
-    const { data: order, error: fetchError } = await supabaseAdmin
-      .from('orders')
-      .select('*')
-      .eq('id', orderId)
-      .single();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-    if (fetchError || !order) {
-      console.error('Error fetching order:', fetchError);
+    // Fetch order from Supabase using direct fetch
+    const fetchResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}&select=*`, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!fetchResponse.ok) {
+      const errorText = await fetchResponse.text();
+      console.error('Error fetching order (direct fetch):', errorText);
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    const orders = await fetchResponse.json();
+    const order = orders[0];
+
+    if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
@@ -125,23 +139,34 @@ Structure must be exactly:
       return NextResponse.json({ error: 'Invalid JSON returned by AI' }, { status: 502 });
     }
 
-    // Save updated JSON and increment revision count
-    // Ujistíme se, že posíláme data pouze v body
-    const { data: updatedOrder, error: updateError } = await supabaseAdmin
-      .from('orders')
-      .update({
+    // Save updated JSON and increment revision count using direct fetch
+    const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({
         generated_site_json: updatedJson,
         status: 'revision_requested',
         revision_count: (order.revision_count || 0) + 1,
         feedback_history: newHistory,
       })
-      .eq('id', orderId)
-      .select()
-      .single();
+    });
 
-    if (updateError) {
-      console.error('Error updating order after revision:', updateError);
-      return NextResponse.json({ error: updateError.message }, { status: 500 });
+    if (!updateResponse.ok) {
+      const errorText = await updateResponse.text();
+      console.error('Error updating order after revision (direct fetch):', errorText);
+      return NextResponse.json({ error: 'Failed to update order' }, { status: 500 });
+    }
+
+    const updatedOrders = await updateResponse.json();
+    const updatedOrder = updatedOrders[0];
+
+    if (!updatedOrder) {
+      throw new Error('Failed to update order');
     }
 
     // Send new preview email

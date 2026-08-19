@@ -18,33 +18,8 @@ interface GeneratedSiteJson {
 
 export async function POST(request: NextRequest) {
   try {
-    // Izolovaný admin klient bez děděných hlaviček z požadavku
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      {
-        auth: { persistSession: false },
-        global: { 
-          fetch: (url, options) => {
-            const headers = new Headers();
-            if (options?.headers) {
-              const incomingHeaders = options.headers instanceof Headers 
-                ? Object.fromEntries(options.headers.entries())
-                : options.headers as Record<string, string>;
-  
-              Object.entries(incomingHeaders).forEach(([key, value]) => {
-                try {
-                  const safeValue = String(value).replace(/[^\x00-\x7F]/g, '');
-                  headers.set(key, safeValue);
-                } catch (e) {}
-              });
-            }
-            return fetch(url, { ...options, headers });
-          }
-        }
-      }
-    );
-
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
     if (!ANTHROPIC_API_KEY) {
       return NextResponse.json({ error: 'ANTHROPIC_API_KEY is not configured' }, { status: 500 });
@@ -56,15 +31,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'order_id is required' }, { status: 400 });
     }
 
-    // Fetch order from Supabase
-    const { data: order, error: fetchError } = await supabaseAdmin
-      .from('orders')
-      .select('*')
-      .eq('id', order_id)
-      .single();
+    // Fetch order from Supabase using direct fetch to avoid SDK header inheritance issues
+    const fetchResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order_id}&select=*`, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Accept': 'application/json'
+      }
+    });
 
-    if (fetchError || !order) {
-      console.error('Error fetching order:', fetchError);
+    if (!fetchResponse.ok) {
+      const errorText = await fetchResponse.text();
+      console.error('Error fetching order with direct fetch:', errorText);
+      return NextResponse.json({ error: 'Order not found or fetch failed' }, { status: 404 });
+    }
+
+    const orders = await fetchResponse.json();
+    const order = orders[0];
+
+    if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
@@ -164,25 +150,32 @@ Write all text content in the language specified (${formData.language || 'cs'}).
       );
     }
 
-    // Save generated JSON to Supabase and update status
+    // Save generated JSON to Supabase using direct fetch
     const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/preview/${order_id}`;
     
-    // Ujistíme se, že posíláme čistá data v body
-    const { data: updatedOrder, error: updateError } = await supabaseAdmin
-      .from('orders')
-      .update({
+    const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order_id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({
         generated_site_json: generatedJson,
         status: 'preview_ready',
         preview_url: previewUrl,
       })
-      .eq('id', order_id)
-      .select()
-      .single();
+    });
 
-    if (updateError) {
-      console.error('Error updating order:', updateError);
-      return NextResponse.json({ error: updateError.message }, { status: 500 });
+    if (!updateResponse.ok) {
+      const errorText = await updateResponse.text();
+      console.error('Error updating order with direct fetch:', errorText);
+      return NextResponse.json({ error: 'Failed to update order' }, { status: 500 });
     }
+
+    const updatedOrders = await updateResponse.json();
+    const updatedOrder = updatedOrders[0];
 
     console.log('Site generated successfully for order:', order_id);
 

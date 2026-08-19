@@ -41,16 +41,26 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function GET(req: NextRequest) {
   try {
-    // 1. Vyhledej všechny komise se statusem 'pending'
-    const { data: pendingCommissions, error: fetchError } = await supabase
-      .from('commissions')
-      .select<"*", Commission>('*')
-      .eq('status', 'pending');
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-    if (fetchError) {
-      console.error('Error fetching pending commissions:', fetchError);
+    // 1. Vyhledej všechny komise se statusem 'pending'
+    const fetchResponse = await fetch(`${supabaseUrl}/rest/v1/commissions?status=eq.pending&select=*`, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!fetchResponse.ok) {
+      const errorText = await fetchResponse.text();
+      console.error('Error fetching pending commissions (direct fetch):', errorText);
       return NextResponse.json({ error: 'Failed to fetch commissions' }, { status: 500 });
     }
+
+    const pendingCommissions: Commission[] = await fetchResponse.json();
 
     if (!pendingCommissions || pendingCommissions.length === 0) {
       return NextResponse.json({ message: 'No pending commissions to process.' });
@@ -69,11 +79,23 @@ export async function GET(req: NextRequest) {
     // 3. Projdi každého influencera a proveď výplatu
     for (const influencerId in commissionsByInfluencer) {
       const commissions = commissionsByInfluencer[influencerId];
-      const { data: influencer } = await supabase
-        .from('partners')
-        .select('stripe_connect_account_id, status')
-        .eq('id', influencerId)
-        .single();
+      
+      const partnerFetchResponse = await fetch(`${supabaseUrl}/rest/v1/partners?id=eq.${influencerId}&select=stripe_connect_account_id,status`, {
+        method: 'GET',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Accept': 'application/json'
+        }
+      });
+
+      if (!partnerFetchResponse.ok) {
+        console.warn(`Failed to fetch partner info for ${influencerId}`);
+        continue;
+      }
+
+      const partners = await partnerFetchResponse.json();
+      const influencer = partners[0];
 
       if (!influencer || !influencer.stripe_connect_account_id || influencer.status !== 'active') {
         console.warn(`Skipping payout for influencer ${influencerId}: No active Stripe account or influencer is not active.`);
@@ -96,27 +118,32 @@ export async function GET(req: NextRequest) {
           description: `Affiliate payout for ${new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}`,
         });
 
-        // 5. Aktualizuj stav komisí v DB
+        // 5. Aktualizuj stav komisí v DB přes direct fetch
         const commissionIds = commissions.map(c => c.id);
-        const { error: updateError } = await supabase
-          .from('commissions')
-          .update({
+        const updateResponse = await fetch(`${supabaseUrl}/rest/v1/commissions?id=in.(${commissionIds.join(',')})`, {
+          method: 'PATCH',
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
             status: 'paid',
             paid_at: new Date().toISOString(),
             stripe_transfer_id: transfer.id,
           })
-          .in('id', commissionIds);
+        });
 
-        if (updateError) {
-          console.error(`Failed to update status for commissions of influencer ${influencerId}:`, updateError);
-          // Pokračujeme dál i při chybě, ať neblokujeme ostatní
+        if (!updateResponse.ok) {
+          const errorText = await updateResponse.text();
+          console.error(`Failed to update status for commissions of influencer ${influencerId} (direct fetch):`, errorText);
         } else {
           console.log(`Successfully paid ${totalPayout} to influencer ${influencerId}.`);
         }
 
       } catch (payoutError) {
         console.error(`Payout failed for influencer ${influencerId}:`, payoutError);
-        // Pokračujeme dál, abychom nezastavili celý proces
       }
     }
 

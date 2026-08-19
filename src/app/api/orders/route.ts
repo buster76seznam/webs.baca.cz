@@ -19,38 +19,6 @@ async function generateWebWithClaude(orderId: string, email: string, domain: str
   console.log("🚀 STARTING CLAUDE GENERATION FOR:", email);
   console.log("SENDING REQUEST TO ANTHROPIC...");
 
-  // Izolovaný admin klient bez děděných hlaviček z požadavku
-  const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      auth: { persistSession: false },
-      global: { 
-        fetch: (url, options) => {
-          const headers = new Headers();
-          
-          if (options?.headers) {
-            const incomingHeaders = options.headers as Record<string, string>;
-            Object.entries(incomingHeaders).forEach(([key, value]) => {
-              try {
-                // Pouze ASCII hodnoty jsou povoleny v hlavičkách
-                const safeValue = String(value).replace(/[^\x00-\x7F]/g, '');
-                if (safeValue !== String(value)) {
-                  console.warn(`[DEBUG] Sanitizing header ${key}: some characters were removed`);
-                }
-                headers.set(key, safeValue);
-              } catch (e) {
-                console.error(`[DEBUG] Failed to set header ${key}:`, e);
-              }
-            });
-          }
-          
-          return fetch(url, { ...options, headers });
-        }
-      }
-    }
-  );
-
   try {
     const userPrompt = `Generate a complete website content JSON for the following business:
 
@@ -114,21 +82,29 @@ Write all text content in the language specified (${formData.language || 'cs'}).
       return;
     }
 
-    // Save to Supabase
+    // Save to Supabase using direct fetch to avoid header inheritance issues with the SDK
     const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || SITE_URL}/preview/${orderId}`;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     
-    // Ujistíme se, že posíláme čistá data v body, bez extra headers
-    const { error: updateError } = await supabaseAdmin
-      .from('orders')
-      .update({
+    const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
         generated_site_json: generatedJson,
         status: 'preview_ready',
         preview_url: previewUrl,
       })
-      .eq('id', orderId);
+    });
 
-    if (updateError) {
-      console.error('Error updating order with AI content:', updateError);
+    if (!updateResponse.ok) {
+      const errorText = await updateResponse.text();
+      console.error('Error updating order with direct fetch:', errorText);
       return;
     }
 
@@ -209,48 +185,57 @@ export async function POST(request: Request) {
     console.warn('Turnstile token missing in request');
   }
 
-  // 4. Save to Database (Supabase)
+  // 4. Save to Database (Supabase) using direct fetch to avoid header inheritance issues
   try {
-    const { data: order, error: dbError } = await supabase
-      .from('orders')
-      .insert([
-        {
-          company_name: body.companyName,
-          company_phone: body.companyPhone,
-          company_email: body.companyEmail,
-          company_address: body.companyAddress,
-          industry: body.industry,
-          owner_name: body.ownerName,
-          owner_phone: body.ownerPhone,
-          owner_email: body.ownerEmail,
-          domain: body.domain,
-          description: body.description,
-          advantage: body.advantage,
-          price_list: body.priceList,
-          working_hours: body.workingHours,
-          primary_color: body.primaryColor,
-          secondary_color: body.secondaryColor,
-          language: body.language,
-          facebook_url: body.facebookUrl,
-          instagram_url: body.instagramUrl,
-          google_maps_url: body.googleMapsUrl,
-          status: 'draft',
-        },
-      ])
-      .select()
-      .single();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-    if (dbError) {
-      console.error('SUPABASE DB ERROR:', dbError);
+    const insertResponse = await fetch(`${supabaseUrl}/rest/v1/orders`, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({
+        company_name: body.companyName,
+        company_phone: body.companyPhone,
+        company_email: body.companyEmail,
+        company_address: body.companyAddress,
+        industry: body.industry,
+        owner_name: body.ownerName,
+        owner_phone: body.ownerPhone,
+        owner_email: body.ownerEmail,
+        domain: body.domain,
+        description: body.description,
+        advantage: body.advantage,
+        price_list: body.priceList,
+        working_hours: body.workingHours,
+        primary_color: body.primaryColor,
+        secondary_color: body.secondaryColor,
+        language: body.language,
+        facebook_url: body.facebookUrl,
+        instagram_url: body.instagramUrl,
+        google_maps_url: body.googleMapsUrl,
+        status: 'draft',
+      })
+    });
+
+    if (!insertResponse.ok) {
+      const errorText = await insertResponse.text();
+      console.error('SUPABASE DB ERROR (direct fetch):', errorText);
       return NextResponse.json(
-        { 
-          success: false, 
-          error: `Supabase error: ${dbError.message}`,
-          code: dbError.code,
-          details: dbError.details 
-        },
+        { success: false, error: 'Database error' },
         { status: 500 }
       );
+    }
+
+    const insertedOrders = await insertResponse.json();
+    const order = insertedOrders[0];
+
+    if (!order) {
+      throw new Error('Failed to create order');
     }
 
     // 5. Send Confirmation Email (Fail-Safe)
