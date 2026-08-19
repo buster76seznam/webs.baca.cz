@@ -38,7 +38,7 @@ async function generateWebWithClaude(orderId: string, email: string, domain: str
 
   try {
     const { object: generatedJson } = await generateObject({
-      model: anthropic('claude-3-5-sonnet-20240620'),
+      model: anthropic('claude-sonnet-4-5-20250929'),
       schema: z.object({
         hero: z.object({
           title: z.string(),
