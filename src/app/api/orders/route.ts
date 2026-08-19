@@ -71,7 +71,7 @@ export async function POST(request: Request) {
   // 4. Save to Database (Supabase)
   try {
     const { data: order, error: dbError } = await supabase
-      .from('web_orders')
+      .from('orders')
       .insert([
         {
           company_name: body.companyName,
