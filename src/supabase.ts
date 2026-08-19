@@ -11,16 +11,22 @@ const globalSupabaseConfig = {
   global: {
     fetch: (url: any, options: any) => {
       const headers = new Headers();
+      
+      // Vynutit EXKLUZIVNĚ pouze nutné ASCII hlavičky pro Supabase
       if (options?.headers) {
         const incomingHeaders = options.headers instanceof Headers 
           ? Object.fromEntries(options.headers.entries())
           : options.headers as Record<string, string>;
 
+        const allowedHeaders = ['apikey', 'authorization', 'content-type', 'prefer', 'accept'];
+        
         Object.entries(incomingHeaders).forEach(([key, value]) => {
-          try {
+          const lowerKey = key.toLowerCase();
+          if (allowedHeaders.includes(lowerKey)) {
+            // Odstraní jakýkoliv znak mimo ASCII rozsah pro jistotu
             const safeValue = String(value).replace(/[^\x00-\x7F]/g, '');
-            headers.set(key, safeValue);
-          } catch (e) {}
+            headers.set(lowerKey, safeValue);
+          }
         });
       }
       return fetch(url, { ...options, headers });

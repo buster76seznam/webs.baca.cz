@@ -12,11 +12,14 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
           ? Object.fromEntries(options.headers.entries())
           : options.headers as Record<string, string>;
 
+        const allowedHeaders = ['apikey', 'authorization', 'content-type', 'prefer', 'accept'];
+
         Object.entries(incomingHeaders).forEach(([key, value]) => {
-          try {
+          const lowerKey = key.toLowerCase();
+          if (allowedHeaders.includes(lowerKey)) {
             const safeValue = String(value).replace(/[^\x00-\x7F]/g, '');
-            headers.set(key, safeValue);
-          } catch (e) {}
+            headers.set(lowerKey, safeValue);
+          }
         });
       }
       return fetch(url, { ...options, headers });

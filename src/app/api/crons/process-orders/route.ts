@@ -30,8 +30,8 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
         method: 'PATCH',
         headers: {
           'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Content-Type': 'application/json'
+          'authorization': `Bearer ${supabaseKey}`,
+          'content-type': 'application/json'
         },
         body: JSON.stringify({ status: 'failed_email' })
       });
@@ -114,8 +114,8 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
         method: 'PATCH',
         headers: {
           'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Content-Type': 'application/json'
+          'authorization': `Bearer ${supabaseKey}`,
+          'content-type': 'application/json'
         },
         body: JSON.stringify({ status: 'failed_email' })
       });

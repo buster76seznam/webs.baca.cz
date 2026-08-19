@@ -92,7 +92,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
       anthropicResponse = await fetch(ANTHROPIC_API_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'content-type': 'application/json',
           'x-api-key': ANTHROPIC_API_KEY!,
           'anthropic-version': '2023-06-01',
         },

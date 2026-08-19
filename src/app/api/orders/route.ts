@@ -20,26 +20,12 @@ if (!apiKey) {
 const anthropic = new Anthropic({
   apiKey: apiKey,
   fetch: async (url, init) => {
-    const cleanHeaders: Record<string, string> = {};
-
-    // 1. Zkopíruj pouze bezpečné ASCII znaky ze všech předávaných hlaviček
-    if (init?.headers) {
-      const entries = init.headers instanceof Headers
-        ? Array.from(init.headers.entries())
-        : Object.entries(init.headers as Record<string, string>);
-      
-      for (const [key, value] of entries) {
-        if (typeof value === 'string') {
-          // Odstraní jakýkoliv znak mimo ASCII rozsah (charCode > 127)
-          cleanHeaders[key.toLowerCase()] = value.replace(/[^\x00-\x7F]/g, '');
-        }
-      }
-    }
-
-    // 2. Vynutit správné a čisté klíčové hlavičky
-    cleanHeaders['x-api-key'] = apiKey.trim();
-    cleanHeaders['anthropic-version'] = '2023-06-01';
-    cleanHeaders['content-type'] = 'application/json';
+    // Vynutit EXKLUZIVNĚ pouze 3 povolené ASCII hlavičky
+    const cleanHeaders: Record<string, string> = {
+      'x-api-key': apiKey.trim(),
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json'
+    };
 
     return fetch(url, {
       ...init,
