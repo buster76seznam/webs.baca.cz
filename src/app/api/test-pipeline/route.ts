@@ -192,13 +192,16 @@ Generate the JSON with these exact keys:
 Write all text content in English. Make it professional and compelling.`;
 
     const rawJson = await callClaude(
-      'Respond ONLY with valid JSON. Do not include markdown formatting or extra text.',
+      'Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like ```json.',
       userPrompt
     );
 
     let generatedJson: unknown;
     // Odstranit markdown code fences pokud Claude je přidal
-    const cleanedJson = rawJson.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+    const cleanedJson = rawJson
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/, '')
+      .trim();
     try {
       generatedJson = JSON.parse(cleanedJson);
     } catch {
@@ -250,12 +253,15 @@ Write all text content in English. Make it professional and compelling.`;
     const revisionPrompt = `Zde je stávající JSON webu:\n${currentJson}\n\nKlient požaduje tyto změny: změň barvu na modrou (primary_color: #1d4ed8, secondary_color: #93c5fd)\n\nUprav JSON a vrať ZMĚNĚNOU kompletní strukturu v platném JSON formátu.`;
 
     const rawJson = await callClaude(
-      'Respond ONLY with valid JSON. Do not include markdown formatting, code blocks, or any extra text.',
+      'Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like ```json.',
       revisionPrompt
     );
 
     let updatedJson: unknown;
-    const cleanedRevisionJson = rawJson.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+    const cleanedRevisionJson = rawJson
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/, '')
+      .trim();
     try {
       updatedJson = JSON.parse(cleanedRevisionJson);
     } catch {

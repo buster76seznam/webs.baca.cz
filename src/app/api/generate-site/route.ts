@@ -86,7 +86,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
         body: JSON.stringify({
           model: 'claude-sonnet-4-5-20250929',
           max_tokens: 4096,
-          system: 'Respond ONLY with valid JSON. Do not include markdown formatting or extra text.',
+          system: 'Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like ```json.',
           messages: [
             {
               role: 'user',
@@ -124,7 +124,11 @@ Write all text content in the language specified (${formData.language || 'cs'}).
     // Parse JSON from Claude's response
     let generatedJson: GeneratedSiteJson;
     try {
-      generatedJson = JSON.parse(rawContent);
+      const cleanedJsonText = rawContent
+        .replace(/^```(?:json)?\s*/i, '')
+        .replace(/\s*```$/, '')
+        .trim();
+      generatedJson = JSON.parse(cleanedJsonText);
     } catch (parseError) {
       console.error('Failed to parse Claude JSON response:', rawContent);
       return NextResponse.json(

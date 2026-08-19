@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     // Build revision prompt
     const currentJson = JSON.stringify(order.generated_site_json, null, 2);
-    const systemPrompt = 'You are a web designer expert. You will receive a website content JSON and a user feedback. Your task is to update the JSON based on the feedback. Respond ONLY with the updated valid JSON. Do not include markdown formatting or extra text.';
+    const systemPrompt = 'You are a web designer expert. You will receive a website content JSON and a user feedback. Your task is to update the JSON based on the feedback. Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like ```json.';
     
     const userPrompt = `
 Current Website JSON:
@@ -115,7 +115,11 @@ Structure must be exactly:
     // Parse JSON
     let updatedJson;
     try {
-      updatedJson = JSON.parse(rawContent);
+      const cleanedJsonText = rawContent
+        .replace(/^```(?:json)?\s*/i, '')
+        .replace(/\s*```$/, '')
+        .trim();
+      updatedJson = JSON.parse(cleanedJsonText);
     } catch (parseError) {
       console.error('Failed to parse Claude JSON response:', rawContent);
       return NextResponse.json({ error: 'Invalid JSON returned by AI' }, { status: 502 });
