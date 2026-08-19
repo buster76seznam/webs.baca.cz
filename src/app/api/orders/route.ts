@@ -2,7 +2,9 @@ import { NextResponse, after } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { Resend } from 'resend';
 import { SITE_URL } from '@/lib/site';
-import Anthropic from '@anthropic-ai/sdk';
+import { generateObject } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
 import { sendPreviewEmail } from '@/lib/emails';
 
 export const maxDuration = 60;
@@ -15,36 +17,7 @@ const forceAscii = (str: string) => {
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const apiKey = forceAscii(process.env.ANTHROPIC_API_KEY || '').trim();
-if (!apiKey) {
-  throw new Error("ANTHROPIC_API_KEY is missing or invalid ASCII!");
-}
-
-const anthropic = new Anthropic({
-  apiKey: apiKey,
-  fetch: async (url, init) => {
-    const headers = new Headers();
-    headers.set('content-type', 'application/json');
-    headers.set('x-api-key', apiKey);
-    headers.set('anthropic-version', '2023-06-01');
-
-    const targetUrl = typeof url === 'string' ? url : (url as any).url;
-    
-    // Ensure body is also safe if it's a string
-    let safeBody = init?.body;
-    if (typeof safeBody === 'string') {
-      // Anthropic body is JSON, it should be UTF-8, but we ensure it's ByteString compatible if needed
-      // Actually, fetch handles UTF-8 strings. The problem is almost always headers.
-    }
-
-    return fetch(targetUrl, {
-      method: init?.method || 'POST',
-      headers: headers,
-      body: safeBody,
-      signal: init?.signal,
-    });
-  }
-});
+// Vercel AI SDK automatically picks up ANTHROPIC_API_KEY from process.env
 
 const sanitize = (str: string) => {
   if (!str) return '';
@@ -64,9 +37,34 @@ async function generateWebWithClaude(orderId: string, email: string, domain: str
   console.log("STARTING CLAUDE GENERATION FOR:", forceAscii(email));
 
   try {
-
-    const userPrompt = `Generate a complete website content JSON for the following business:
-
+    const { object: generatedJson } = await generateObject({
+      model: anthropic('claude-3-5-sonnet-20240620'),
+      schema: z.object({
+        hero: z.object({
+          title: z.string(),
+          subtitle: z.string(),
+          ctaText: z.string()
+        }),
+        about: z.object({
+          title: z.string(),
+          text: z.string()
+        }),
+        services: z.array(z.object({
+          title: z.string(),
+          description: z.string()
+        })),
+        contact: z.object({
+          address: z.string(),
+          phone: z.string(),
+          hours: z.string()
+        }),
+        theme: z.object({
+          primaryColor: z.string(),
+          secondaryColor: z.string()
+        })
+      }),
+      system: 'Respond strictly with raw JSON. Do NOT use emoji. Use only ASCII characters (no diacritics).',
+      prompt: `Generate a complete website content JSON for the following business:
 Company Name: ${sanitize(formData.companyName || '')}
 Industry: ${sanitize(formData.industry || '')}
 Description: ${sanitize(formData.description || '')}
@@ -81,45 +79,8 @@ Preferred Primary Color: ${sanitize(formData.primaryColor || '')}
 Preferred Secondary Color: ${sanitize(formData.secondaryColor || '')}
 Language: ${sanitize(formData.language || 'cs')}
 
-Generate the JSON with these exact keys:
-{
-  "hero": { "title": "...", "subtitle": "...", "ctaText": "..." },
-  "about": { "title": "...", "text": "..." },
-  "services": [ { "title": "...", "description": "..." } ],
-  "contact": { "address": "...", "phone": "...", "hours": "..." },
-  "theme": { "primaryColor": "#...", "secondaryColor": "#..." }
-}
-
-Write all text content in the language specified (${sanitize(formData.language || 'cs')}). Use only ASCII characters (no diacritics).`;
-
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 4000,
-      system: 'Respond strictly with raw JSON. Do NOT use emoji. Use only ASCII characters (no diacritics).',
-      messages: [
-        {
-          role: 'user',
-          content: userPrompt,
-        },
-      ],
+Write all text content in the language specified (${sanitize(formData.language || 'cs')}). Use only ASCII characters (no diacritics).`,
     });
-
-    const rawContent = (response?.content?.[0] as any)?.text || "";
-
-    if (!rawContent) {
-      throw new Error("Anthropic returned empty response body.");
-    }
-
-    const cleanedJsonText = rawContent
-      .replace(/^```(?:json)?\s*/i, '')
-      .replace(/\s*```$/, '')
-      .trim();
-
-    if (!cleanedJsonText) {
-      throw new Error("Cleaned JSON text is empty.");
-    }
-
-    const generatedJson = JSON.parse(cleanedJsonText);
 
     const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || SITE_URL}/preview/${orderId}`;
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
