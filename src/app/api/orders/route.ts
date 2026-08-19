@@ -12,7 +12,23 @@ export const maxDuration = 60;
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+  apiKey: process.env.ANTHROPIC_API_KEY!,
+  // Zabezpečení čistých HTTP hlaviček pro fetch v Node.js
+  fetch: (url, init) => {
+    if (init && init.headers) {
+      // Odstranění jakýchkoliv ne-ASCII znaků z hlaviček před odesláním
+      const cleanHeaders: Record<string, string> = {};
+      const headersObj = init.headers as Record<string, string>;
+
+      for (const [key, value] of Object.entries(headersObj)) {
+        if (typeof value === 'string') {
+          cleanHeaders[key] = value.replace(/[^\x00-\x7F]/g, '');
+        }
+      }
+      init.headers = cleanHeaders;
+    }
+    return fetch(url, init);
+  }
 });
 
 async function generateWebWithClaude(orderId: string, email: string, domain: string, formData: any) {
@@ -22,19 +38,19 @@ async function generateWebWithClaude(orderId: string, email: string, domain: str
   try {
     const userPrompt = `Generate a complete website content JSON for the following business:
 
-Company Name: ${formData.companyName || ''}
-Industry: ${formData.industry || ''}
-Description: ${formData.description || ''}
-Advantages / Unique Selling Points: ${formData.advantage || ''}
-Services / Price List: ${formData.priceList || ''}
-Working Hours: ${formData.workingHours || ''}
-Email: ${formData.companyEmail || ''}
-Phone: ${formData.companyPhone || ''}
-Address: ${formData.companyAddress || ''}
-Country: ${formData.companyCountry || ''}
-Preferred Primary Color: ${formData.primaryColor || ''}
-Preferred Secondary Color: ${formData.secondaryColor || ''}
-Language: ${formData.language || 'cs'}
+Company Name: ${(formData.companyName || '').normalize('NFC')}
+Industry: ${(formData.industry || '').normalize('NFC')}
+Description: ${(formData.description || '').normalize('NFC')}
+Advantages / Unique Selling Points: ${(formData.advantage || '').normalize('NFC')}
+Services / Price List: ${(formData.priceList || '').normalize('NFC')}
+Working Hours: ${(formData.workingHours || '').normalize('NFC')}
+Email: ${(formData.companyEmail || '').normalize('NFC')}
+Phone: ${(formData.companyPhone || '').normalize('NFC')}
+Address: ${(formData.companyAddress || '').normalize('NFC')}
+Country: ${(formData.companyCountry || '').normalize('NFC')}
+Preferred Primary Color: ${(formData.primaryColor || '').normalize('NFC')}
+Preferred Secondary Color: ${(formData.secondaryColor || '').normalize('NFC')}
+Language: ${(formData.language || 'cs').normalize('NFC')}
 
 Generate the JSON with these exact keys:
 {

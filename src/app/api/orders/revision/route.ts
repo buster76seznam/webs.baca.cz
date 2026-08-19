@@ -62,12 +62,12 @@ Current Website JSON:
 ${currentJson}
 
 User Feedback for Changes:
-"${feedback}"
+"${(feedback || '').normalize('NFC')}"
 
 Business Context:
-Company: ${order.company_name}
-Industry: ${order.industry}
-Description: ${order.description}
+Company: ${(order.company_name || '').normalize('NFC')}
+Industry: ${(order.industry || '').normalize('NFC')}
+Description: ${(order.description || '').normalize('NFC')}
 
 Update the JSON to reflect the user's feedback while maintaining the structure. Output the full updated JSON.
 Structure must be exactly:

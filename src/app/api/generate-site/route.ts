@@ -58,19 +58,19 @@ export async function POST(request: NextRequest) {
     const formData = order;
     const userPrompt = `Generate a complete website content JSON for the following business:
 
-Company Name: ${formData.company_name || ''}
-Industry: ${formData.industry || ''}
-Description: ${formData.description || ''}
-Advantages / Unique Selling Points: ${formData.advantage || ''}
-Services / Price List: ${formData.price_list || ''}
-Working Hours: ${formData.working_hours || ''}
-Email: ${formData.company_email || ''}
-Phone: ${formData.company_phone || ''}
-Address: ${formData.company_address || ''}
-Country: ${formData.company_country || ''}
-Preferred Primary Color: ${formData.primary_color || ''}
-Preferred Secondary Color: ${formData.secondary_color || ''}
-Language: ${formData.language || 'cs'}
+Company Name: ${(formData.company_name || '').normalize('NFC')}
+Industry: ${(formData.industry || '').normalize('NFC')}
+Description: ${(formData.description || '').normalize('NFC')}
+Advantages / Unique Selling Points: ${(formData.advantage || '').normalize('NFC')}
+Services / Price List: ${(formData.price_list || '').normalize('NFC')}
+Working Hours: ${(formData.working_hours || '').normalize('NFC')}
+Email: ${(formData.company_email || '').normalize('NFC')}
+Phone: ${(formData.company_phone || '').normalize('NFC')}
+Address: ${(formData.company_address || '').normalize('NFC')}
+Country: ${(formData.company_country || '').normalize('NFC')}
+Preferred Primary Color: ${(formData.primary_color || '').normalize('NFC')}
+Preferred Secondary Color: ${(formData.secondary_color || '').normalize('NFC')}
+Language: ${(formData.language || 'cs').normalize('NFC')}
 
 Generate the JSON with these exact keys:
 {
