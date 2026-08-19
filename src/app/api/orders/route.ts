@@ -1,8 +1,5 @@
 import { NextResponse, after } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { supabaseAdmin as defaultSupabaseAdmin } from '@/supabase';
-import { ratelimit } from '@/lib/ratelimit';
 import { Resend } from 'resend';
 import { SITE_URL } from '@/lib/site';
 import Anthropic from '@anthropic-ai/sdk';
@@ -10,9 +7,15 @@ import { sendPreviewEmail } from '@/lib/emails';
 
 export const maxDuration = 60;
 
+// NUCLEAR FIX: Ensure NO non-ASCII characters in headers or logs
+const forceAscii = (str: string) => {
+  if (!str) return '';
+  return String(str).replace(/[^\x00-\x7F]/g, '');
+};
+
 const resend = new Resend(process.env.RESEND_API_KEY);
-console.log("🔑 ANTHROPIC KEY PRESENT:", !!process.env.ANTHROPIC_API_KEY);
-const apiKey = process.env.ANTHROPIC_API_KEY;
+
+const apiKey = (process.env.ANTHROPIC_API_KEY || '').trim();
 if (!apiKey) {
   throw new Error("ANTHROPIC_API_KEY is missing!");
 }
@@ -20,14 +23,11 @@ if (!apiKey) {
 const anthropic = new Anthropic({
   apiKey: apiKey,
   fetch: async (url, init) => {
-    // Vytvořit úplně nové hlavičky, aby se zabránilo dědičnosti non-ASCII hlaviček z Next.js requestu
     const headers = new Headers();
-    headers.set('x-api-key', apiKey.trim());
+    headers.set('x-api-key', forceAscii(apiKey));
     headers.set('anthropic-version', '2023-06-01');
     headers.set('content-type', 'application/json');
 
-    // Pokud je url Request objekt, extrahujeme pouze string URL, 
-    // abychom zabránili přenosu původních hlaviček v Request objektu
     const targetUrl = typeof url === 'string' ? url : (url as any).url;
 
     return fetch(targetUrl, {
@@ -35,21 +35,17 @@ const anthropic = new Anthropic({
       headers: headers,
       body: init?.body,
       signal: init?.signal,
-      // Důležité: nepoužívat ...init, abychom se vyhnuli dědění problémových vlastností
     });
   }
 });
 
 async function generateWebWithClaude(orderId: string, email: string, domain: string, formData: any) {
-  console.log("🚀 STARTING CLAUDE GENERATION FOR:", email);
-  console.log("SENDING REQUEST TO ANTHROPIC...");
+  console.log("STARTING CLAUDE GENERATION FOR:", forceAscii(email));
 
   try {
-    // Helper function to remove non-ASCII characters
     const sanitize = (str: string) => {
       if (!str) return '';
       return str.replace(/[^\x00-\x7F]/g, (char) => {
-        // Replace common Czech characters with ASCII equivalents
         const map: Record<string, string> = {
           'š': 's', 'č': 'c', 'ř': 'r', 'ž': 'z', 'ý': 'y', 'á': 'a',
           'í': 'i', 'é': 'e', 'ú': 'u', 'ů': 'u', 'ď': 'd', 'ť': 't',
@@ -86,13 +82,12 @@ Generate the JSON with these exact keys:
   "theme": { "primaryColor": "#...", "secondaryColor": "#..." }
 }
 
-Write all text content in the language specified (${sanitize(formData.language || 'cs')}). Make it professional and compelling. Use only ASCII characters (no diacritics).`;
+Write all text content in the language specified (${sanitize(formData.language || 'cs')}). Use only ASCII characters (no diacritics).`;
 
-    console.log("🤖 CLAUDE MODEL SENT:", "claude-sonnet-4-5-20250929");
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-5-20250929',
       max_tokens: 4000,
-      system: 'Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like ```json. CRITICAL: Do NOT use emoji in the text. Do NOT use Czech characters š, č, and ř (use s, c, r instead) to avoid header encoding issues.',
+      system: 'Respond strictly with raw JSON. Do NOT use emoji. Use only ASCII characters (no diacritics).',
       messages: [
         {
           role: 'user',
@@ -101,8 +96,6 @@ Write all text content in the language specified (${sanitize(formData.language |
       ],
     });
 
-    console.log("✅ ANTHROPIC RESPONSE RECEIVED SUCCESSFULLY!");
-
     const rawContent = response.content[0].type === 'text' ? response.content[0].text : '';
 
     if (!rawContent) {
@@ -110,7 +103,6 @@ Write all text content in the language specified (${sanitize(formData.language |
       return;
     }
 
-    // Parse JSON
     let generatedJson;
     try {
       const cleanedJsonText = rawContent
@@ -119,23 +111,23 @@ Write all text content in the language specified (${sanitize(formData.language |
         .trim();
       generatedJson = JSON.parse(cleanedJsonText);
     } catch (parseError) {
-      console.error('Failed to parse Claude JSON response:', rawContent);
+      console.error('Failed to parse Claude JSON response');
       return;
     }
 
-    // Save to Supabase using direct fetch to avoid header inheritance issues with the SDK
     const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || SITE_URL}/preview/${orderId}`;
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
     
+    const updateHeaders = new Headers();
+    updateHeaders.set('apikey', forceAscii(supabaseKey));
+    updateHeaders.set('Authorization', `Bearer ${forceAscii(supabaseKey)}`);
+    updateHeaders.set('Content-Type', 'application/json');
+    updateHeaders.set('Prefer', 'return=minimal');
+
     const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
       method: 'PATCH',
-      headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
+      headers: updateHeaders,
       body: JSON.stringify({
         generated_site_json: generatedJson,
         status: 'preview_ready',
@@ -144,41 +136,20 @@ Write all text content in the language specified (${sanitize(formData.language |
     });
 
     if (!updateResponse.ok) {
-      const errorText = await updateResponse.text();
-      console.error('Error updating order with direct fetch:', errorText);
+      console.error('Error updating order with direct fetch');
       return;
     }
 
-    console.log('Site generated successfully for order:', orderId);
-
-    // Send preview email
     if (email) {
       await sendPreviewEmail(email, previewUrl, orderId);
-      console.log('Preview email sent to:', email);
     }
   } catch (err: any) {
-    console.error("❌ ANTHROPIC CRASH ERROR:", err);
-    console.error("❌ ERROR MESSAGE:", err?.message);
-    console.error("❌ ERROR STATUS:", err?.status);
+    console.error("ANTHROPIC CRASH ERROR");
+    console.error("ERROR MESSAGE:", forceAscii(err?.message));
   }
 }
 
 export async function POST(request: Request) {
-  // 1. Redis Rate Limiter (Fail-Safe)
-  try {
-    const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
-    if (ratelimit) {
-      const { success } = await ratelimit.limit(ip);
-      if (!success) {
-        console.warn(`Rate limit exceeded for IP: ${ip}`);
-        // Continuing anyway as per fail-safe logic requirements
-      }
-    }
-  } catch (rlErr) {
-    console.warn('Redis rate-limiter failed or missing config:', rlErr);
-  }
-
-  // 2. Parse Body (FormData or JSON)
   let body: any;
   try {
     const contentType = request.headers.get('content-type') || '';
@@ -189,20 +160,18 @@ export async function POST(request: Request) {
       body = await request.json();
     }
   } catch (e) {
-    console.error('Failed to parse request body:', e);
     return NextResponse.json(
       { success: false, error: 'Invalid request body' },
       { status: 400 }
     );
   }
 
-  // 3. Turnstile Token Check (Fail-Safe)
   const turnstileToken = body.turnstileToken;
   if (turnstileToken) {
     try {
       const secretKey = process.env.TURNSTILE_SECRET_KEY;
       if (secretKey) {
-        const verifyRes = await fetch(
+        await fetch(
           'https://challenges.cloudflare.com/turnstile/v0/siteverify',
           {
             method: 'POST',
@@ -212,33 +181,25 @@ export async function POST(request: Request) {
             )}`,
           }
         );
-        const verifyData = await verifyRes.json();
-        if (!verifyData.success) {
-          console.warn('Turnstile verification failed:', verifyData['error-codes']);
-        }
-      } else {
-        console.warn('TURNSTILE_SECRET_KEY is not defined');
       }
     } catch (tsErr) {
-      console.warn('Turnstile check failed:', tsErr);
+      // Fail-safe
     }
-  } else {
-    console.warn('Turnstile token missing in request');
   }
 
-  // 4. Save to Database (Supabase) using direct fetch to avoid header inheritance issues
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '').trim();
+
+    const insertHeaders = new Headers();
+    insertHeaders.set('apikey', forceAscii(supabaseKey));
+    insertHeaders.set('Authorization', `Bearer ${forceAscii(supabaseKey)}`);
+    insertHeaders.set('Content-Type', 'application/json');
+    insertHeaders.set('Prefer', 'return=representation');
 
     const insertResponse = await fetch(`${supabaseUrl}/rest/v1/orders`, {
       method: 'POST',
-      headers: {
-        'apikey': supabaseKey.trim(),
-        'Authorization': `Bearer ${supabaseKey.trim()}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
-      },
+      headers: insertHeaders,
       body: JSON.stringify({
         company_name: body.companyName,
         company_phone: body.companyPhone,
@@ -264,8 +225,6 @@ export async function POST(request: Request) {
     });
 
     if (!insertResponse.ok) {
-      const errorText = await insertResponse.text();
-      console.error('SUPABASE DB ERROR (direct fetch):', errorText);
       return NextResponse.json(
         { success: false, error: 'Database error' },
         { status: 500 }
@@ -279,48 +238,22 @@ export async function POST(request: Request) {
       throw new Error('Failed to create order');
     }
 
-    // 5. Send Confirmation Email (Fail-Safe)
     try {
-      // DŮLEŽITÉ: from pole striktně ASCII bez diakritiky
       const FROM_EMAIL = 'Webs Baca <info@websbaca.cz>';
-      const companyName = body.companyName || 'Customer';
-      const domain = body.domain || 'your new website';
+      const companyName = forceAscii(body.companyName || 'Customer');
+      const domain = forceAscii(body.domain || 'your new website');
       const orderId = order?.id || 'N/A';
 
-      // Sanitizace domény pro subjekt emailu (odstranění non-ASCII pro hlavičky)
-      const safeSubjectDomain = String(domain).replace(/[^\x00-\x7F]/g, '');
-      
       await resend.emails.send({
         from: FROM_EMAIL,
         to: body.companyEmail,
-        subject: `Order received — ${safeSubjectDomain} 🎉`,
-        html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px; color: #111;">
-            <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Order received! 🎉</h1>
-            <p style="color: #444; font-size: 16px; line-height: 1.6;">
-              Thank you, <strong>${companyName}</strong>! We have received your order and we'll get to work immediately.
-            </p>
-            <p style="color: #444; font-size: 16px; line-height: 1.6;">
-              Your website will soon be available at the domain <strong>${domain}</strong>. Once it's ready, you'll receive an email with a preview link.
-            </p>
-            <div style="background-color: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 20px; margin: 24px 0;">
-              <p style="color: #166534; font-size: 14px; margin: 0 0 4px 0;">Your domain</p>
-              <p style="color: #15803d; font-size: 22px; font-weight: 700; margin: 0;">${domain}</p>
-            </div>
-            <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
-            <p style="color: #aaa; font-size: 12px;">
-              Order ID: ${orderId} · <a href="https://webs.baca.cz" style="color: #aaa;">webs.baca.cz</a>
-            </p>
-          </div>
-        `,
+        subject: `Order received - ${domain}`,
+        html: `Order received for ${companyName}. Domain: ${domain}. Order ID: ${orderId}`,
       });
-      console.info(`Confirmation email sent for order: ${orderId}`);
     } catch (emailErr) {
-      console.error('Email send failed:', emailErr);
+      // Fail-safe
     }
 
-    // 6. Trigger AI Site Generation via Claude API
-    // Using after() for background processing (Next.js 15 feature)
     after(async () => {
       try {
         await generateWebWithClaude(
@@ -330,19 +263,17 @@ export async function POST(request: Request) {
           body
         );
       } catch (err) {
-        console.error("Error in background generation:", err);
+        // Fail-safe
       }
     });
 
-    // 7. Final Response (No custom headers with user text)
     return NextResponse.json(
       { success: true, message: 'Order created' },
       { status: 200 }
     );
   } catch (err: any) {
-    console.error('Unexpected error in /api/orders:', err);
     return NextResponse.json(
-      { success: false, error: err?.message || 'Server error' },
+      { success: false, error: 'Server error' },
       { status: 500 }
     );
   }

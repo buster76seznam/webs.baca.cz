@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { supabaseAdmin as defaultSupabaseAdmin } from '@/supabase';
+import { supabase } from '@/lib/supabase';
 import { sendPreviewEmail } from '@/lib/emails';
 
 export const runtime = 'nodejs';
 
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const ANTHROPIC_API_KEY = (process.env.ANTHROPIC_API_KEY || '').trim();
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
+
+// NUCLEAR FIX: Ensure NO non-ASCII characters in headers or logs
+const forceAscii = (str: string) => {
+  if (!str) return '';
+  return String(str).replace(/[^\x00-\x7F]/g, '');
+};
 
 interface GeneratedSiteJson {
   hero: { title: string; subtitle: string; ctaText: string };
@@ -19,7 +24,7 @@ interface GeneratedSiteJson {
 export async function POST(request: NextRequest) {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
 
     if (!ANTHROPIC_API_KEY) {
       return NextResponse.json({ error: 'ANTHROPIC_API_KEY is not configured' }, { status: 500 });
@@ -31,19 +36,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'order_id is required' }, { status: 400 });
     }
 
-    // Fetch order from Supabase using direct fetch to avoid SDK header inheritance issues
+    const fetchHeaders = new Headers();
+    fetchHeaders.set('apikey', forceAscii(supabaseKey));
+    fetchHeaders.set('Authorization', `Bearer ${forceAscii(supabaseKey)}`);
+    fetchHeaders.set('Accept', 'application/json');
+
     const fetchResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order_id}&select=*`, {
       method: 'GET',
-      headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Accept': 'application/json'
-      }
+      headers: fetchHeaders
     });
 
     if (!fetchResponse.ok) {
-      const errorText = await fetchResponse.text();
-      console.error('Error fetching order with direct fetch:', errorText);
       return NextResponse.json({ error: 'Order not found or fetch failed' }, { status: 404 });
     }
 
@@ -54,7 +57,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    // Build prompt from form_data
     const formData = order;
     const userPrompt = `Generate a complete website content JSON for the following business:
 
@@ -83,16 +85,11 @@ Generate the JSON with these exact keys:
 
 Write all text content in the language specified (${formData.language || 'cs'}). Make it professional and compelling.`;
 
-    // Call Anthropic Claude API
-    console.log("Key check:", process.env.ANTHROPIC_API_KEY ? "EXISTS (starts with " + process.env.ANTHROPIC_API_KEY.slice(0, 7) + ")" : "MISSING!");
-
-    console.log("🤖 CLAUDE MODEL SENT:", "claude-sonnet-4-5-20250929");
     let anthropicResponse;
     try {
-      // Vytvořit čisté hlavičky bez dědičnosti z okolního prostředí
       const cleanHeaders = new Headers();
       cleanHeaders.set('content-type', 'application/json');
-      cleanHeaders.set('x-api-key', (ANTHROPIC_API_KEY || '').trim());
+      cleanHeaders.set('x-api-key', forceAscii(ANTHROPIC_API_KEY));
       cleanHeaders.set('anthropic-version', '2023-06-01');
 
       anthropicResponse = await fetch(ANTHROPIC_API_URL, {
@@ -101,7 +98,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
         body: JSON.stringify({
           model: 'claude-sonnet-4-5-20250929',
           max_tokens: 4096,
-          system: 'Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like ```json. CRITICAL: Do NOT use emoji in the text. Do NOT use Czech characters š, č, and ř (use s, c, r instead) to avoid header encoding issues.',
+          system: 'Respond strictly with raw JSON. Do NOT use emoji. Use only ASCII characters (no diacritics).',
           messages: [
             {
               role: 'user',
@@ -111,19 +108,15 @@ Write all text content in the language specified (${formData.language || 'cs'}).
         }),
       });
     } catch (claudeErr: any) {
-      console.error("❌ ANTHROPIC API ERROR FULL:", JSON.stringify(claudeErr, null, 2));
-      console.error("❌ ANTHROPIC MESSAGE:", claudeErr?.message);
       return NextResponse.json(
-        { error: 'Claude API call failed', details: claudeErr?.message },
+        { error: 'Claude API call failed', details: forceAscii(claudeErr?.message) },
         { status: 502 }
       );
     }
 
     if (!anthropicResponse.ok) {
-      const errorText = await anthropicResponse.text();
-      console.error('Anthropic API error:', errorText);
       return NextResponse.json(
-        { error: `Anthropic API error: ${anthropicResponse.status}`, details: errorText },
+        { error: `Anthropic API error: ${anthropicResponse.status}` },
         { status: 502 }
       );
     }
@@ -132,11 +125,9 @@ Write all text content in the language specified (${formData.language || 'cs'}).
     const rawContent = anthropicData?.content?.[0]?.text;
 
     if (!rawContent) {
-      console.error('No content in Anthropic response:', anthropicData);
       return NextResponse.json({ error: 'No content returned from Claude' }, { status: 502 });
     }
 
-    // Parse JSON from Claude's response
     let generatedJson: GeneratedSiteJson;
     try {
       const cleanedJsonText = rawContent
@@ -145,24 +136,23 @@ Write all text content in the language specified (${formData.language || 'cs'}).
         .trim();
       generatedJson = JSON.parse(cleanedJsonText);
     } catch (parseError) {
-      console.error('Failed to parse Claude JSON response:', rawContent);
       return NextResponse.json(
-        { error: 'Claude returned invalid JSON', raw: rawContent },
+        { error: 'Claude returned invalid JSON' },
         { status: 502 }
       );
     }
 
-    // Save generated JSON to Supabase using direct fetch
     const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/preview/${order_id}`;
     
+    const updateHeaders = new Headers();
+    updateHeaders.set('apikey', forceAscii(supabaseKey));
+    updateHeaders.set('Authorization', `Bearer ${forceAscii(supabaseKey)}`);
+    updateHeaders.set('Content-Type', 'application/json');
+    updateHeaders.set('Prefer', 'return=representation');
+
     const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order_id}`, {
       method: 'PATCH',
-      headers: {
-        'apikey': supabaseKey.trim(),
-        'Authorization': `Bearer ${supabaseKey.trim()}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
-      },
+      headers: updateHeaders,
       body: JSON.stringify({
         generated_site_json: generatedJson,
         status: 'preview_ready',
@@ -171,21 +161,14 @@ Write all text content in the language specified (${formData.language || 'cs'}).
     });
 
     if (!updateResponse.ok) {
-      const errorText = await updateResponse.text();
-      console.error('Error updating order with direct fetch:', errorText);
       return NextResponse.json({ error: 'Failed to update order' }, { status: 500 });
     }
 
     const updatedOrders = await updateResponse.json();
     const updatedOrder = updatedOrders[0];
 
-    console.log('Site generated successfully for order:', order_id);
-
-    // Send preview email to client
     if (order.company_email) {
-      sendPreviewEmail(order.company_email, previewUrl, order_id).catch((err) =>
-        console.error('Failed to send preview email:', err)
-      );
+      sendPreviewEmail(order.company_email, previewUrl, order_id).catch(() => {});
     }
 
     return NextResponse.json(
@@ -193,7 +176,6 @@ Write all text content in the language specified (${formData.language || 'cs'}).
       { status: 200 }
     );
   } catch (error) {
-    console.error('Server error in /api/generate-site:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
