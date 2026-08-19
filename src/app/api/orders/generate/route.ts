@@ -34,10 +34,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Order not found' }, { status: 404 });
     }
 
-    // 3. Vercel AI SDK: Volání Claude (claude-3-5-sonnet-latest)
+    // 3. Vercel AI SDK: Volání Claude (claude-sonnet-4-5-20250929)
     console.log('Calling Claude AI for content generation...');
     const { object: generatedJson } = await generateObject({
-      model: anthropic('claude-3-5-sonnet-latest'),
+      model: anthropic('claude-sonnet-4-5-20250929'),
       schema: z.object({
         hero: z.object({
           title: z.string(),
