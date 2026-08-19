@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { ratelimit } from '@/lib/ratelimit';
 import { Resend } from 'resend';
+import { SITE_URL } from '@/lib/site';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -149,7 +150,35 @@ export async function POST(request: Request) {
       console.error('Email send failed:', emailErr);
     }
 
-    // 6. Final Response (No custom headers with user text)
+    // 6. Trigger AI Site Generation via Claude API
+    try {
+      console.log("🚀 STARTING CLAUDE GENERATION FOR:", body.companyEmail);
+      
+      // We trigger the generation asynchronously to not block the response
+      // but we still want to log the start. In a production environment with Vercel, 
+      // you might want to use a background job or Vercel's waitUntil.
+      fetch(`${SITE_URL}/api/generate-site`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ order_id: order.id }),
+      }).then(async (res) => {
+        if (res.ok) {
+          console.log("✅ CLAUDE GENERATION SUCCESS");
+        } else {
+          const errorText = await res.text();
+          console.error("❌ CLAUDE GENERATION FAILED:", errorText);
+        }
+      }).catch((claudeError) => {
+        console.error("❌ CLAUDE GENERATION FAILED:", claudeError);
+      });
+
+    } catch (claudeError) {
+      console.error("❌ CLAUDE GENERATION FAILED:", claudeError);
+    }
+
+    // 7. Final Response (No custom headers with user text)
     return NextResponse.json(
       { success: true, message: 'Order created' },
       { status: 200 }
