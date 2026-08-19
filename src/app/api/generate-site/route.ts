@@ -37,9 +37,9 @@ export async function POST(request: NextRequest) {
     }
 
     const fetchHeaders = new Headers();
-    fetchHeaders.set('apikey', forceAscii(supabaseKey));
-    fetchHeaders.set('Authorization', `Bearer ${forceAscii(supabaseKey)}`);
-    fetchHeaders.set('Accept', 'application/json');
+    fetchHeaders.set('content-type', 'application/json');
+    fetchHeaders.set('apikey', supabaseKey);
+    fetchHeaders.set('Authorization', `Bearer ${supabaseKey}`);
 
     const fetchResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order_id}&select=*`, {
       method: 'GET',
@@ -89,7 +89,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
     try {
       const cleanHeaders = new Headers();
       cleanHeaders.set('content-type', 'application/json');
-      cleanHeaders.set('x-api-key', forceAscii(ANTHROPIC_API_KEY));
+      cleanHeaders.set('x-api-key', ANTHROPIC_API_KEY);
       cleanHeaders.set('anthropic-version', '2023-06-01');
 
       anthropicResponse = await fetch(ANTHROPIC_API_URL, {
@@ -145,10 +145,9 @@ Write all text content in the language specified (${formData.language || 'cs'}).
     const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/preview/${order_id}`;
     
     const updateHeaders = new Headers();
-    updateHeaders.set('apikey', forceAscii(supabaseKey));
-    updateHeaders.set('Authorization', `Bearer ${forceAscii(supabaseKey)}`);
-    updateHeaders.set('Content-Type', 'application/json');
-    updateHeaders.set('Prefer', 'return=representation');
+    updateHeaders.set('content-type', 'application/json');
+    updateHeaders.set('apikey', supabaseKey);
+    updateHeaders.set('Authorization', `Bearer ${supabaseKey}`);
 
     const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order_id}`, {
       method: 'PATCH',

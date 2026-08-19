@@ -29,9 +29,9 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
       await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order.id}`, {
         method: 'PATCH',
         headers: {
+          'content-type': 'application/json',
           'apikey': supabaseKey,
-          'authorization': `Bearer ${supabaseKey}`,
-          'content-type': 'application/json'
+          'Authorization': `Bearer ${supabaseKey}`
         },
         body: JSON.stringify({ status: 'failed_email' })
       });
@@ -43,9 +43,9 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
       const partnerFetch = await fetch(`${supabaseUrl}/rest/v1/partners?referral_code=eq.${order.ref_code}&select=id,commission_pct`, {
         method: 'GET',
         headers: {
+          'content-type': 'application/json',
           'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Accept': 'application/json'
+          'Authorization': `Bearer ${supabaseKey}`
         }
       });
 
@@ -61,9 +61,9 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
         const commissionInsert = await fetch(`${supabaseUrl}/rest/v1/commissions`, {
           method: 'POST',
           headers: {
+            'content-type': 'application/json',
             'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-            'Content-Type': 'application/json'
+            'Authorization': `Bearer ${supabaseKey}`
           },
           body: JSON.stringify({
             influencer_id: partner.id,
@@ -82,9 +82,9 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
           await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order.id}`, {
             method: 'PATCH',
             headers: {
+              'content-type': 'application/json',
               'apikey': supabaseKey,
-              'Authorization': `Bearer ${supabaseKey}`,
-              'Content-Type': 'application/json'
+              'Authorization': `Bearer ${supabaseKey}`
             },
             body: JSON.stringify({ status: 'failed_email' })
           });
@@ -99,9 +99,9 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
     const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order.id}`, {
       method: 'PATCH',
       headers: {
+        'content-type': 'application/json',
         'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${supabaseKey}`
       },
       body: JSON.stringify({ status: 'paid' })
     });
@@ -113,9 +113,9 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
       await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order.id}`, {
         method: 'PATCH',
         headers: {
+          'content-type': 'application/json',
           'apikey': supabaseKey,
-          'authorization': `Bearer ${supabaseKey}`,
-          'content-type': 'application/json'
+          'Authorization': `Bearer ${supabaseKey}`
         },
         body: JSON.stringify({ status: 'failed_email' })
       });
@@ -129,9 +129,9 @@ async function processOrder(order: Database['public']['Tables']['orders']['Row']
     await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order.id}`, {
       method: 'PATCH',
       headers: {
+        'content-type': 'application/json',
         'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${supabaseKey}`
       },
       body: JSON.stringify({ status: 'failed_email' })
     });
@@ -149,14 +149,13 @@ export async function GET(request: Request) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
 
-  const headers = new Headers();
-  headers.set('apikey', supabaseKey);
-  headers.set('Authorization', `Bearer ${supabaseKey}`);
-  headers.set('Accept', 'application/json');
-
   const fetchQueued = await fetch(`${supabaseUrl}/rest/v1/orders?status=eq.draft&limit=3&select=*`, {
     method: 'GET',
-    headers
+    headers: {
+      'content-type': 'application/json',
+      'apikey': supabaseKey,
+      'Authorization': `Bearer ${supabaseKey}`
+    }
   });
 
   if (!fetchQueued.ok) {

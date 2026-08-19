@@ -26,9 +26,9 @@ export async function POST(request: NextRequest) {
     const fetchResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}&select=*`, {
       method: 'GET',
       headers: {
+        'content-type': 'application/json',
         'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Accept': 'application/json'
+        'Authorization': `Bearer ${supabaseKey}`
       }
     });
 
@@ -85,7 +85,7 @@ Structure must be exactly:
     console.log("🤖 CLAUDE MODEL SENT:", "claude-sonnet-4-5-20250929");
     let anthropicResponse;
     try {
-      // Vytvořit čisté hlavičky bez dědičnosti z okolního prostředí
+      // PŘÍSNĚ STŘEŽENÉ STANDARDNÍ HLAVIČKY
       const cleanHeaders = new Headers();
       cleanHeaders.set('content-type', 'application/json');
       cleanHeaders.set('x-api-key', (ANTHROPIC_API_KEY || '').trim());
@@ -145,10 +145,9 @@ Structure must be exactly:
     const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
       method: 'PATCH',
       headers: {
+        'content-type': 'application/json',
         'apikey': supabaseKey.trim(),
-        'Authorization': `Bearer ${supabaseKey.trim()}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
+        'Authorization': `Bearer ${supabaseKey.trim()}`
       },
       body: JSON.stringify({
         generated_site_json: updatedJson,

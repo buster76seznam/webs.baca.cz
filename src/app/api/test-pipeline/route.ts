@@ -43,7 +43,7 @@ async function callClaude(systemPrompt: string, userPrompt: string): Promise<str
   try {
     console.log("🤖 CLAUDE MODEL SENT:", "claude-sonnet-4-5-20250929");
     
-    // Vytvořit čisté hlavičky pro ochranu před non-ASCII znaky z requestu
+    // PŘÍSNĚ STŘEŽENÉ STANDARDNÍ HLAVIČKY
     const cleanHeaders = new Headers();
     cleanHeaders.set('content-type', 'application/json');
     cleanHeaders.set('x-api-key', (ANTHROPIC_API_KEY || '').trim());

@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://tpmagqetpsesrxmehane.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwbWFncWV0cHNlc3J4bWVoYW5lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5MzEwOTEsImV4cCI6MjA5MzUwNzA5MX0.sP6Ek6IdWVK83tdWeGo0LYdadChYwPw111J4tISbLLs';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   global: {
@@ -17,8 +17,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
         Object.entries(incomingHeaders).forEach(([key, value]) => {
           const lowerKey = key.toLowerCase();
           if (allowedHeaders.includes(lowerKey)) {
-            const safeValue = String(value).replace(/[^\x00-\x7F]/g, '');
-            headers.set(lowerKey, safeValue);
+            // PŘÍSNĚ STANDARDNÍ ASCII HLAVIČKY
+            headers.set(lowerKey, String(value));
           }
         });
       }

@@ -23,10 +23,11 @@ if (!apiKey) {
 const anthropic = new Anthropic({
   apiKey: apiKey,
   fetch: async (url, init) => {
+    // PŘÍSNĚ STŘEŽENÉ STANDARDNÍ HLAVIČKY
     const headers = new Headers();
-    headers.set('x-api-key', forceAscii(apiKey));
-    headers.set('anthropic-version', '2023-06-01');
     headers.set('content-type', 'application/json');
+    headers.set('x-api-key', apiKey);
+    headers.set('anthropic-version', '2023-06-01');
 
     const targetUrl = typeof url === 'string' ? url : (url as any).url;
 
@@ -120,10 +121,9 @@ Write all text content in the language specified (${sanitize(formData.language |
     const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
     
     const updateHeaders = new Headers();
-    updateHeaders.set('apikey', forceAscii(supabaseKey));
-    updateHeaders.set('Authorization', `Bearer ${forceAscii(supabaseKey)}`);
-    updateHeaders.set('Content-Type', 'application/json');
-    updateHeaders.set('Prefer', 'return=minimal');
+    updateHeaders.set('content-type', 'application/json');
+    updateHeaders.set('apikey', supabaseKey);
+    updateHeaders.set('Authorization', `Bearer ${supabaseKey}`);
 
     const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
       method: 'PATCH',
@@ -192,10 +192,9 @@ export async function POST(request: Request) {
     const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '').trim();
 
     const insertHeaders = new Headers();
-    insertHeaders.set('apikey', forceAscii(supabaseKey));
-    insertHeaders.set('Authorization', `Bearer ${forceAscii(supabaseKey)}`);
-    insertHeaders.set('Content-Type', 'application/json');
-    insertHeaders.set('Prefer', 'return=representation');
+    insertHeaders.set('content-type', 'application/json');
+    insertHeaders.set('apikey', supabaseKey);
+    insertHeaders.set('Authorization', `Bearer ${supabaseKey}`);
 
     const insertResponse = await fetch(`${supabaseUrl}/rest/v1/orders`, {
       method: 'POST',
@@ -244,6 +243,7 @@ export async function POST(request: Request) {
       const domain = forceAscii(body.domain || 'your new website');
       const orderId = order?.id || 'N/A';
 
+      console.log("TRIGGERING RESEND EMAIL FOR ORDER:", orderId);
       await resend.emails.send({
         from: FROM_EMAIL,
         to: body.companyEmail,
@@ -251,7 +251,7 @@ export async function POST(request: Request) {
         html: `Order received for ${companyName}. Domain: ${domain}. Order ID: ${orderId}`,
       });
     } catch (emailErr) {
-      // Fail-safe
+      console.error("FAILED TO SEND INITIAL EMAIL:", emailErr);
     }
 
     after(async () => {

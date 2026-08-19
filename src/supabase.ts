@@ -12,7 +12,7 @@ const globalSupabaseConfig = {
     fetch: (url: any, options: any) => {
       const headers = new Headers();
       
-      // Vynutit EXKLUZIVNĚ pouze nutné ASCII hlavičky pro Supabase
+      // PŘÍSNĚ STANDARDNÍ ASCII HLAVIČKY PRO SUPABASE
       if (options?.headers) {
         const incomingHeaders = options.headers instanceof Headers 
           ? Object.fromEntries(options.headers.entries())
@@ -23,9 +23,7 @@ const globalSupabaseConfig = {
         Object.entries(incomingHeaders).forEach(([key, value]) => {
           const lowerKey = key.toLowerCase();
           if (allowedHeaders.includes(lowerKey)) {
-            // Odstraní jakýkoliv znak mimo ASCII rozsah pro jistotu
-            const safeValue = String(value).replace(/[^\x00-\x7F]/g, '');
-            headers.set(lowerKey, safeValue);
+            headers.set(lowerKey, String(value));
           }
         });
       }
@@ -36,16 +34,14 @@ const globalSupabaseConfig = {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, globalSupabaseConfig);
 
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceRoleKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
 
 if (!supabaseServiceRoleKey) {
-  console.error('Service role key from env: NOT SET');
-  throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set. This is required for admin operations.');
+  console.error('CRITICAL ERROR: SUPABASE_SERVICE_ROLE_KEY is NOT SET in environment variables!');
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for admin operations.');
 }
 
-console.log('Using service role key: ...'); // Do not log the key itself
-
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
+export const supabaseAdmin = createClient(supabaseUrl!, supabaseServiceRoleKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false
