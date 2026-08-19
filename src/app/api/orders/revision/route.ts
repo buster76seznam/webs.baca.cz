@@ -68,7 +68,7 @@ Structure must be exactly:
     // Call Anthropic Claude API
     console.log("Key check:", process.env.ANTHROPIC_API_KEY ? "EXISTS (starts with " + process.env.ANTHROPIC_API_KEY.slice(0, 7) + ")" : "MISSING!");
 
-    console.log("🤖 CLAUDE MODEL SENT:", "claude-5-sonnet");
+    console.log("🤖 CLAUDE MODEL SENT:", "claude-sonnet-4-5-20250929");
     let anthropicResponse;
     try {
       anthropicResponse = await fetch(ANTHROPIC_API_URL, {
@@ -79,7 +79,7 @@ Structure must be exactly:
           'anthropic-version': '2023-06-01',
         },
         body: JSON.stringify({
-          model: 'claude-5-sonnet',
+          model: 'claude-sonnet-4-5-20250929',
           max_tokens: 4096,
           system: systemPrompt,
           messages: [
