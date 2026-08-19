@@ -100,9 +100,14 @@ export async function POST(request: Request) {
       .single();
 
     if (dbError) {
-      console.error('Supabase DB error:', dbError);
+      console.error('SUPABASE DB ERROR:', dbError);
       return NextResponse.json(
-        { success: false, error: 'Failed to save order to database' },
+        { 
+          success: false, 
+          error: `Supabase error: ${dbError.message}`,
+          code: dbError.code,
+          details: dbError.details 
+        },
         { status: 500 }
       );
     }
