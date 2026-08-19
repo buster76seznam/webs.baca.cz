@@ -150,44 +150,44 @@ Write all text content in the language specified (${sanitize(formData.language |
 }
 
 export async function POST(request: Request) {
-  let body: any;
   try {
-    const contentType = request.headers.get('content-type') || '';
-    if (contentType.includes('multipart/form-data')) {
-      const formData = await request.formData();
-      body = Object.fromEntries(formData.entries());
-    } else {
-      body = await request.json();
-    }
-  } catch (e) {
-    return NextResponse.json(
-      { success: false, error: 'Invalid request body' },
-      { status: 400 }
-    );
-  }
-
-  const turnstileToken = body.turnstileToken;
-  if (turnstileToken) {
+    let body: any;
     try {
-      const secretKey = process.env.TURNSTILE_SECRET_KEY;
-      if (secretKey) {
-        await fetch(
-          'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `secret=${encodeURIComponent(secretKey)}&response=${encodeURIComponent(
-              turnstileToken
-            )}`,
-          }
-        );
+      const contentType = request.headers.get('content-type') || '';
+      if (contentType.includes('multipart/form-data')) {
+        const formData = await request.formData();
+        body = Object.fromEntries(formData.entries());
+      } else {
+        body = await request.json();
       }
-    } catch (tsErr) {
-      // Fail-safe
+    } catch (e) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid request body' },
+        { status: 400 }
+      );
     }
-  }
 
-  try {
+    const turnstileToken = body.turnstileToken;
+    if (turnstileToken) {
+      try {
+        const secretKey = process.env.TURNSTILE_SECRET_KEY;
+        if (secretKey) {
+          await fetch(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: `secret=${encodeURIComponent(secretKey)}&response=${encodeURIComponent(
+                turnstileToken
+              )}`,
+            }
+          );
+        }
+      } catch (tsErr) {
+        // Fail-safe
+      }
+    }
+
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '').trim();
 
@@ -237,6 +237,7 @@ export async function POST(request: Request) {
       throw new Error('Failed to create order');
     }
 
+    // Email sending is wrapped in its own try/catch to prevent 500 if it fails
     try {
       const FROM_EMAIL = 'Webs Baca <info@websbaca.cz>';
       const companyName = forceAscii(body.companyName || 'Customer');
@@ -251,7 +252,7 @@ export async function POST(request: Request) {
         html: `Order received for ${companyName}. Domain: ${domain}. Order ID: ${orderId}`,
       });
     } catch (emailErr) {
-      console.error("FAILED TO SEND INITIAL EMAIL:", emailErr);
+      console.error("FAILED TO SEND INITIAL EMAIL (Non-blocking):", emailErr);
     }
 
     after(async () => {
@@ -264,6 +265,7 @@ export async function POST(request: Request) {
         );
       } catch (err) {
         // Fail-safe
+        console.error("ERROR IN AFTER() HOOK:", err);
       }
     });
 
@@ -271,9 +273,10 @@ export async function POST(request: Request) {
       { success: true, message: 'Order created' },
       { status: 200 }
     );
-  } catch (err: any) {
+  } catch (error) {
+    console.error("❌ UNHANDLED SERVER ERROR IN POST /api/orders:", error);
     return NextResponse.json(
-      { success: false, error: 'Server error' },
+      { success: false, error: error instanceof Error ? error.message : "Internal Server Error" },
       { status: 500 }
     );
   }
