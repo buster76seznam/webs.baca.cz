@@ -84,6 +84,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
     // Save to Supabase
     const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || SITE_URL}/preview/${orderId}`;
     
+    // Ujistíme se, že posíláme čistá data v body, bez extra headers
     const { error: updateError } = await supabaseAdmin
       .from('orders')
       .update({
@@ -200,7 +201,7 @@ export async function POST(request: Request) {
           facebook_url: body.facebookUrl,
           instagram_url: body.instagramUrl,
           google_maps_url: body.googleMapsUrl,
-          status: 'čeká',
+          status: 'queued',
         },
       ])
       .select()

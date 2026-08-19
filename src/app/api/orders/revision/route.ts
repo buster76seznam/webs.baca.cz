@@ -126,6 +126,7 @@ Structure must be exactly:
     }
 
     // Save updated JSON and increment revision count
+    // Ujistíme se, že posíláme data pouze v body
     const { data: updatedOrder, error: updateError } = await supabaseAdmin
       .from('orders')
       .update({

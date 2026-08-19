@@ -140,6 +140,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
     // Save generated JSON to Supabase and update status
     const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/preview/${order_id}`;
     
+    // Ujistíme se, že posíláme čistá data v body
     const { data: updatedOrder, error: updateError } = await supabaseAdmin
       .from('orders')
       .update({

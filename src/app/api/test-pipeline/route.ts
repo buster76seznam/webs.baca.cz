@@ -217,6 +217,7 @@ Write all text content in English. Make it professional and compelling.`;
     }
 
     // Uložit do Supabase – status 'development' = generováno (dle CHECK constraint v DB)
+    // Ujistíme se, že posíláme čistá data v body bez extra headers
     const { error: updateError } = await supabaseAdmin
       .from('orders')
       .update({ generated_site_json: generatedJson, status: 'development' })
