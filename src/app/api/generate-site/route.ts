@@ -83,7 +83,7 @@ Write all text content in the language specified (${formData.language || 'cs'}).
           'anthropic-version': '2023-06-01',
         },
         body: JSON.stringify({
-          model: 'claude-3-haiku-20240307',
+          model: 'claude-3-5-sonnet-20241022',
           max_tokens: 4096,
           system: 'Respond ONLY with valid JSON. Do not include markdown formatting or extra text.',
           messages: [

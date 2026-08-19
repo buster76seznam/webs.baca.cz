@@ -47,7 +47,7 @@ Generate the JSON with these exact keys:
 Write all text content in the language specified (${formData.language || 'cs'}). Make it professional and compelling.`;
 
     const response = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307',
+      model: 'claude-3-5-sonnet-20241022',
       max_tokens: 4000,
       system: 'Respond ONLY with valid JSON. Do not include markdown formatting or extra text.',
       messages: [
