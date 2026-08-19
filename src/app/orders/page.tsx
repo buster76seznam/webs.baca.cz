@@ -215,19 +215,22 @@ export default function OrdersPage() {
     setErrorMsg('');
 
     try {
-      const formDataToSend = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        // Only send fields that the API expects, exclude workingDays and workingTime
-        if (key !== 'workingDays' && key !== 'workingTime' && (key !== 'workingHours' || formData.workingTime === 'custom')) {
-          formDataToSend.append(key, value);
-        }
-      });
-      formDataToSend.append('workingHours', formattedWorkingHours);
-      formDataToSend.append('turnstileToken', turnstileToken || '');
+      const payload = {
+        ...formData,
+        workingHours: formattedWorkingHours,
+        turnstileToken: turnstileToken || ''
+      };
+
+      // Remove local UI state fields before sending
+      delete (payload as any).workingDays;
+      delete (payload as any).workingTime;
 
       const res = await fetch('/api/orders', {
         method: 'POST',
-        body: formDataToSend,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();

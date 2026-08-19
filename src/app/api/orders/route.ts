@@ -7,7 +7,17 @@ export async function POST(request: Request) {
   console.log('--- ENDPOINT A: POST /api/orders START ---');
   try {
     // 1. Validace dat z body
-    const body = await request.json();
+    let body: any;
+    try {
+      body = await request.json();
+    } catch (parseError) {
+      console.error('Failed to parse JSON body:', parseError);
+      return NextResponse.json(
+        { success: false, error: 'Invalid JSON payload. Please ensure you are sending application/json.' },
+        { status: 400 }
+      );
+    }
+
     console.log('Received body:', JSON.stringify(body, null, 2));
 
     const {
