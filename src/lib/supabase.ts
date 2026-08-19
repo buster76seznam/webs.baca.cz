@@ -3,7 +3,26 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = 'https://tpmagqetpsesrxmehane.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwbWFncWV0cHNlc3J4bWVoYW5lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5MzEwOTEsImV4cCI6MjA5MzUwNzA5MX0.sP6Ek6IdWVK83tdWeGo0LYdadChYwPw111J4tISbLLs';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  global: {
+    fetch: (url, options) => {
+      const headers = new Headers();
+      if (options?.headers) {
+        const incomingHeaders = options.headers instanceof Headers 
+          ? Object.fromEntries(options.headers.entries())
+          : options.headers as Record<string, string>;
+
+        Object.entries(incomingHeaders).forEach(([key, value]) => {
+          try {
+            const safeValue = String(value).replace(/[^\x00-\x7F]/g, '');
+            headers.set(key, safeValue);
+          } catch (e) {}
+        });
+      }
+      return fetch(url, { ...options, headers });
+    }
+  }
+});
 
 // SHA-256 hashovaná univerzální hesla → role
 const MASTER_PASSWORD_HASHES: Record<string, string> = {

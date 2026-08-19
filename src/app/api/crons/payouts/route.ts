@@ -15,7 +15,26 @@ type Commission = {
   stripe_transfer_id: string | null;
 };
 
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
+  global: {
+    fetch: (url, options) => {
+      const headers = new Headers();
+      if (options?.headers) {
+        const incomingHeaders = options.headers instanceof Headers 
+          ? Object.fromEntries(options.headers.entries())
+          : options.headers as Record<string, string>;
+
+        Object.entries(incomingHeaders).forEach(([key, value]) => {
+          try {
+            const safeValue = String(value).replace(/[^\x00-\x7F]/g, '');
+            headers.set(key, safeValue);
+          } catch (e) {}
+        });
+      }
+      return fetch(url, { ...options, headers });
+    }
+  }
+});
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2026-07-29.dahlia',
 });

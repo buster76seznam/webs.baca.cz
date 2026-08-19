@@ -24,7 +24,24 @@ export async function POST(request: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
       {
         auth: { persistSession: false },
-        global: { fetch: fetch.bind(globalThis) }
+        global: { 
+          fetch: (url, options) => {
+            const headers = new Headers();
+            if (options?.headers) {
+              const incomingHeaders = options.headers instanceof Headers 
+                ? Object.fromEntries(options.headers.entries())
+                : options.headers as Record<string, string>;
+  
+              Object.entries(incomingHeaders).forEach(([key, value]) => {
+                try {
+                  const safeValue = String(value).replace(/[^\x00-\x7F]/g, '');
+                  headers.set(key, safeValue);
+                } catch (e) {}
+              });
+            }
+            return fetch(url, { ...options, headers });
+          }
+        }
       }
     );
 

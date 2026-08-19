@@ -25,7 +25,29 @@ async function generateWebWithClaude(orderId: string, email: string, domain: str
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
       auth: { persistSession: false },
-      global: { fetch: fetch.bind(globalThis) }
+      global: { 
+        fetch: (url, options) => {
+          const headers = new Headers();
+          
+          if (options?.headers) {
+            const incomingHeaders = options.headers as Record<string, string>;
+            Object.entries(incomingHeaders).forEach(([key, value]) => {
+              try {
+                // Pouze ASCII hodnoty jsou povoleny v hlavičkách
+                const safeValue = String(value).replace(/[^\x00-\x7F]/g, '');
+                if (safeValue !== String(value)) {
+                  console.warn(`[DEBUG] Sanitizing header ${key}: some characters were removed`);
+                }
+                headers.set(key, safeValue);
+              } catch (e) {
+                console.error(`[DEBUG] Failed to set header ${key}:`, e);
+              }
+            });
+          }
+          
+          return fetch(url, { ...options, headers });
+        }
+      }
     }
   );
 

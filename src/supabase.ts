@@ -7,7 +7,28 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Supabase URL and Anon Key must be defined in environment variables.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const globalSupabaseConfig = {
+  global: {
+    fetch: (url: any, options: any) => {
+      const headers = new Headers();
+      if (options?.headers) {
+        const incomingHeaders = options.headers instanceof Headers 
+          ? Object.fromEntries(options.headers.entries())
+          : options.headers as Record<string, string>;
+
+        Object.entries(incomingHeaders).forEach(([key, value]) => {
+          try {
+            const safeValue = String(value).replace(/[^\x00-\x7F]/g, '');
+            headers.set(key, safeValue);
+          } catch (e) {}
+        });
+      }
+      return fetch(url, { ...options, headers });
+    }
+  }
+};
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, globalSupabaseConfig);
 
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -23,14 +44,7 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
     autoRefreshToken: false,
     persistSession: false
   },
-  global: {
-    // Prevent header inheritance by using a clean fetch
-    fetch: (url, options) => {
-      const headers = new Headers(options?.headers);
-      // Ensure only standard headers are sent
-      return fetch(url, { ...options, headers });
-    }
-  }
+  ...globalSupabaseConfig
 });
 
 // SHA-256 hashovaná univerzální hesla → role
