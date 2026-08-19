@@ -91,7 +91,7 @@ export async function GET(request: Request) {
   const { data: orders, error } = await supabaseAdmin
     .from('orders')
     .select('*')
-    .eq('status', 'queued')
+    .eq('status', 'pending')
     .limit(3); // Concurrency limit
 
   if (error) {

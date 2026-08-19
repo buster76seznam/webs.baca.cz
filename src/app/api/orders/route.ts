@@ -201,7 +201,7 @@ export async function POST(request: Request) {
           facebook_url: body.facebookUrl,
           instagram_url: body.instagramUrl,
           google_maps_url: body.googleMapsUrl,
-          status: 'queued',
+          status: 'pending',
         },
       ])
       .select()

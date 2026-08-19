@@ -73,8 +73,8 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
 
     if (!error && data) {
       const sorted = [...data].sort((a, b) => {
-        const aUrgent = a.status === 'queued' && a.status_updated_at && daysSince(a.status_updated_at) >= 14;
-        const bUrgent = b.status === 'queued' && b.status_updated_at && daysSince(b.status_updated_at) >= 14;
+        const aUrgent = a.status === 'pending' && a.status_updated_at && daysSince(a.status_updated_at) >= 14;
+        const bUrgent = b.status === 'pending' && b.status_updated_at && daysSince(b.status_updated_at) >= 14;
         if (aUrgent && !bUrgent) return -1;
         if (!aUrgent && bUrgent) return 1;
         return 0;

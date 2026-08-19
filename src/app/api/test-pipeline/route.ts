@@ -140,7 +140,7 @@ export async function GET(request: NextRequest) {
       .from('orders')
       .insert({
         ref_code: 'TEST_HONZA',
-        status: 'queued',
+        status: 'pending',
         ...testFormData,
       })
       .select()

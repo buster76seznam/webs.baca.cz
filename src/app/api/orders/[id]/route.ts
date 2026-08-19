@@ -12,7 +12,7 @@ export async function PATCH(
     console.log('PATCH /api/orders/[id]:', { id, status });
 
     // Validate status
-    const validStatuses = ['queued', 'development', 'completed'];
+    const validStatuses = ['pending', 'development', 'completed'];
     if (!validStatuses.includes(status)) {
       console.error('Invalid status:', status);
       return NextResponse.json({ error: 'Invalid status', validStatuses }, { status: 400 });

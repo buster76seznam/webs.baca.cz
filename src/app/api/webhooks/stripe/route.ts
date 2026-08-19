@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     const { error: updateError } = await supabaseAdmin
       .from('orders')
-      .update({ status: 'queued', stripe_checkout_session_id: session.id })
+      .update({ status: 'pending', stripe_checkout_session_id: session.id })
       .eq('id', orderId);
 
     if (updateError) {
