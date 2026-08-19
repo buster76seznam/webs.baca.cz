@@ -15,48 +15,55 @@ const forceAscii = (str: string) => {
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const apiKey = (process.env.ANTHROPIC_API_KEY || '').trim();
+const apiKey = forceAscii(process.env.ANTHROPIC_API_KEY || '').trim();
 if (!apiKey) {
-  throw new Error("ANTHROPIC_API_KEY is missing!");
+  throw new Error("ANTHROPIC_API_KEY is missing or invalid ASCII!");
 }
 
 const anthropic = new Anthropic({
   apiKey: apiKey,
   fetch: async (url, init) => {
-    // PŘÍSNĚ STŘEŽENÉ STANDARDNÍ HLAVIČKY
     const headers = new Headers();
     headers.set('content-type', 'application/json');
     headers.set('x-api-key', apiKey);
     headers.set('anthropic-version', '2023-06-01');
 
     const targetUrl = typeof url === 'string' ? url : (url as any).url;
+    
+    // Ensure body is also safe if it's a string
+    let safeBody = init?.body;
+    if (typeof safeBody === 'string') {
+      // Anthropic body is JSON, it should be UTF-8, but we ensure it's ByteString compatible if needed
+      // Actually, fetch handles UTF-8 strings. The problem is almost always headers.
+    }
 
     return fetch(targetUrl, {
       method: init?.method || 'POST',
       headers: headers,
-      body: init?.body,
+      body: safeBody,
       signal: init?.signal,
     });
   }
 });
 
+const sanitize = (str: string) => {
+  if (!str) return '';
+  return String(str).replace(/[^\x00-\x7F]/g, (char) => {
+    const map: Record<string, string> = {
+      'š': 's', 'č': 'c', 'ř': 'r', 'ž': 'z', 'ý': 'y', 'á': 'a',
+      'í': 'i', 'é': 'e', 'ú': 'u', 'ů': 'u', 'ď': 'd', 'ť': 't',
+      'ň': 'n', 'Š': 'S', 'Č': 'C', 'Ř': 'R', 'Ž': 'Z', 'Ý': 'Y',
+      'Á': 'A', 'Í': 'I', 'É': 'E', 'Ú': 'U', 'Ů': 'U', 'Ď': 'D',
+      'Ť': 'T', 'Ň': 'N'
+    };
+    return map[char] || '';
+  });
+};
+
 async function generateWebWithClaude(orderId: string, email: string, domain: string, formData: any) {
   console.log("STARTING CLAUDE GENERATION FOR:", forceAscii(email));
 
   try {
-    const sanitize = (str: string) => {
-      if (!str) return '';
-      return str.replace(/[^\x00-\x7F]/g, (char) => {
-        const map: Record<string, string> = {
-          'š': 's', 'č': 'c', 'ř': 'r', 'ž': 'z', 'ý': 'y', 'á': 'a',
-          'í': 'i', 'é': 'e', 'ú': 'u', 'ů': 'u', 'ď': 'd', 'ť': 't',
-          'ň': 'n', 'Š': 'S', 'Č': 'C', 'Ř': 'R', 'Ž': 'Z', 'Ý': 'Y',
-          'Á': 'A', 'Í': 'I', 'É': 'E', 'Ú': 'U', 'Ů': 'U', 'Ď': 'D',
-          'Ť': 'T', 'Ň': 'N'
-        };
-        return map[char] || '';
-      });
-    };
 
     const userPrompt = `Generate a complete website content JSON for the following business:
 
