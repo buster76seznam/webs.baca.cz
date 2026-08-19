@@ -97,24 +97,22 @@ Write all text content in the language specified (${sanitize(formData.language |
       ],
     });
 
-    const rawContent = response.content[0].type === 'text' ? response.content[0].text : '';
+    const rawContent = (response?.content?.[0] as any)?.text || "";
 
     if (!rawContent) {
-      console.error('No content in Anthropic response');
-      return;
+      throw new Error("Anthropic returned empty response body.");
     }
 
-    let generatedJson;
-    try {
-      const cleanedJsonText = rawContent
-        .replace(/^```(?:json)?\s*/i, '')
-        .replace(/\s*```$/, '')
-        .trim();
-      generatedJson = JSON.parse(cleanedJsonText);
-    } catch (parseError) {
-      console.error('Failed to parse Claude JSON response');
-      return;
+    const cleanedJsonText = rawContent
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/, '')
+      .trim();
+
+    if (!cleanedJsonText) {
+      throw new Error("Cleaned JSON text is empty.");
     }
+
+    const generatedJson = JSON.parse(cleanedJsonText);
 
     const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || SITE_URL}/preview/${orderId}`;
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -151,20 +149,18 @@ Write all text content in the language specified (${sanitize(formData.language |
 
 export async function POST(request: Request) {
   try {
-    let body: any;
+    let body: any = {};
     try {
       const contentType = request.headers.get('content-type') || '';
       if (contentType.includes('multipart/form-data')) {
         const formData = await request.formData();
         body = Object.fromEntries(formData.entries());
       } else {
-        body = await request.json();
+        const text = await request.text();
+        body = text ? JSON.parse(text) : {};
       }
     } catch (e) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid request body' },
-        { status: 400 }
-      );
+      console.error("Failed to parse request body:", e);
     }
 
     const turnstileToken = body.turnstileToken;
