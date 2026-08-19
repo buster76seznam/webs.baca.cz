@@ -100,7 +100,7 @@ export async function sendAdminDomainPurchaseEmail(
   domain: string,
   customerEmail: string
 ) {
-  const adminEmail = process.env.ADMIN_EMAIL || 'filip@baca.cz';
+  const adminEmail = process.env.ADMIN_EMAIL || 'webs.baca.support@gmail.com';
   const porkbunUrl = `https://porkbun.com/checkout/search?q=${encodeURIComponent(domain)}`;
   const namecheapUrl = `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(domain)}`;
   const supabaseOrderUrl = `https://supabase.com/dashboard/project/${process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('https://', '').split('.')[0]}/editor?table=orders&filter=id%3Aeq%3A${orderId}`;
