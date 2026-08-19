@@ -1,6 +1,7 @@
 import { NextResponse, after } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { supabaseAdmin } from '@/supabase';
+import { supabaseAdmin as defaultSupabaseAdmin } from '@/supabase';
 import { ratelimit } from '@/lib/ratelimit';
 import { Resend } from 'resend';
 import { SITE_URL } from '@/lib/site';
@@ -17,6 +18,16 @@ const anthropic = new Anthropic({
 async function generateWebWithClaude(orderId: string, email: string, domain: string, formData: any) {
   console.log("🚀 STARTING CLAUDE GENERATION FOR:", email);
   console.log("SENDING REQUEST TO ANTHROPIC...");
+
+  // Izolovaný admin klient bez děděných hlaviček z požadavku
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: { persistSession: false },
+      global: { fetch: fetch.bind(globalThis) }
+    }
+  );
 
   try {
     const userPrompt = `Generate a complete website content JSON for the following business:

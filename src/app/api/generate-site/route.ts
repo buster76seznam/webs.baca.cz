@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/supabase';
+import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin as defaultSupabaseAdmin } from '@/supabase';
 import { sendPreviewEmail } from '@/lib/emails';
 
 export const runtime = 'nodejs';
@@ -17,6 +18,15 @@ interface GeneratedSiteJson {
 
 export async function POST(request: NextRequest) {
   try {
+    // Izolovaný admin klient bez děděných hlaviček z požadavku
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: { persistSession: false },
+        global: { fetch: fetch.bind(globalThis) }
+      }
+    );
 
 
     if (!ANTHROPIC_API_KEY) {
