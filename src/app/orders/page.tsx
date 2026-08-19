@@ -68,26 +68,26 @@ export default function OrdersPage() {
   ];
 
   const languages = [
-    { code: 'cs', name: 'Čeština', native: 'Čeština' },
+    { code: 'cs', name: 'Cestina', native: 'Cestina' },
     { code: 'en', name: 'English', native: 'English' },
     { code: 'de', name: 'German', native: 'Deutsch' },
-    { code: 'sk', name: 'Slovak', native: 'Slovenčina' },
+    { code: 'sk', name: 'Slovak', native: 'Slovencina' },
     { code: 'pl', name: 'Polish', native: 'Polski' },
-    { code: 'fr', name: 'French', native: 'Français' },
-    { code: 'es', name: 'Spanish', native: 'Español' },
+    { code: 'fr', name: 'French', native: 'Francais' },
+    { code: 'es', name: 'Spanish', native: 'Espanol' },
     { code: 'it', name: 'Italian', native: 'Italiano' },
-    { code: 'ru', name: 'Russian', native: 'Русский' },
-    { code: 'uk', name: 'Ukrainian', native: 'Українська' },
+    { code: 'ru', name: 'Russian', native: 'Russkiy' },
+    { code: 'uk', name: 'Ukrainian', native: 'Ukrainska' },
     { code: 'hu', name: 'Hungarian', native: 'Magyar' },
-    { code: 'ro', name: 'Romanian', native: 'Română' },
+    { code: 'ro', name: 'Romanian', native: 'Romana' },
     { code: 'nl', name: 'Dutch', native: 'Nederlands' },
     { code: 'sv', name: 'Swedish', native: 'Svenska' },
     { code: 'da', name: 'Danish', native: 'Dansk' },
     { code: 'fi', name: 'Finnish', native: 'Suomi' },
     { code: 'no', name: 'Norwegian', native: 'Norsk' },
-    { code: 'el', name: 'Greek', native: 'Ελληνικά' },
-    { code: 'tr', name: 'Turkish', native: 'Türkçe' },
-    { code: 'pt', name: 'Portuguese', native: 'Português' },
+    { code: 'el', name: 'Greek', native: 'Ellinika' },
+    { code: 'tr', name: 'Turkish', native: 'Turkce' },
+    { code: 'pt', name: 'Portuguese', native: 'Portugues' },
   ];
 
   const filteredLanguages = languages.filter(lang =>
@@ -96,25 +96,25 @@ export default function OrdersPage() {
   );
 
   const countries = [
-    { code: 'CZ', name: 'Česká republika', en: 'Czech Republic' },
+    { code: 'CZ', name: 'Ceska republika', en: 'Czech Republic' },
     { code: 'SK', name: 'Slovensko', en: 'Slovakia' },
     { code: 'PL', name: 'Polsko', en: 'Poland' },
-    { code: 'DE', name: 'Německo', en: 'Germany' },
+    { code: 'DE', name: 'Nemecko', en: 'Germany' },
     { code: 'AT', name: 'Rakousko', en: 'Austria' },
-    { code: 'HU', name: 'Maďarsko', en: 'Hungary' },
+    { code: 'HU', name: 'Madarsko', en: 'Hungary' },
     { code: 'RO', name: 'Rumunsko', en: 'Romania' },
     { code: 'HR', name: 'Chorvatsko', en: 'Croatia' },
     { code: 'SI', name: 'Slovinsko', en: 'Slovenia' },
-    { code: 'GB', name: 'Velká Británie', en: 'United Kingdom' },
+    { code: 'GB', name: 'Velka Britanie', en: 'United Kingdom' },
     { code: 'US', name: 'USA', en: 'United States' },
     { code: 'FR', name: 'Francie', en: 'France' },
-    { code: 'IT', name: 'Itálie', en: 'Italy' },
-    { code: 'ES', name: 'Španělsko', en: 'Spain' },
+    { code: 'IT', name: 'Italie', en: 'Italy' },
+    { code: 'ES', name: 'Spanelsko', en: 'Spain' },
     { code: 'NL', name: 'Nizozemsko', en: 'Netherlands' },
     { code: 'BE', name: 'Belgie', en: 'Belgium' },
-    { code: 'CH', name: 'Švýcarsko', en: 'Switzerland' },
-    { code: 'SE', name: 'Švédsko', en: 'Sweden' },
-    { code: 'DK', name: 'Dánsko', en: 'Denmark' },
+    { code: 'CH', name: 'Svycarsko', en: 'Switzerland' },
+    { code: 'SE', name: 'Svedsko', en: 'Sweden' },
+    { code: 'DK', name: 'Dansko', en: 'Denmark' },
     { code: 'NO', name: 'Norsko', en: 'Norway' },
     { code: 'FI', name: 'Finsko', en: 'Finland' },
     { code: 'PT', name: 'Portugalsko', en: 'Portugal' },
@@ -122,10 +122,10 @@ export default function OrdersPage() {
     { code: 'UA', name: 'Ukrajina', en: 'Ukraine' },
     { code: 'RU', name: 'Rusko', en: 'Russia' },
     { code: 'TR', name: 'Turecko', en: 'Turkey' },
-    { code: 'AE', name: 'Spojené arabské emiráty', en: 'United Arab Emirates' },
+    { code: 'AE', name: 'Spojene arabske emiraty', en: 'United Arab Emirates' },
     { code: 'CA', name: 'Kanada', en: 'Canada' },
-    { code: 'AU', name: 'Austrálie', en: 'Australia' },
-    { code: 'OTHER', name: 'Jiná', en: 'Other' },
+    { code: 'AU', name: 'Australie', en: 'Australia' },
+    { code: 'OTHER', name: 'Jina', en: 'Other' },
   ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -270,10 +270,10 @@ export default function OrdersPage() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-4 uppercase">
-            {isEnglish ? 'Website Order' : 'Objednávka webu'}
+            {isEnglish ? 'Website Order' : 'Objednavka webu'}
           </h1>
           <p className="text-zinc-400 text-lg">
-            {isEnglish ? 'Fill out the form and we will contact you within 60 minutes.' : 'Vyplňte formulář a my se vám ozveme do 60 minut.'}
+            {isEnglish ? 'Fill out the form and we will contact you within 60 minutes.' : 'Vyplnte formular a my se vam ozveme do 60 minut.'}
           </p>
         </motion.div>
 
@@ -284,15 +284,15 @@ export default function OrdersPage() {
               <h2 className="text-xl font-black mb-6 text-brand uppercase tracking-wider">{isEnglish ? 'Company' : 'Podnik'}</h2>
               <div className="grid sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className={labelClass}>{isEnglish ? 'Company Name *' : 'Název podniku *'}</label>
-                  <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} placeholder={isEnglish ? 'Novak s.r.o.' : 'Novák s.r.o.'} className={inputClass} required />
+                  <label className={labelClass}>{isEnglish ? 'Company Name *' : 'Nazev podniku *'}</label>
+                  <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} placeholder={isEnglish ? 'Novak s.r.o.' : 'Novak s.r.o.'} className={inputClass} required />
                 </div>
                 <div>
                   <label className={labelClass}>{isEnglish ? 'Phone *' : 'Telefon *'}</label>
                   <PhoneInput
                     value={formData.companyPhone}
                     onChange={(value) => setFormData({ ...formData, companyPhone: value || '' })}
-                    placeholder={isEnglish ? 'Enter phone number' : 'Zadejte telefonní číslo'}
+                    placeholder={isEnglish ? 'Enter phone number' : 'Zadejte telefonni cislo'}
                     className="w-full bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-8px_rgba(124,58,237,0.5)] transition-all duration-300 text-sm [&_input]:bg-transparent [&_input]:text-white [&_input]:placeholder-zinc-700 [&_select]:bg-[#0A0A0A] [&_select]:text-white [&_select]:border-white/10"
                     required
                   />
@@ -313,10 +313,10 @@ export default function OrdersPage() {
               </div>
               <div>
                 <label className={labelClass}>{isEnglish ? 'Address *' : 'Adresa *'}</label>
-                <input type="text" name="companyAddress" value={formData.companyAddress} onChange={handleInputChange} placeholder={isEnglish ? 'Street 123, 123 45 City' : 'Ulice 123, 123 45 Město'} className={inputClass} required />
+                <input type="text" name="companyAddress" value={formData.companyAddress} onChange={handleInputChange} placeholder={isEnglish ? 'Street 123, 123 45 City' : 'Ulice 123, 123 45 Mesto'} className={inputClass} required />
               </div>
               <div>
-                <label className={labelClass}>{isEnglish ? 'Country *' : 'Země *'}</label>
+                <label className={labelClass}>{isEnglish ? 'Country *' : 'Zeme *'}</label>
                 <select name="companyCountry" value={formData.companyCountry} onChange={handleInputChange} className={inputClass} required>
                   <option value="">{isEnglish ? 'Select country' : 'Vyberte zemi'}</option>
                   {countries.map(c => (
@@ -333,22 +333,22 @@ export default function OrdersPage() {
               <h2 className="text-xl font-black mb-6 text-brand uppercase tracking-wider">{isEnglish ? 'Website' : 'Web'}</h2>
 
               <div className="mb-4">
-                <label className={labelClass}>{isEnglish ? 'Desired domain *' : 'Jakou doménu chcete *'}</label>
+                <label className={labelClass}>{isEnglish ? 'Desired domain *' : 'Jakou domenu chcete *'}</label>
                 <input type="text" name="domain" value={formData.domain} onChange={handleInputChange} placeholder={isEnglish ? 'mydomain.com' : 'mojedomena.cz'} className={inputClass} required />
               </div>
 
               <div className="mb-4">
                 <label className={labelClass}>{isEnglish ? 'What do you want *' : 'Co chcete *'}</label>
-                <textarea name="description" value={formData.description} onChange={handleInputChange} placeholder={isEnglish ? 'Describe what you want...' : 'Popište co chcete...'} rows={4} className={`${inputClass} resize-none`} required />
+                <textarea name="description" value={formData.description} onChange={handleInputChange} placeholder={isEnglish ? 'Describe what you want...' : 'Popiste co chcete...'} rows={4} className={`${inputClass} resize-none`} required />
               </div>
 
               <div className="mb-4">
-                <label className={labelClass}>{isEnglish ? 'Advantage over competition *' : 'Výhoda oproti konkurenci *'}</label>
-                <textarea name="advantage" value={formData.advantage} onChange={handleInputChange} placeholder={isEnglish ? 'What makes you different from others...' : 'Čím se odlišujete od ostatních...'} rows={3} className={`${inputClass} resize-none`} required />
+                <label className={labelClass}>{isEnglish ? 'Advantage over competition *' : 'Vyhoda oproti konkurenci *'}</label>
+                <textarea name="advantage" value={formData.advantage} onChange={handleInputChange} placeholder={isEnglish ? 'What makes you different from others...' : 'Cim se odlisujete od ostatnich...'} rows={3} className={`${inputClass} resize-none`} required />
               </div>
 
               <div>
-                <label className={labelClass}>{isEnglish ? 'Working hours *' : 'Pracovní doba *'}</label>
+                <label className={labelClass}>{isEnglish ? 'Working hours *' : 'Pracovni doba *'}</label>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <select
@@ -524,22 +524,22 @@ export default function OrdersPage() {
                   onClick={() => setExpandedSections({ ...expandedSections, owner: !expandedSections.owner })}
                   className="w-full p-8 md:p-12 flex justify-between items-center hover:bg-white/[0.02] transition-colors"
                 >
-                  <h2 className="text-xl font-black text-zinc-400 uppercase tracking-wider">{isEnglish ? 'Owner/Manager' : 'Majitel/Jednatel'} <span className="text-zinc-600 normal-case text-sm">({isEnglish ? '(optional)' : '(nepovinné)'})</span></h2>
+                  <h2 className="text-xl font-black text-zinc-400 uppercase tracking-wider">{isEnglish ? 'Owner/Manager' : 'Majitel/Jednatel'} <span className="text-zinc-600 normal-case text-sm">({isEnglish ? '(optional)' : '(nepovinne)'})</span></h2>
                   <div className={`transition-transform ${expandedSections.owner ? 'rotate-180' : ''}`}>▼</div>
                 </button>
                 {expandedSections.owner && (
                   <div className="px-8 md:px-12 pb-8 md:pb-12 border-t border-white/5">
                     <div className="grid sm:grid-cols-2 gap-4 mb-4">
                       <div>
-                        <label className={labelClass}>{isEnglish ? 'Full Name' : 'Jméno a příjmení'}</label>
-                        <input type="text" name="ownerName" value={formData.ownerName} onChange={handleInputChange} placeholder={isEnglish ? 'Jan Novak' : 'Jan Novák'} className={inputClass} />
+                        <label className={labelClass}>{isEnglish ? 'Full Name' : 'Jmeno a prijmeni'}</label>
+                        <input type="text" name="ownerName" value={formData.ownerName} onChange={handleInputChange} placeholder={isEnglish ? 'Jan Novak' : 'Jan Novak'} className={inputClass} />
                       </div>
                       <div>
                         <label className={labelClass}>{isEnglish ? 'Phone' : 'Telefon'}</label>
                         <PhoneInput
                           value={formData.ownerPhone}
                           onChange={(value) => setFormData({ ...formData, ownerPhone: value || '' })}
-                          placeholder={isEnglish ? 'Enter phone number' : 'Zadejte telefonní číslo'}
+                          placeholder={isEnglish ? 'Enter phone number' : 'Zadejte telefonni cislo'}
                           className="w-full bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-8px_rgba(124,58,237,0.5)] transition-all duration-300 text-sm [&_input]:bg-transparent [&_input]:text-white [&_input]:placeholder-zinc-700 [&_select]:bg-[#0A0A0A] [&_select]:text-white [&_select]:border-white/10"
                         />
                       </div>
@@ -557,8 +557,8 @@ export default function OrdersPage() {
           {/* STEP 4: Review & Submit */}
           {currentStep === 4 && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12 text-center">
-              <h2 className="text-3xl font-black mb-4 text-brand uppercase">{isEnglish ? 'Ready to submit?' : 'Připraveni na odeslání?'}</h2>
-              <p className="text-zinc-400 mb-8">{isEnglish ? 'Review your details above. Click submit to send your order.' : 'Zkontrolujte vaše údaje výše. Klikněte na odeslat pro odeslání vaší objednávky.'}</p>
+              <h2 className="text-3xl font-black mb-4 text-brand uppercase">{isEnglish ? 'Ready to submit?' : 'Pripraveni na odeslani?'}</h2>
+              <p className="text-zinc-400 mb-8">{isEnglish ? 'Review your details above. Click submit to send your order.' : 'Zkontrolujte vase udaje vyse. Kliknete na odeslat pro odeslani vasi objednavky.'}</p>
               <Turnstile siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''} onSuccess={setTurnstileToken} />
             </motion.div>
           )}

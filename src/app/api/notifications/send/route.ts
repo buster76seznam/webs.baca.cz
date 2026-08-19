@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
     const { subscription, data } = await request.json();
     
     const payload = JSON.stringify({
-      title: data.title || 'Nová objednávka',
-      body: data.body || 'Přišla nová objednávka na Webs Bača',
+      title: data.title || 'New Order',
+      body: data.body || 'A new order has arrived on Webs Bača',
       icon: '/Logo.png',
       badge: '/Logo.png',
       data: {

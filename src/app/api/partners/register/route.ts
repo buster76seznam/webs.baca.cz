@@ -83,26 +83,26 @@ export async function POST(request: NextRequest) {
       const { error: emailError } = await resend.emails.send({
         from: 'Webs Bača <noreply@websbaca.cz>',
         to: email,
-        subject: 'Potvrzeni registrace - Webs Baca Partner Program',
+        subject: 'Registration Confirmation - Webs Baca Partner Program',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 12px;">
             <div style="text-align: center; margin-bottom: 32px;">
               <h1 style="color: #7c3aed; font-size: 28px; margin: 0;">Webs Baca</h1>
               <p style="color: #666; margin: 4px 0 0 0; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;">Partner Program</p>
             </div>
-            <h2 style="color: #111; font-size: 22px;">Vitej, ${name}!</h2>
-            <p style="color: #444; line-height: 1.6;">Dekujeme za registraci do nascho partner programu. Pro dokonceni registrace potvrdte svuj email kliknuti na tlacitko nize:</p>
+            <h2 style="color: #111; font-size: 22px;">Welcome, ${name}!</h2>
+            <p style="color: #444; line-height: 1.6;">Thank you for registering for our partner program. To complete your registration, please confirm your email by clicking the button below:</p>
             <div style="text-align: center; margin: 32px 0;">
               <a href="${verificationLink}" style="display: inline-block; background: #7c3aed; color: white; padding: 16px 32px; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 16px;">
-                Potvrdit email
+                Confirm Email
               </a>
             </div>
-            <p style="color: #666; font-size: 14px;">Nebo zkopirujte tento odkaz do prohlizece:<br>
+            <p style="color: #666; font-size: 14px;">Or copy this link into your browser:<br>
             <span style="color: #7c3aed;">${verificationLink}</span></p>
             <div style="background: #f5f3ff; border: 1px solid #ede9fe; border-radius: 8px; padding: 16px; margin: 24px 0;">
-              <p style="margin: 0; color: #7c3aed; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em;">Vas Referral kod</p>
+              <p style="margin: 0; color: #7c3aed; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em;">Your Referral Code</p>
               <p style="margin: 8px 0 0 0; font-size: 20px; font-weight: bold; color: #111; font-family: monospace;">${referralCode}</p>
-              <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;">Ulozit si ho - budete ho potrebovat pro prihlaseni</p>
+              <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;">Save it - you will need it to log in</p>
             </div>
             <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
             <p style="color: #999; font-size: 12px; text-align: center;">Webs Baca Partner Program - websbaca.cz</p>

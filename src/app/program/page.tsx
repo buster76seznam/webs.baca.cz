@@ -126,7 +126,7 @@ export default function ProgramPage() {
         body: JSON.stringify(sub)
       });
 
-      showNotification('success', 'Přihlášeno k notifikacím');
+      showNotification('success', 'Prihlaseno k notifikacim');
     } catch (error) {
       console.error('Subscription error:', error);
       showNotification('error', 'Chyba při přihlášení k notifikacím');
@@ -299,13 +299,13 @@ export default function ProgramPage() {
       console.log('Status change response:', data);
       if (res.ok) {
         await fetchOrders(); // Refetch from database to get persisted status
-        showNotification('success', 'Status byl změněn.');
+        showNotification('success', 'Status byl zmenen.');
       } else {
-        showNotification('error', data.error || 'Chyba při změně statusu.');
+        showNotification('error', data.error || 'Chyba pri zmene statusu.');
       }
     } catch (err) {
       console.error('Error updating status:', err);
-      showNotification('error', 'Chyba při změně statusu.');
+      showNotification('error', 'Chyba pri zmene statusu.');
     }
   };
 
@@ -431,7 +431,7 @@ export default function ProgramPage() {
                     : 'bg-white/5 text-zinc-500 hover:text-white hover:bg-white/10'
                 }`}
               >
-                Přehled domén
+                Prehled domen
               </button>
             </div>
           </div>
@@ -643,7 +643,7 @@ export default function ProgramPage() {
           <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
             <h2 className="text-lg font-black mb-4 flex items-center gap-2">
               <Server size={20} className="text-brand" />
-              Přehled domén
+              Prehled domen
             </h2>
             {loadingDomains ? (
               <div className="text-center py-8">
@@ -790,7 +790,7 @@ export default function ProgramPage() {
           <div className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
             <h2 className="text-lg font-black mb-4 flex items-center gap-2">
               <Mail size={20} className="text-brand" />
-              Zpracované odpovědi
+              Zpracovane odpovedi
             </h2>
             {loadingReplies ? (
               <div className="text-center py-8">

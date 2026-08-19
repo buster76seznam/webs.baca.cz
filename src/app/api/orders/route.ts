@@ -25,6 +25,7 @@ async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({ secret, response: token, remoteip: ip }),
+    credentials: 'omit',
   });
   const data = await res.json();
   return data.success === true;
@@ -173,6 +174,7 @@ export async function POST(request: NextRequest) {
         headers: {
           'Authorization': `Bearer ${safeCronSecret}`,
         },
+        credentials: 'omit', // CRITICAL: Prevent forwarding non-ASCII cookies
       });
       console.log('Cron triggered status:', cronRes.status);
     } catch (fetchError) {
