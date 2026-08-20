@@ -27,11 +27,11 @@ export default function HeroVariant2Centered({ hero, companyName }: Props) {
 
       {/* Decorative circles */}
       <div
-        className="absolute top-[-15%] left-[-10%] w-[600px] h-[600px] rounded-full blur-3xl pointer-events-none"
+        className="absolute top-[-15%] left-[-10%] w-[600px] h-[600px] max-w-full rounded-full blur-3xl pointer-events-none"
         style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
       />
       <div
-        className="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none"
+        className="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] max-w-full rounded-full blur-3xl pointer-events-none"
         style={{ backgroundColor: 'rgba(0,0,0,0.15)' }}
       />
 

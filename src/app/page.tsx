@@ -149,8 +149,8 @@ export default function Home() {
         </section>
 
         {/* The "Why" Section - Massive Spacing */}
-        <section id="why" className="py-64 px-8 border-y border-white/5 relative overflow-hidden w-full">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" /></div>
+        <section id="why" className="py-64 px-8 border-y border-white/5 relative overflow-hidden w-full max-w-full">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-0 right-0 w-[600px] h-[600px] max-w-full bg-brand/5 rounded-full blur-[120px] pointer-events-none" /></div>
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="mb-40 text-left max-w-4xl">
               <h2 className="text-5xl md:text-[100px] font-black mb-10 tracking-tighter leading-none uppercase">{t.whyTitle} <br /><span className="text-brand italic">{t.whySubtitle}</span></h2>
@@ -192,8 +192,8 @@ export default function Home() {
         </section>
 
         {/* Pricing Section - Ultra Premium */}
-        <section id="pricing" className="py-64 px-8 relative overflow-hidden bg-[#020202] w-full">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
+        <section id="pricing" className="py-64 px-8 relative overflow-hidden bg-[#020202] w-full max-w-full">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] max-w-full bg-brand/5 rounded-full blur-[200px] pointer-events-none" /></div>
           
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-40">
@@ -343,8 +343,8 @@ export default function Home() {
         </section>
 
         {/* Affiliate Program Section */}
-        <section className="py-64 px-8 bg-[#050505] relative overflow-hidden w-full">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-brand/5 rounded-full blur-[200px]" /></div>
+        <section className="py-64 px-8 bg-[#050505] relative overflow-hidden w-full max-w-full">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] max-w-full bg-brand/5 rounded-full blur-[200px] pointer-events-none" /></div>
           
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div {...fadeIn} className="text-center mb-24">
