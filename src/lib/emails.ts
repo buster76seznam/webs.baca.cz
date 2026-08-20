@@ -94,6 +94,99 @@ export async function sendDomainUnavailableEmail(
   }
 }
 
+export async function sendDomainBoughtEmail(
+  clientEmail: string,
+  companyName: string,
+  domain: string,
+  orderId: string
+) {
+  console.log(`Sending domain bought email for order ${orderId} to ${clientEmail}`);
+  try {
+    const data = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: clientEmail,
+      subject: `Your domain ${domain} is officially registered! 🚀`,
+      html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
+        <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Your website is live! 🚀</h1>
+        <p style="color: #444; font-size: 16px; line-height: 1.6;">
+          Great news, <strong>${companyName}</strong>! Your domain <strong>${domain}</strong> has been officially purchased and your website is now online.
+        </p>
+        <p style="color: #444; font-size: 16px; line-height: 1.6;">
+          Everything is fully functional and ready for your visitors.
+        </p>
+        <div style="margin: 32px 0;">
+          <a href="https://${domain}" style="background-color: #2563eb; color: #fff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 600; display: inline-block;">
+            Visit your website
+          </a>
+        </div>
+        <p style="color: #888; font-size: 14px;">
+          Or copy this link into your browser:<br>
+          <a href="https://${domain}" style="color: #2563eb;">https://${domain}</a>
+        </p>
+        <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
+        <p style="color: #aaa; font-size: 12px;">
+          Order No. ${orderId} · <a href="${BASE_URL}" style="color: #aaa;">websbaca.cz</a>
+        </p>
+      </div>
+    `,
+    });
+    console.log(`Domain bought email sent successfully for order ${orderId}:`, data);
+    return data;
+  } catch (error) {
+    console.error(`FAILED TO SEND DOMAIN BOUGHT EMAIL for order ${orderId}:`, error);
+    throw error;
+  }
+}
+
+export async function sendAdminNewDomainSelectedEmail(
+  orderId: string,
+  companyName: string,
+  newDomain: string
+) {
+  const adminEmail = 'webs.baca.support@gmail.com';
+  console.log(`Sending admin notification for new domain selection: ${newDomain}`);
+  try {
+    const data = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: adminEmail,
+      subject: `🚨 New Domain Selected: ${companyName}`,
+      html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px; border: 2px solid #3b82f6; border-radius: 12px;">
+        <h1 style="color: #111; font-size: 22px; margin-bottom: 20px;">Customer selected a new domain</h1>
+        
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 28px;">
+          <tr>
+            <td style="padding: 10px 12px; background: #f9fafb; border: 1px solid #e5e7eb; font-weight: 600; color: #374151; width: 160px;">Company</td>
+            <td style="padding: 10px 12px; border: 1px solid #e5e7eb; color: #111;">${companyName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 12px; background: #f9fafb; border: 1px solid #e5e7eb; font-weight: 600; color: #374151;">New Domain</td>
+            <td style="padding: 10px 12px; border: 1px solid #e5e7eb; color: #111; font-weight: 700; font-size: 18px;">${newDomain}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 12px; background: #f9fafb; border: 1px solid #e5e7eb; font-weight: 600; color: #374151;">Order ID</td>
+            <td style="padding: 10px 12px; border: 1px solid #e5e7eb; color: #6b7280; font-family: monospace;">${orderId}</td>
+          </tr>
+        </table>
+
+        <p style="color: #374151; font-size: 15px;">Please check the domain management dashboard to approve this domain.</p>
+        
+        <div style="margin-top: 24px;">
+          <a href="${BASE_URL}/domains" style="background-color: #3b82f6; color: #fff; padding: 12px 22px; border-radius: 8px; text-decoration: none; font-size: 15px; font-weight: 600; display: inline-block;">
+            Open Domain Dashboard
+          </a>
+        </div>
+      </div>
+    `,
+    });
+    return data;
+  } catch (error) {
+    console.error(`FAILED TO SEND ADMIN NEW DOMAIN NOTIFICATION:`, error);
+    throw error;
+  }
+}
+
 export async function sendAdminDomainPurchaseEmail(
   orderId: string,
   companyName: string,

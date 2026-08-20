@@ -11,7 +11,7 @@ export interface AgenturaUser {
   last_seen?: string | null;
 }
 
-export type OrderStatus = 'draft' | 'queued' | 'development' | 'completed' | 'preview_ready' | 'revision_requested' | 'approved' | 'paid' | 'active' | 'failed_email';
+export type OrderStatus = 'draft' | 'queued' | 'development' | 'completed' | 'preview_ready' | 'revision_requested' | 'approved' | 'paid' | 'pending_domain' | 'active' | 'failed_email';
 
 export type PricingType = 'dle_domluvy' | 'doda';
 
@@ -66,6 +66,7 @@ export const ORDER_STATUSES: OrderStatus[] = [
   'revision_requested',
   'approved',
   'paid',
+  'pending_domain',
   'active',
   'failed_email',
 ];
@@ -79,6 +80,7 @@ export const STATUS_COLORS: Record<OrderStatus, string> = {
   'revision_requested': 'bg-purple-500/10 text-purple-400',
   'approved': 'bg-green-500/10 text-green-400',
   'paid': 'bg-emerald-600/10 text-emerald-500',
+  'pending_domain': 'bg-orange-500/10 text-orange-400',
   'active': 'bg-sky-500/10 text-sky-400',
   'failed_email': 'bg-red-500/10 text-red-400',
 };

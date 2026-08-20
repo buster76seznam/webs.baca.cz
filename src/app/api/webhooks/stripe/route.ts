@@ -67,11 +67,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ received: true });
     }
 
-    // 1. Aktualizace statusu objednávky na PAID
+    // 1. Aktualizace statusu objednávky na PENDING_DOMAIN
     const { error: updateError } = await supabaseAdmin
       .from('orders')
       .update({ 
-        status: 'paid', 
+        status: 'pending_domain', 
         stripe_checkout_session_id: session.id,
         status_updated_at: new Date().toISOString()
       })
