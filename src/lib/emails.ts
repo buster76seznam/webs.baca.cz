@@ -111,21 +111,21 @@ export async function sendAdminDomainPurchaseEmail(
     const data = await resend.emails.send({
       from: FROM_EMAIL,
       to: adminEmail,
-      subject: `[ACTION REQUIRED] Purchase domain: ${domain} for ${companyName}`,
+      subject: `🚨 NOVÁ PLATBA: Koupit doménu pro ${companyName}`,
       html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px; border: 2px solid #f59e0b; border-radius: 12px;">
         <div style="background-color: #fef3c7; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
-          <p style="color: #92400e; font-size: 14px; font-weight: 700; margin: 0;">⚡ ACTION REQUIRED — Customer has paid, domain needs to be purchased</p>
+          <p style="color: #92400e; font-size: 14px; font-weight: 700; margin: 0;">⚡ NOVÁ PLATBA — Koupit doménu: ${domain}</p>
         </div>
-        <h1 style="color: #111; font-size: 22px; margin-bottom: 20px;">New Order — Domain Purchase</h1>
+        <h1 style="color: #111; font-size: 22px; margin-bottom: 20px;">Detail objednávky</h1>
 
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 28px;">
           <tr>
-            <td style="padding: 10px 12px; background: #f9fafb; border: 1px solid #e5e7eb; font-weight: 600; color: #374151; width: 160px;">Company</td>
+            <td style="padding: 10px 12px; background: #f9fafb; border: 1px solid #e5e7eb; font-weight: 600; color: #374151; width: 160px;">Název firmy</td>
             <td style="padding: 10px 12px; border: 1px solid #e5e7eb; color: #111;">${companyName}</td>
           </tr>
           <tr>
-            <td style="padding: 10px 12px; background: #f9fafb; border: 1px solid #e5e7eb; font-weight: 600; color: #374151;">Domain</td>
+            <td style="padding: 10px 12px; background: #f9fafb; border: 1px solid #e5e7eb; font-weight: 600; color: #374151;">Vybraná doména</td>
             <td style="padding: 10px 12px; border: 1px solid #e5e7eb; color: #111; font-weight: 700; font-size: 18px;">${domain}</td>
           </tr>
           <tr>

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { supabaseAdmin } from '@/supabase';
-import { COMMISSION_STRUCTURE } from '@/lib/affiliate-types';
-import { sendAdminDomainPurchaseEmail, sendOrderConfirmationEmail } from '@/lib/emails';
+import { getTierInfo, calculateCommission } from '@/lib/affiliate-config';
+import { sendAdminDomainPurchaseEmail, sendOrderConfirmationEmail, sendPartnerCommissionEmail } from '@/lib/emails';
 
 export const runtime = 'nodejs';
 
@@ -47,20 +47,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing orderId in metadata' }, { status: 400 });
     }
 
-    const { data: existingOrder, error: existingOrderError } = await supabaseAdmin
+    // Načtení objednávky pro kontrolu a získání detailů
+    const { data: order, error: orderError } = await supabaseAdmin
       .from('orders')
-      .select('id')
-      .eq('stripe_checkout_session_id', session.id)
+      .select('*')
+      .eq('id', orderId)
       .single();
 
-    if (existingOrder) {
+    if (orderError || !order) {
+      console.error('Webhook: order not found:', orderId);
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    // Kontrola duplicity checkout session
+    if (order.stripe_checkout_session_id === session.id && order.status === 'paid') {
       console.log(`Webhook: received duplicate checkout session ${session.id}, skipping.`);
       return NextResponse.json({ received: true });
     }
 
+    // 1. Aktualizace statusu objednávky na PAID
     const { error: updateError } = await supabaseAdmin
       .from('orders')
-      .update({ status: 'draft', stripe_checkout_session_id: session.id })
+      .update({ 
+        status: 'paid', 
+        stripe_checkout_session_id: session.id,
+        status_updated_at: new Date().toISOString()
+      })
       .eq('id', orderId);
 
     if (updateError) {
@@ -69,6 +81,84 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`Webhook: order ${orderId} marked as paid`);
+
+    // 2. Odeslání notifikačních e-mailů
+    try {
+      // Admin notifikace (Action required: purchase domain)
+      await sendAdminDomainPurchaseEmail(
+        order.id,
+        order.company_name,
+        order.domain,
+        order.company_email
+      );
+
+      // Potvrzení pro klienta
+      await sendOrderConfirmationEmail(
+        order.company_email,
+        order.company_name,
+        order.domain,
+        order.id
+      );
+    } catch (emailErr) {
+      console.error('Webhook: failed to send emails:', emailErr);
+    }
+
+    // 3. Logika Affiliate provize
+    const referralCode = ref_code || order.ref_code;
+    if (referralCode) {
+      try {
+        // Najít partnera podle referral kódu
+        const { data: partner, error: partnerError } = await supabaseAdmin
+          .from('partners')
+          .select('*')
+          .eq('referral_code', referralCode)
+          .single();
+
+        if (partner && !partnerError) {
+          // Získat aktuální počet klientů partnera pro určení tieru
+          const { count: activeClientsCount } = await supabaseAdmin
+            .from('partner_referrals')
+            .select('*', { count: 'exact', head: true })
+            .eq('partner_id', partner.id)
+            .eq('status', 'active');
+
+          const tierInfo = getTierInfo(activeClientsCount || 0);
+          const commissionAmount = tierInfo.usdCommission;
+
+          // Zapsat provizi do partner_referrals
+          await supabaseAdmin
+            .from('partner_referrals')
+            .insert([{
+              partner_id: partner.id,
+              client_email: order.company_email,
+              client_name: order.company_name,
+              amount: commissionAmount,
+              status: 'pending' // Provize je na začátku pending
+            }]);
+
+          // Zapsat konverzi pro přehled
+          await supabaseAdmin
+            .from('client_conversions')
+            .insert([{
+              partner_id: partner.id,
+              subscription_price: order.price || 150,
+              currency: 'USD',
+              status: 'active'
+            }]);
+
+          // Poslat e-mail partnerovi
+          await sendPartnerCommissionEmail(
+            partner.email,
+            commissionAmount,
+            order.domain
+          );
+          
+          console.log(`Webhook: Commission of $${commissionAmount} recorded for partner ${partner.id}`);
+        }
+      } catch (affiliateErr) {
+        console.error('Webhook: affiliate commission processing failed:', affiliateErr);
+      }
+    }
   }
 
   return NextResponse.json({ received: true });

@@ -53,6 +53,7 @@ export default function OrdersPage() {
     facebookUrl: '',
     instagramUrl: '',
     googleMapsUrl: '',
+    refCode: '',
   });
 
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -98,6 +99,22 @@ export default function OrdersPage() {
   const [progress, setProgress] = useState(0);
   const [showProgress, setShowProgress] = useState(false);
   const [progressStep, setProgressStep] = useState(0);
+
+  useEffect(() => {
+    // Capture referral code from URL
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref') || params.get('affiliate') || params.get('referral');
+    if (ref) {
+      setFormData(prev => ({ ...prev, refCode: ref }));
+      // Optional: store in session/cookie for persistence if they navigate away
+      sessionStorage.setItem('referral_code', ref);
+    } else {
+      const storedRef = sessionStorage.getItem('referral_code');
+      if (storedRef) {
+        setFormData(prev => ({ ...prev, refCode: storedRef }));
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (status === 'success') {
@@ -251,6 +268,7 @@ export default function OrdersPage() {
         facebookUrl: '', instagramUrl: '', googleMapsUrl: '',
         legalBusinessName: '', stateOfIncorporation: '', principalPlaceOfBusiness: '',
         authorizedSignatory: '', contractEmail: '',
+        refCode: '',
       });
       setCurrentStep(1);
     } catch {

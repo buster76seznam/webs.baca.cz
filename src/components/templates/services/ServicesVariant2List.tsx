@@ -14,7 +14,7 @@ export default function ServicesVariant2List({ services }: Props) {
   return (
     <section
       id="services"
-      className="py-24 px-6 bg-white"
+      className="py-24 px-6 bg-white w-full max-w-full overflow-x-hidden"
     >
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16">

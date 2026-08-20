@@ -15,7 +15,7 @@ interface Props {
 
 export default function HeroVariant2Centered({ hero, companyName }: Props) {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center px-6 py-24 overflow-hidden">
+    <section className="relative min-h-[90vh] flex items-center justify-center px-6 py-24 w-full max-w-full overflow-x-hidden">
       {/* Full-width gradient background */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -59,8 +59,8 @@ export default function HeroVariant2Centered({ hero, companyName }: Props) {
         </p>
         <a
           href="#contact"
-          className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 shadow-xl"
-          style={{ backgroundColor: 'white', color: 'var(--color-primary)' }}
+          className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 shadow-xl backdrop-blur-sm"
+          style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', color: 'var(--color-primary)' }}
         >
           {hero?.ctaText || 'Kontaktujte nás'}
           <ArrowRight size={20} />

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import PreviewClient from './PreviewClient';
 import Link from 'next/link';
+import { Metadata } from 'next';
 
 // Ořezání bílých znaků a neplatných symbolů z env proměnných
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || '';
@@ -34,6 +35,52 @@ interface OrderRow {
   company_address: string | null;
   revision_count: number | null;
   working_hours: string;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const { data: order } = await supabase
+    .from('orders')
+    .select('company_name, domain, description')
+    .eq('id', id)
+    .single();
+
+  if (!order) return { title: 'Web Preview' };
+
+  const domain = order.domain || 'websbaca.cz';
+  const url = `https://${domain}`;
+
+  return {
+    title: `${order.company_name} | Official Website`,
+    description: order.description || `Welcome to the official website of ${order.company_name}.`,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: order.company_name,
+      description: order.description || `Official website of ${order.company_name}`,
+      url: url,
+      siteName: order.company_name,
+      images: [
+        {
+          url: '/og-image.jpg', // Fallback, could be dynamic if we have site screenshots
+          width: 1200,
+          height: 630,
+        },
+      ],
+      locale: 'cs_CZ',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: order.company_name,
+      description: order.description,
+    },
+  };
 }
 
 export default async function PreviewPage({

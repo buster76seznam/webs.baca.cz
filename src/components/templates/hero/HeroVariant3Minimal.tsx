@@ -15,7 +15,7 @@ interface Props {
 
 export default function HeroVariant3Minimal({ hero, companyName }: Props) {
   return (
-    <section className="relative min-h-[90vh] flex items-center px-6 py-24 bg-white overflow-hidden">
+    <section className="relative min-h-[90vh] flex items-center px-6 py-24 bg-white w-full max-w-full overflow-x-hidden">
       {/* Subtle accent line */}
       <div
         className="absolute left-0 top-0 h-full w-1 pointer-events-none"

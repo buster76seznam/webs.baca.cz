@@ -73,7 +73,8 @@ export async function POST(request: Request) {
       facebookUrl,
       instagramUrl,
       googleMapsUrl,
-      turnstileToken
+      turnstileToken,
+      refCode
     } = body;
 
     // Turnstile validace (volitelná, ale ponecháme ji pokud tam byla)
@@ -121,6 +122,7 @@ export async function POST(request: Request) {
           facebook_url: facebookUrl,
           instagram_url: instagramUrl,
           google_maps_url: googleMapsUrl,
+          ref_code: refCode,
           status: 'draft',
           created_at: new Date().toISOString(),
         }

@@ -21,6 +21,7 @@ interface OrderRow {
   id: string;
   company_name: string;
   status: string;
+  domain?: string | null;
   primary_color: string | null;
   language: string | null;
   google_maps_url: string | null;
@@ -52,11 +53,27 @@ function hexAlpha(hex: string, alpha: number): string {
 export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) {
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
 
+  // Structured Data (JSON-LD)
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: order.company_name,
+    description: data.about?.text || '',
+    url: order.domain ? `https://${order.domain}` : '',
+    telephone: order.company_phone || '',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: order.company_address || '',
+    },
+    openingHours: order.working_hours || '',
+    image: '/Logo.png',
+  };
+
   const primaryColor = data.theme?.primaryColor || order.primary_color || '#7C3AED';
   const secondaryColor = data.theme?.secondaryColor || '#10B981';
 
-  const heroVariant = 'variant_1';
-  const servicesVariant = 'grid';
+  const heroVariant: string = 'variant_1';
+  const servicesVariant: string = 'grid';
 
   const { hero, about, services, contact } = data;
 
@@ -91,6 +108,12 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans w-full max-w-full overflow-x-hidden" style={cssVars}>
+      {/* SEO: JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+
       {/* ─── STICKY DEMO BANNER ─── */}
       {!isPaid && (
         <div
@@ -144,8 +167,8 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
               </p>
             </div>
             <div
-              className="rounded-3xl p-10 flex flex-col gap-6"
-              style={{ backgroundColor: hexAlpha(primaryColor, 0.08), border: `1px solid ${hexAlpha(primaryColor, 0.2)}` }}
+              className="rounded-3xl p-10 flex flex-col gap-6 shadow-xl backdrop-blur-sm"
+              style={{ backgroundColor: hexAlpha(primaryColor, 0.05), border: `1px solid ${hexAlpha(primaryColor, 0.1)}` }}
             >
               {(contact?.address || order.company_address) && (
                 <div className="flex items-start gap-4">

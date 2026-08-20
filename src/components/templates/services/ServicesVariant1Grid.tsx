@@ -14,7 +14,7 @@ export default function ServicesVariant1Grid({ services }: Props) {
   return (
     <section
       id="services"
-      className="py-24 px-6"
+      className="py-24 px-6 w-full max-w-full overflow-x-hidden"
       style={{ backgroundColor: '#f8f8f8' }}
     >
       <div className="max-w-6xl mx-auto">
@@ -33,7 +33,7 @@ export default function ServicesVariant1Grid({ services }: Props) {
           {services.map((service, i) => (
             <div
               key={i}
-              className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-all hover:-translate-y-1"
+              className="bg-white/90 rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 backdrop-blur-sm"
               style={{ border: '1px solid var(--color-primary-15)' }}
             >
               <div

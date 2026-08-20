@@ -15,7 +15,7 @@ interface Props {
 
 export default function HeroVariant1Split({ hero, companyName }: Props) {
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden px-6 py-24">
+    <section className="relative min-h-[90vh] flex items-center w-full max-w-full overflow-x-hidden px-6 py-24">
       {/* Background decoration */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -57,7 +57,7 @@ export default function HeroVariant1Split({ hero, companyName }: Props) {
           {/* Right: Graphic */}
           <div className="relative flex items-center justify-center">
             <div
-              className="w-full aspect-square max-w-md rounded-3xl flex items-center justify-center overflow-hidden shadow-2xl"
+              className="w-full aspect-square max-w-md rounded-3xl flex items-center justify-center overflow-hidden shadow-2xl backdrop-blur-sm"
               style={{ backgroundColor: 'var(--color-primary-08)', border: '1px solid var(--color-primary-20)' }}
             >
               {/* Decorative abstract shapes */}
