@@ -1,7 +1,15 @@
 import { notFound } from 'next/navigation';
-import { supabaseAdmin } from '@/supabase';
+import { createClient } from '@supabase/supabase-js';
 import PreviewClient from './PreviewClient';
 import Link from 'next/link';
+
+// Ořezání bílých znaků a neplatných symbolů z env proměnných
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || '';
+const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)?.trim() || '';
+
+const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: { persistSession: false, autoRefreshToken: false }
+});
 
 interface GeneratedSiteJson {
   hero: { title: string; subtitle: string; ctaText: string };
@@ -35,21 +43,31 @@ export default async function PreviewPage({
 }) {
   const { id } = await params;
 
-  console.log("🔍 FETCHING ORDER WITH ID:", id);
-
-  const { data: order, error } = await supabaseAdmin
+  const { data: order, error } = await supabase
     .from('orders')
     .select('*')
     .eq('id', id)
-    .single();
+    .maybeSingle();
 
   if (error) {
-    console.error("❌ SUPABASE FETCH ERROR:", error);
+    console.error("❌ SUPABASE FETCH ERROR:", error.message);
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        <div className="text-center max-w-md bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+          <h1 className="text-2xl font-bold text-red-600 mb-2">Chyba při načítání náhledu</h1>
+          <p className="text-gray-500 mb-6">{error.message}</p>
+          <Link 
+            href="/"
+            className="inline-block bg-indigo-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Zpět na úvod
+          </Link>
+        </div>
+      </div>
+    );
   }
 
-  console.log("📦 SUPABASE DATA RECEIVED:", order ? "YES (ID: " + order.id + ")" : "NO");
-
-  if (error || !order) {
+  if (!order) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
         <div className="text-center max-w-md bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
@@ -67,8 +85,13 @@ export default async function PreviewPage({
     );
   }
 
+  // Ošetření načítání dat v komponentě - parsování generated_site_json
+  const siteJson = typeof order.generated_site_json === 'string' 
+    ? JSON.parse(order.generated_site_json) 
+    : order.generated_site_json;
+
   // Check if status is preview_ready or if we have the content
-  const isReady = order.status === 'preview_ready' || order.generated_site_json;
+  const isReady = order.status === 'preview_ready' || siteJson;
 
   if (!isReady) {
     return (
@@ -92,16 +115,6 @@ export default async function PreviewPage({
   }
 
   const isPaid = order.status === 'paid' || order.status === 'active';
-
-  // Handle cases where generated_site_json might be a string (stored as text in DB)
-  let siteJson = order.generated_site_json;
-  if (typeof siteJson === 'string') {
-    try {
-      siteJson = JSON.parse(siteJson);
-    } catch (e) {
-      console.error("❌ FAILED TO PARSE generated_site_json:", e);
-    }
-  }
 
   return (
     <PreviewClient
