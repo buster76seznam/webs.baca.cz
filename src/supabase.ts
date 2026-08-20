@@ -34,21 +34,6 @@ const globalSupabaseConfig = {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, globalSupabaseConfig);
 
-const supabaseServiceRoleKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
-
-if (!supabaseServiceRoleKey) {
-  console.error('CRITICAL ERROR: SUPABASE_SERVICE_ROLE_KEY is NOT SET in environment variables!');
-  throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for admin operations.');
-}
-
-export const supabaseAdmin = createClient(supabaseUrl!, supabaseServiceRoleKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
-  },
-  ...globalSupabaseConfig
-});
-
 // SHA-256 hashovaná univerzální hesla → role
 export const MASTER_PASSWORD_HASHES: Record<string, string> = {
   'd4f3ea7996fa7c8cfc0ee0f7a3e5f40a251b35fecd577b22ff54df860e8d496c': 'Obchodní zástupce',

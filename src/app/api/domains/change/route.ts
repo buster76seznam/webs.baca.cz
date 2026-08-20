@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { sendAdminNewDomainSelectedEmail } from '@/lib/emails';
 
 export async function POST(request: NextRequest) {

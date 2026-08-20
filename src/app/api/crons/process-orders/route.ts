@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { sendAdminDomainPurchaseEmail, sendOrderConfirmationEmail } from '@/lib/emails';
 
 export const runtime = 'nodejs';

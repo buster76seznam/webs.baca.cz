@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { supabaseAdmin } from '@/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { COMMISSION_STRUCTURE } from '@/lib/affiliate-types';
 import { sendPreviewEmail, sendAdminDomainPurchaseEmail, sendOrderConfirmationEmail } from '@/lib/emails';
 
