@@ -16,7 +16,7 @@ export default function ServicesVariant1Grid({ services }: Props) {
   return (
     <section
       id="services"
-      className="py-32 px-6 w-full max-w-full overflow-x-hidden relative"
+      className="py-32 px-6 w-full max-w-full overflow-hidden relative"
       style={{ backgroundColor: '#ffffff' }}
     >
       <div className="max-w-7xl mx-auto relative z-10">

@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+html, body {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+  position: relative;
+  width: 100%;
+}
+
+* {
+  max-width: 100vw;
+}
+
 @theme {
   --color-brand: #7C3AED; /* Ta sytá fialová z tvé fotky */
   --color-brand-light: #A78BFA;
@@ -30,13 +41,6 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Globální zamezení přetékání pro celou aplikaci i klientské weby */
-html, body {
-  max-width: 100vw !important;
-  overflow-x: hidden !important;
-  position: relative;
-  width: 100%;
-}
 
 /* Anti-overflow wrapper pro všechny klientské sekce */
 .anti-overflow-container {

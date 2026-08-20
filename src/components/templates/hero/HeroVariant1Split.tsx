@@ -15,7 +15,7 @@ interface Props {
 
 export default function HeroVariant1Split({ hero, companyName }: Props) {
   return (
-    <section className="relative min-h-[95vh] flex items-center w-full max-w-full overflow-x-hidden px-6 py-32 bg-slate-50">
+    <section className="relative min-h-[95vh] flex items-center w-full max-w-full overflow-hidden px-6 py-32 bg-slate-50">
       {/* Background decoration */}
       <div
         className="absolute inset-0 pointer-events-none opacity-40"

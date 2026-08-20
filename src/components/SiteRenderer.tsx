@@ -1,4 +1,4 @@
-'use client';
+ 'use client';
 
 import { MapPin, Phone, Mail, CheckCircle, Star, ArrowRight, Clock } from 'lucide-react';
 import { useState } from 'react';
@@ -167,7 +167,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
   } as React.CSSProperties;
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans w-full max-w-full overflow-x-hidden relative anti-overflow-container" style={cssVars}>
+    <div className="min-h-screen bg-white text-gray-900 font-sans w-full max-w-full overflow-hidden relative anti-overflow-container" style={cssVars}>
       {/* SEO: JSON-LD */}
       <script
         type="application/ld+json"
@@ -211,7 +211,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
       </div>
 
       {/* ─── ABOUT ─── */}
-      <section id="about" className="py-32 px-6 bg-white overflow-hidden relative anti-overflow-container">
+      <section id="about" className="py-32 px-6 bg-white overflow-hidden w-full max-w-full relative anti-overflow-container">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div className="relative">
@@ -291,7 +291,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
       {/* ─── MAP ─── */}
       <section
         id="map"
-        className="py-32 px-6 relative overflow-hidden anti-overflow-container"
+        className="py-32 px-6 relative overflow-hidden w-full max-w-full anti-overflow-container"
         style={{ backgroundColor: '#f9fafb' }}
       >
         <div className="max-w-6xl mx-auto">
@@ -348,7 +348,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
       </section>
 
       {/* ─── CONTACT FORM ─── */}
-      <section id="contact" className="py-32 px-6 bg-white relative overflow-hidden anti-overflow-container">
+      <section id="contact" className="py-32 px-6 bg-white relative overflow-hidden w-full max-w-full anti-overflow-container" >
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
             <div

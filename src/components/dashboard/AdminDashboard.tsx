@@ -176,7 +176,7 @@ export default function AdminDashboard({ userId, username, onLogout }: AdminDash
         </div>
       </nav>
 
-      <main className="max-w-6xl mx-auto px-6 py-8 relative z-10">
+      <main className="max-w-6xl mx-auto px-6 py-8 relative z-10 w-full max-w-full overflow-hidden">
         <OnlineUsersBar currentUserId={userId} />
 
         <div className="flex flex-wrap gap-2 mb-10">

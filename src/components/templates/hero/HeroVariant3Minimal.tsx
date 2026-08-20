@@ -15,7 +15,7 @@ interface Props {
 
 export default function HeroVariant3Minimal({ hero, companyName }: Props) {
   return (
-    <section className="relative min-h-[90vh] flex items-center px-6 py-32 bg-white w-full max-w-full overflow-x-hidden">
+    <section className="relative min-h-[90vh] flex items-center px-6 py-32 bg-white w-full max-w-full overflow-hidden">
       {/* Background Graphic Element */}
       <div className="absolute right-0 top-0 w-1/3 h-full bg-slate-50 pointer-events-none hidden lg:block" />
       

@@ -38,7 +38,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
       .select('*, sales_user:agentura_users!orders_sales_user_id_fkey(username)')
       .order('created_at', { ascending: false });
 
-    if (role === 'Obchodní zástupce') {
+    if (role === 'Obchodni zastupce') {
       query = query.eq('sales_user_id', userId);
     }
 
@@ -72,7 +72,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
     return () => { supabase.removeChannel(channel); };
   }, [fetchOrders]);
 
-  const isSales = role === 'Obchodní zástupce';
+  const isSales = role === 'Obchodni zastupce';
 
   return (
     <div className="min-h-screen bg-[#030303] text-white">
@@ -116,7 +116,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
         </div>
       </nav>
 
-      <main className="max-w-6xl mx-auto px-6 py-12 relative z-10">
+      <main className="max-w-6xl mx-auto px-6 py-12 relative z-10 w-full max-w-full overflow-hidden">
         <StatsPanel orders={orders} role={role} userId={userId} />
 
         <div className="flex items-center justify-between mb-8">
