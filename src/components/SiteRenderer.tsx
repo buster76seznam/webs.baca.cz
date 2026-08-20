@@ -36,6 +36,7 @@ interface Props {
   data: GeneratedSiteJson;
   order: OrderRow;
   isPaid: boolean;
+  onApprove?: () => void;
 }
 
 /** Convert a hex color to CSS rgba with the given opacity (0–1). */
@@ -48,7 +49,7 @@ function hexAlpha(hex: string, alpha: number): string {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-export default function SiteRenderer({ data, order, isPaid }: Props) {
+export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) {
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
 
   const primaryColor = data.theme?.primaryColor || order.primary_color || '#7C3AED';
@@ -65,7 +66,9 @@ export default function SiteRenderer({ data, order, isPaid }: Props) {
   };
 
   const handleApproveClick = () => {
-    alert('Stripe Checkout integration coming soon!');
+    if (onApprove) {
+      onApprove();
+    }
   };
 
   /**

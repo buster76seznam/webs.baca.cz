@@ -65,11 +65,7 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
       if (!res.ok) throw new Error('Failed to approve');
       
       setCurrentStatus('approved');
-      setSuccessMsg('Web byl schválen! Přesměrovávám k platbě...');
-      
-      setTimeout(() => {
-        router.push(`/api/checkout/create-session?orderId=${order.id}`);
-      }, 2000);
+      setSuccessMsg('Děkujeme, web byl úspěšně schválen! Budeme vás kontaktovat.');
     } catch (err) {
       setError('Nepodařilo se schválit návrh.');
     } finally {
@@ -145,7 +141,12 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
       <div className="flex flex-1 flex-col lg:flex-row">
         <div className="flex-1 bg-gray-100 overflow-hidden relative">
             <div className="w-full h-full overflow-y-auto">
-                <SiteRenderer data={currentSiteJson} order={order} isPaid={isPaid} />
+                <SiteRenderer 
+                  data={currentSiteJson} 
+                  order={order} 
+                  isPaid={isPaid} 
+                  onApprove={handleApprove}
+                />
             </div>
         </div>
 
