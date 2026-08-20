@@ -89,7 +89,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden w-full max-w-full ${promoVisible ? "pt-72 sm:pt-80 md:pt-96 lg:pt-[28rem]" : "pt-48 sm:pt-52"}`}>
           {/* Animated Background Glows */}
-          <div className="relative w-full max-w-full overflow-hidden pointer-events-none">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
             <motion.div 
               animate={{ 
