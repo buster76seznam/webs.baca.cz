@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import SiteRenderer from '@/components/SiteRenderer';
 import { useRouter } from 'next/navigation';
+import { ArrowRight } from 'lucide-react';
 
 interface GeneratedSiteJson {
   hero: { title: string; subtitle: string; ctaText: string };
@@ -63,9 +64,22 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
       });
 
       if (!res.ok) throw new Error('Failed to approve');
-      
+
       setCurrentStatus('approved');
-      setSuccessMsg('Děkujeme, web byl úspěšně schválen! Budeme vás kontaktovat.');
+
+      // Okamžité přesměrování na Stripe Checkout po schválení
+      const stripeRes = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: order.id }),
+      });
+
+      const { url } = await stripeRes.json();
+      if (url) {
+        window.location.href = url;
+      } else {
+        setSuccessMsg('Děkujeme, web byl úspěšně schválen! Přesměrování na platbu se nezdařilo, prosím kontaktujte nás.');
+      }
     } catch (err) {
       setError('Nepodařilo se schválit návrh.');
     } finally {
@@ -108,6 +122,19 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
     }
   }
 
+  // Pokud je již zaplaceno, zobrazíme čistý web bez demo prvků a ovládacích panelů
+  if (isPaid) {
+    return (
+      <div className="min-h-screen w-full overflow-x-hidden">
+        <SiteRenderer
+          data={currentSiteJson}
+          order={order}
+          isPaid={true}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden">
       <div className="bg-white border-b border-gray-200 sticky top-0 z-50 w-full max-w-full overflow-hidden px-4 py-3 shadow-sm">
@@ -129,9 +156,19 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
                 </button>
               </>
             )}
-            {isApproved && (
+            {isApproved && !isPaid && (
+              <button
+                onClick={handleApprove}
+                disabled={loading}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors shadow-sm disabled:opacity-50 flex items-center gap-2"
+              >
+                {loading ? 'Zpracovávám...' : 'Dokončit platbu'}
+                <ArrowRight size={16} />
+              </button>
+            )}
+            {isPaid && (
               <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-semibold flex items-center gap-2">
-                <span className="text-xl">✅</span> Schváleno
+                <span className="text-xl">✅</span> Zaplaceno
               </div>
             )}
           </div>
