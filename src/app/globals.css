@@ -30,13 +30,21 @@ body {
   scroll-behavior: smooth;
 }
 
+/* Globální zamezení přetékání pro celou aplikaci i klientské weby */
 html,
 body {
   max-width: 100vw !important;
   overflow-x: hidden !important;
   position: relative;
-  overflow-y: auto;
   width: 100%;
+}
+
+/* Anti-overflow wrapper pro všechny klientské sekce */
+.anti-overflow-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* Zabraňuje přetečení z fixed/absolute elementů */

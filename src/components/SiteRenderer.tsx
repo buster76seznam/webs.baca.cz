@@ -167,7 +167,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
   } as React.CSSProperties;
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans w-full max-w-full overflow-x-hidden relative" style={cssVars}>
+    <div className="min-h-screen bg-white text-gray-900 font-sans w-full max-w-full overflow-x-hidden relative anti-overflow-container" style={cssVars}>
       {/* SEO: JSON-LD */}
       <script
         type="application/ld+json"
@@ -200,16 +200,18 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
       {!isPaid && <div className="h-14" />}
 
       {/* ─── HERO ─── */}
-      {heroVariant === 'variant_2' ? (
-        <HeroVariant2Centered hero={hero} companyName={order.company_name} />
-      ) : heroVariant === 'variant_3' ? (
-        <HeroVariant3Minimal hero={hero} companyName={order.company_name} />
-      ) : (
-        <HeroVariant1Split hero={hero} companyName={order.company_name} />
-      )}
+      <div className="anti-overflow-container">
+        {heroVariant === 'variant_2' ? (
+          <HeroVariant2Centered hero={hero} companyName={order.company_name} />
+        ) : heroVariant === 'variant_3' ? (
+          <HeroVariant3Minimal hero={hero} companyName={order.company_name} />
+        ) : (
+          <HeroVariant1Split hero={hero} companyName={order.company_name} />
+        )}
+      </div>
 
       {/* ─── ABOUT ─── */}
-      <section id="about" className="py-32 px-6 bg-white overflow-hidden">
+      <section id="about" className="py-32 px-6 bg-white overflow-hidden relative anti-overflow-container">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div className="relative">
@@ -281,13 +283,15 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
 
       {/* ─── SERVICES ─── */}
       {services && services.length > 0 && (
-        <ServicesVariant1Grid services={services} />
+        <div className="anti-overflow-container">
+          <ServicesVariant1Grid services={services} />
+        </div>
       )}
 
       {/* ─── MAP ─── */}
       <section
         id="map"
-        className="py-32 px-6"
+        className="py-32 px-6 relative overflow-hidden anti-overflow-container"
         style={{ backgroundColor: '#f9fafb' }}
       >
         <div className="max-w-6xl mx-auto">
@@ -344,7 +348,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
       </section>
 
       {/* ─── CONTACT FORM ─── */}
-      <section id="contact" className="py-32 px-6 bg-white">
+      <section id="contact" className="py-32 px-6 bg-white relative overflow-hidden anti-overflow-container">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
             <div
@@ -429,7 +433,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
 
       {/* ─── FOOTER ─── */}
       <footer
-        className="py-24 px-6 text-white"
+        className="py-24 px-6 text-white relative overflow-hidden anti-overflow-container"
         style={{ backgroundColor: '#000' }}
       >
         <div className="max-w-6xl mx-auto">

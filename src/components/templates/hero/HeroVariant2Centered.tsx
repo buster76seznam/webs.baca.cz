@@ -15,7 +15,7 @@ interface Props {
 
 export default function HeroVariant2Centered({ hero, companyName }: Props) {
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-6 py-32 w-full max-w-full overflow-x-hidden bg-slate-900">
+    <section className="relative min-h-screen flex items-center justify-center px-6 py-32 w-full max-w-full overflow-hidden bg-slate-900 anti-overflow-container">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 overflow-hidden">
         <img 

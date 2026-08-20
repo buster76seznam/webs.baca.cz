@@ -105,7 +105,7 @@ export default function Home() {
                 opacity: [0.2, 0.3, 0.2]
               }}
               transition={{ duration: 12, repeat: Infinity, delay: 1 }}
-              className="absolute bottom-1/4 right-0 w-[800px] h-[800px] bg-brand-dark/10 rounded-full blur-[150px]" 
+              className="absolute bottom-1/4 right-0 translate-x-1/2 w-[300px] md:w-[800px] h-[300px] md:h-[800px] bg-brand-dark/10 rounded-full blur-[80px] md:blur-[150px] pointer-events-none" 
             />
           </div>
           
