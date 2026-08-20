@@ -73,12 +73,12 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
   const isSales = role === 'Obchodní zástupce';
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white">
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(124,58,237,0.05),transparent_60%)] pointer-events-none" />
+    <div className="min-h-screen bg-[#030303] text-white w-full max-w-full overflow-x-hidden">
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(124,58,237,0.05),transparent_60%)] pointer-events-none overflow-hidden" />
 
       {/* Nav */}
-      <nav className="sticky top-0 z-40 bg-black/60 backdrop-blur-2xl border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <nav className="sticky top-0 z-40 bg-black/60 backdrop-blur-2xl border-b border-white/5 w-full max-w-full overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between min-w-0">
           <div className="flex items-center gap-4">
             <div className="relative w-9 h-9 overflow-hidden rounded-xl border border-[#7C3AED]/40">
               {!logoError ? (
@@ -95,11 +95,11 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-              <span className="text-xs font-bold text-zinc-400">{username}</span>
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#7C3AED] bg-[#7C3AED]/10 border border-[#7C3AED]/20 px-3 py-1 rounded-full">
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="hidden sm:flex items-center gap-3 min-w-0">
+              <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] shrink-0" />
+              <span className="text-xs font-bold text-zinc-400 truncate">{username}</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#7C3AED] bg-[#7C3AED]/10 border border-[#7C3AED]/20 px-3 py-1 rounded-full shrink-0">
                 {role}
               </span>
             </div>
@@ -107,7 +107,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
             <button
               onClick={fetchOrders}
               disabled={refreshing}
-              className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+              className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors shrink-0"
               title="Obnovit"
             >
               <RefreshCw size={14} className={refreshing ? 'animate-spin text-[#7C3AED]' : 'text-zinc-500'} />
@@ -115,7 +115,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
 
             <button
               onClick={onLogout}
-              className="w-9 h-9 rounded-xl bg-white/5 hover:bg-red-500/20 hover:text-red-400 flex items-center justify-center transition-all duration-300"
+              className="w-9 h-9 rounded-xl bg-white/5 hover:bg-red-500/20 hover:text-red-400 flex items-center justify-center transition-all duration-300 shrink-0"
               title="Odhlásit se"
             >
               <LogOut size={14} />
@@ -124,9 +124,9 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
         </div>
       </nav>
 
-      <main className="max-w-6xl mx-auto px-6 py-10 relative z-10">
-        <div className="flex items-center justify-between mb-8">
-          <div>
+      <main className="max-w-6xl mx-auto px-6 py-10 relative z-10 w-full overflow-hidden">
+        <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
+          <div className="min-w-0">
             <h1 className="text-3xl font-black tracking-tight">
               {isSales ? 'Moje objednávky' : 'Přehled zadání'}
             </h1>
@@ -142,7 +142,7 @@ export default function Dashboard({ userId, username, role, onLogout }: Dashboar
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setShowNewOrder(true)}
-              className="flex items-center gap-2 bg-[#7C3AED] text-white px-6 py-3 rounded-2xl font-black text-sm uppercase tracking-wider hover:bg-[#5B21B6] transition-all duration-300 shadow-[0_0_30px_-5px_rgba(124,58,237,0.5)]"
+              className="flex items-center gap-2 bg-[#7C3AED] text-white px-6 py-3 rounded-2xl font-black text-sm uppercase tracking-wider hover:bg-[#5B21B6] transition-all duration-300 shadow-[0_0_30px_-5px_rgba(124,58,237,0.5)] shrink-0"
             >
               <Plus size={16} />
               Přidat

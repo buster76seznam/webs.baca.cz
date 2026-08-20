@@ -166,7 +166,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
       layout
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-none border transition-all duration-500 overflow-hidden
+      className={`rounded-none border transition-all duration-500 overflow-hidden w-full max-w-full
         ${isUrgent
           ? 'border-amber-500/50 bg-amber-500/5 shadow-[0_0_30px_-5px_rgba(245,158,11,0.3)]'
           : 'border-white/5 bg-[#0A0A0A]'
@@ -183,11 +183,11 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
       )}
 
       {/* Card header */}
-      <div className="p-6 flex items-start justify-between gap-4">
+      <div className="p-6 flex items-start justify-between gap-4 min-w-0">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 mb-1 flex-wrap">
+          <div className="flex items-center gap-3 mb-1 flex-wrap min-w-0">
             <h3 className="text-lg font-black tracking-tight truncate">{order.company_name}</h3>
-            <span className="text-[10px] font-black uppercase tracking-widest text-[#7C3AED] bg-[#7C3AED]/10 border border-[#7C3AED]/20 px-3 py-1 rounded-none">
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#7C3AED] bg-[#7C3AED]/10 border border-[#7C3AED]/20 px-3 py-1 rounded-none shrink-0">
               {order.industry}
             </span>
           </div>
@@ -203,13 +203,13 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
             <button
               onClick={() => setStatusOpen(!statusOpen)}
               disabled={updating}
-              className={`flex items-center gap-2 px-4 py-2 rounded-none border text-xs font-black uppercase tracking-wider transition-all duration-300 ${statusColor}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-none border text-xs font-black uppercase tracking-wider transition-all duration-300 ${statusColor} whitespace-nowrap`}
             >
               {updating ? '...' : order.status}
               <ChevronDown size={12} className={`transition-transform duration-300 ${statusOpen ? 'rotate-180' : ''}`} />
             </button>
           ) : (
-            <span className={`px-4 py-2 rounded-none border text-xs font-black uppercase tracking-wider ${statusColor}`}>
+            <span className={`px-4 py-2 rounded-none border text-xs font-black uppercase tracking-wider ${statusColor} whitespace-nowrap`}>
               {order.status}
             </span>
           )}
@@ -220,7 +220,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                 <button
                   key={s}
                   onClick={() => handleStatusChange(s)}
-                  className={`w-full text-left px-5 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors
+                  className={`w-full text-left px-5 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors whitespace-nowrap
                     ${order.status === s ? 'text-[#7C3AED]' : 'text-zinc-300'}`}
                 >
                   {s}
@@ -232,16 +232,16 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
       </div>
 
       {/* Basic contact info */}
-      <div className="px-6 pb-6 space-y-3">
-        <div className="flex items-center gap-3 text-zinc-400">
+      <div className="px-6 pb-6 space-y-3 min-w-0">
+        <div className="flex items-center gap-3 text-zinc-400 min-w-0">
           <Phone size={14} className="shrink-0" />
-          <span className="text-xs font-bold">{order.company_phone || 'Není uvedeno'}</span>
+          <span className="text-xs font-bold truncate">{order.company_phone || 'Není uvedeno'}</span>
         </div>
-        <div className="flex items-center gap-3 text-zinc-400">
+        <div className="flex items-center gap-3 text-zinc-400 min-w-0">
           <Mail size={14} className="shrink-0" />
           <span className="text-xs font-bold truncate">{order.company_email || 'Není uvedeno'}</span>
         </div>
-        <div className="flex items-center gap-3 text-zinc-400">
+        <div className="flex items-center gap-3 text-zinc-400 min-w-0">
           <MapPin size={14} className="shrink-0" />
           <span className="text-xs font-bold truncate">{order.company_address || 'Není uvedeno'}</span>
         </div>
@@ -257,17 +257,17 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
 
       {/* Expanded details */}
       {expanded && (
-        <div className="p-6 bg-black/40 space-y-6 border-t border-white/5">
-          <div>
+        <div className="p-6 bg-black/40 space-y-6 border-t border-white/5 overflow-hidden">
+          <div className="min-w-0">
             <div className="flex items-center gap-2 mb-3 text-[#7C3AED]">
               <Wrench size={14} />
               <span className="text-[10px] font-black uppercase tracking-widest">Co dělají</span>
             </div>
-            <p className="text-sm text-zinc-300 leading-relaxed">{order.description}</p>
+            <p className="text-sm text-zinc-300 leading-relaxed break-words">{order.description}</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div>
+          <div className="grid grid-cols-2 gap-6 min-w-0">
+            <div className="min-w-0">
               <div className="flex items-center gap-2 mb-2 text-zinc-500">
                 <Camera size={14} />
                 <span className="text-[10px] font-black uppercase tracking-widest">Fotky</span>
@@ -276,19 +276,19 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
                 {order.images?.length ? 'K dispozici' : 'Nemá / zajistíme'}
               </span>
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2 mb-2 text-zinc-500">
                 <Globe size={14} />
                 <span className="text-[10px] font-black uppercase tracking-widest">Doména</span>
               </div>
-              <span className="text-xs font-bold text-zinc-300">{order.domain}</span>
+              <span className="text-xs font-bold text-zinc-300 truncate block">{order.domain}</span>
             </div>
           </div>
 
 
           {/* Design section */}
           {(order.primary_color || order.secondary_color || order.language) && (
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2 mb-3 text-[#7C3AED]">
                 <Palette size={14} />
                 <span className="text-[10px] font-black uppercase tracking-widest">Design</span>
@@ -296,19 +296,19 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
               <div className="space-y-2">
                 {order.primary_color && (
                   <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded border border-white/20" style={{ backgroundColor: order.primary_color }} />
+                    <div className="w-6 h-6 rounded border border-white/20 shrink-0" style={{ backgroundColor: order.primary_color }} />
                     <span className="text-xs text-zinc-400">Primární barva</span>
                   </div>
                 )}
                 {order.secondary_color && (
                   <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded border border-white/20" style={{ backgroundColor: order.secondary_color }} />
+                    <div className="w-6 h-6 rounded border border-white/20 shrink-0" style={{ backgroundColor: order.secondary_color }} />
                     <span className="text-xs text-zinc-400">Sekundární barva</span>
                   </div>
                 )}
                 {order.language && (
                   <div className="flex items-center gap-3">
-                    <Languages size={16} className="text-zinc-500" />
+                    <Languages size={16} className="text-zinc-500 shrink-0" />
                     <span className="text-xs text-zinc-400">Jazyk: {order.language.toUpperCase()}</span>
                   </div>
                 )}
@@ -320,32 +320,32 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
 
           {/* Owner section */}
           {(order.owner_name || order.owner_phone || order.owner_email) && (
-            <div>
+            <div className="min-w-0">
               <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Majitel/Jednatel</div>
               <div className="space-y-1">
-                {order.owner_name && <p className="text-xs text-zinc-300">{order.owner_name}</p>}
-                {order.owner_phone && <p className="text-xs text-zinc-400">{order.owner_phone}</p>}
-                {order.owner_email && <p className="text-xs text-zinc-400">{order.owner_email}</p>}
+                {order.owner_name && <p className="text-xs text-zinc-300 break-words">{order.owner_name}</p>}
+                {order.owner_phone && <p className="text-xs text-zinc-400 break-words">{order.owner_phone}</p>}
+                {order.owner_email && <p className="text-xs text-zinc-400 break-words">{order.owner_email}</p>}
               </div>
             </div>
           )}
 
           {/* Additional info */}
           {(order.advantage || order.price_list || order.working_hours) && (
-            <div>
+            <div className="min-w-0">
               <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Další informace</div>
               <div className="space-y-2">
                 {order.advantage && (
                   <div>
                     <div className="text-[10px] font-bold text-zinc-500 mb-1">Výhoda oproti konkurenci</div>
-                    <p className="text-xs text-zinc-300">{order.advantage}</p>
+                    <p className="text-xs text-zinc-300 break-words">{order.advantage}</p>
                   </div>
                 )}
 
                 {order.working_hours && (
                   <div>
                     <div className="text-[10px] font-bold text-zinc-500 mb-1">Pracovní doba</div>
-                    <p className="text-xs text-zinc-300">{order.working_hours}</p>
+                    <p className="text-xs text-zinc-300 break-words">{order.working_hours}</p>
                   </div>
                 )}
               </div>
@@ -353,7 +353,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
           )}
 
           {/* Notes section */}
-          <div>
+          <div className="min-w-0">
             <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Poznámky</div>
             <textarea
               value={notes}
@@ -361,7 +361,7 @@ export default function OrderCard({ order, viewerRole, viewerUserId, onUpdate }:
               onBlur={handleNotesSave}
               disabled={savingNotes}
               placeholder="Přidejte poznámku..."
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs text-white placeholder-zinc-600 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-8px_rgba(124,58,237,0.5)] transition-all duration-300 resize-none h-20"
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs text-white placeholder-zinc-600 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-8px_rgba(124,58,237,0.5)] transition-all duration-300 resize-none h-20 break-words"
             />
             {savingNotes && (
               <p className="text-[10px] text-zinc-500 mt-1">Ukládám...</p>

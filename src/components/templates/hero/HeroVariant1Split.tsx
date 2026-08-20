@@ -74,8 +74,8 @@ export default function HeroVariant1Split({ hero, companyName }: Props) {
           </div>
 
           {/* Right: Graphic */}
-          <div className="relative lg:h-[600px] flex items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-tr from-var(--color-primary) to-var(--color-secondary) opacity-10 blur-3xl rounded-full scale-75 animate-pulse" />
+          <div className="relative lg:h-[600px] flex items-center justify-center overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-primary)] to-[var(--color-secondary)] opacity-10 blur-3xl rounded-full scale-75 animate-pulse" />
             <div
               className="relative w-full aspect-[4/5] max-w-[450px] rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] border-[8px] border-white group"
             >

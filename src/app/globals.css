@@ -37,12 +37,14 @@ body {
   overflow-x: hidden !important;
   position: relative;
   width: 100%;
+  min-width: 0;
 }
 
 /* Anti-overflow wrapper pro všechny klientské sekce */
 .anti-overflow-container {
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   overflow-x: hidden;
   position: relative;
 }
@@ -54,12 +56,36 @@ section,
 footer,
 nav {
   max-width: 100%;
+  min-width: 0;
   overflow-x: clip;
 }
 
 main,
 section {
   max-width: 100%;
+  min-width: 0;
+}
+
+/* Extra protection for all containers */
+* {
+  min-width: 0;
+}
+
+/* Text overflow prevention */
+* {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Prevent image overflow */
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 @media (prefers-reduced-motion: reduce) {

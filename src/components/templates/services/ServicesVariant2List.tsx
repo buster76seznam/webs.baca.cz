@@ -45,8 +45,8 @@ export default function ServicesVariant2List({ services }: Props) {
                 }`}
               >
                 {/* Icon block */}
-                <div className="flex-shrink-0 relative">
-                  <div className="absolute -inset-4 bg-gradient-to-tr from-var(--color-primary) to-var(--color-secondary) opacity-10 blur-2xl rounded-full scale-0 group-hover:scale-100 transition-transform duration-700" />
+                <div className="flex-shrink-0 relative overflow-hidden">
+                  <div className="absolute -inset-4 bg-gradient-to-tr from-[var(--color-primary)] to-[var(--color-secondary)] opacity-10 blur-2xl rounded-full scale-0 group-hover:scale-100 transition-transform duration-700" />
                   <div
                     className="w-24 h-24 md:w-32 md:h-32 rounded-[2.5rem] flex items-center justify-center text-5xl md:text-6xl bg-slate-50 relative z-10 border border-slate-100 group-hover:scale-110 transition-transform duration-500"
                   >
