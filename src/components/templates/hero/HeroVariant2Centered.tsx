@@ -30,11 +30,11 @@ export default function HeroVariant2Centered({ hero, companyName }: Props) {
 
       {/* Animated Glows */}
       <div
-        className="absolute top-[-15%] left-[-10%] w-[600px] h-[600px] max-w-full rounded-full blur-[120px] pointer-events-none"
+        className="absolute top-[-15%] left-0 -translate-x-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] max-w-full rounded-full blur-[80px] md:blur-[120px] pointer-events-none"
         style={{ backgroundColor: 'var(--color-primary)', opacity: 0.15 }}
       />
       <div
-        className="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] max-w-full rounded-full blur-[120px] pointer-events-none"
+        className="absolute bottom-[-15%] right-0 translate-x-1/2 w-[250px] md:w-[500px] h-[250px] md:h-[500px] max-w-full rounded-full blur-[80px] md:blur-[120px] pointer-events-none"
         style={{ backgroundColor: 'var(--color-secondary)', opacity: 0.15 }}
       />
 
