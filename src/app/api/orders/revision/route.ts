@@ -55,9 +55,16 @@ export async function POST(request: NextRequest) {
 
     // Build revision prompt
     const currentJson = JSON.stringify(order.generated_site_json, null, 2);
-    const systemPrompt = 'You are a web designer expert. You will receive a website content JSON and a user feedback. Your task is to update the JSON based on the feedback. Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like ```json. CRITICAL: Do NOT use emoji in the text. Do NOT use Czech characters š, č, and ř (use s, c, r instead) to avoid header encoding issues.';
+    const systemPrompt = `You are a web designer expert. You will receive a website content JSON and a user feedback. Your task is to update the JSON based on the feedback. Respond strictly with raw JSON. Do NOT wrap the JSON in markdown code blocks like \`\`\`json. 
+CRITICAL: System MUST generate ALL JSON content strictly in the language specified in the order.
+If order.language is 'en', all text MUST be 100% in English.
+If order.language is 'cs', all text MUST be 100% in Czech.
+Never fallback to Czech unless language is explicitly 'cs'. Do NOT use emoji. Do NOT use Czech characters š, č, and ř (use s, c, r instead) ONLY IF it is necessary for headers (but preferably use standard UTF-8 if the client supports it, however here we follow the previous constraint for safety).`;
     
     const userPrompt = `
+Update the JSON to reflect the user's feedback while maintaining the structure. Output the full updated JSON.
+Update the JSON to reflect the user's feedback while maintaining the structure. Output the full updated JSON.
+CRITICAL: All generated content MUST be strictly in ${order.language === 'en' ? 'English' : 'Czech'}.
 Current Website JSON:
 ${currentJson}
 

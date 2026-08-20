@@ -50,8 +50,68 @@ function hexAlpha(hex: string, alpha: number): string {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
+const translations = {
+  cs: {
+    aboutTitle: 'O nás',
+    address: 'Adresa',
+    phone: 'Telefon',
+    email: 'Email',
+    hours: 'Otevírací doba',
+    location: 'Lokalita',
+    findUs: 'Kde nás najdete',
+    contact: 'Kontakt',
+    writeToUs: 'Napište nám',
+    contactPrompt: 'Máte dotaz nebo zájem o spolupráci? Ozvěte se nám.',
+    nameLabel: 'Jméno',
+    namePlaceholder: 'Vaše jméno',
+    emailPlaceholder: 'vas@email.cz',
+    messageLabel: 'Zpráva',
+    messagePlaceholder: 'Jak vám můžeme pomoci?',
+    sendButton: 'Odeslat zprávu',
+    demoBadge: 'Demo verze',
+    demoMap: 'Interaktivní mapa',
+    demoForm: 'Formulář bude aktivní po zakoupení webu',
+    demoSite: 'Náhled vašeho webu (Demo version)',
+    approveButton: 'Schválit & Aktivovat web na vlastní doméně',
+    approveButtonMobile: 'Aktivovat web',
+    rights: 'Všechna práva vyhrazena.',
+    servicesTitle: 'Služby',
+    servicesSubtitle: 'Co nabízíme',
+  },
+  en: {
+    aboutTitle: 'About Us',
+    address: 'Address',
+    phone: 'Phone',
+    email: 'Email',
+    hours: 'Opening Hours',
+    location: 'Location',
+    findUs: 'Where to find us',
+    contact: 'Contact',
+    writeToUs: 'Write to us',
+    contactPrompt: 'Have a question or interested in working together? Get in touch.',
+    nameLabel: 'Name',
+    namePlaceholder: 'Your name',
+    emailPlaceholder: 'your@email.com',
+    messageLabel: 'Message',
+    messagePlaceholder: 'How can we help you?',
+    sendButton: 'Send message',
+    demoBadge: 'Demo version',
+    demoMap: 'Interactive map',
+    demoForm: 'The form will be active after purchasing the website',
+    demoSite: 'Preview of your website (Demo version)',
+    approveButton: 'Approve & Activate website on your own domain',
+    approveButtonMobile: 'Activate website',
+    rights: 'All rights reserved.',
+    servicesTitle: 'Services',
+    servicesSubtitle: 'What we offer',
+  }
+};
+
 export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) {
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+
+  const lang = order.language === 'en' ? 'en' : 'cs';
+  const t = translations[lang];
 
   // Structured Data (JSON-LD)
   const structuredData = {
@@ -107,7 +167,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
   } as React.CSSProperties;
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans w-full max-w-full overflow-x-hidden" style={cssVars}>
+    <div className="min-h-screen bg-white text-gray-900 font-sans w-full max-w-full overflow-x-hidden relative" style={cssVars}>
       {/* SEO: JSON-LD */}
       <script
         type="application/ld+json"
@@ -123,17 +183,17 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
           <div className="flex items-center gap-3 min-w-0">
             <span className="text-yellow-400 text-lg flex-shrink-0">👁️</span>
             <span className="text-white text-sm font-medium truncate">
-              Náhled vašeho webu (Demo version)
+              {t.demoSite}
             </span>
           </div>
           <button
             onClick={handleApproveClick}
-            className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg text-white font-bold text-sm transition-all hover:opacity-90 active:scale-95"
+            className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg text-white font-bold text-sm transition-all hover:opacity-90 active:scale-95 shadow-[0_0_15px_rgba(0,0,0,0.3)]"
             style={{ backgroundColor: primaryColor }}
           >
             <CheckCircle size={16} />
-            <span className="hidden sm:inline">Schválit &amp; Aktivovat web na vlastní doméně</span>
-            <span className="sm:hidden">Aktivovat web</span>
+            <span className="hidden sm:inline">{t.approveButton}</span>
+            <span className="sm:hidden">{t.approveButtonMobile}</span>
           </button>
         </div>
       )}
@@ -149,60 +209,68 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
       )}
 
       {/* ─── ABOUT ─── */}
-      <section id="about" className="py-24 px-6 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
+      <section id="about" className="py-32 px-6 bg-white overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div className="relative">
               <div
-                className="text-xs font-black uppercase tracking-widest mb-4"
-                style={{ color: primaryColor }}
+                className="text-xs font-black uppercase tracking-[0.3em] mb-6 inline-block px-4 py-1.5 rounded-full"
+                style={{ backgroundColor: hexAlpha(primaryColor, 0.1), color: primaryColor }}
               >
-                O nás
+                {t.aboutTitle}
               </div>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-6 text-gray-900">
+              <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-8 text-gray-900 leading-[1.1]">
                 {about?.title}
               </h2>
-              <p className="text-gray-600 leading-relaxed text-lg whitespace-pre-line">
+              <div className="w-20 h-1.5 bg-gray-100 rounded-full mb-8" />
+              <p className="text-gray-600 leading-relaxed text-lg whitespace-pre-line font-medium">
                 {about?.text}
               </p>
             </div>
             <div
-              className="rounded-3xl p-10 flex flex-col gap-6 shadow-xl backdrop-blur-sm"
-              style={{ backgroundColor: hexAlpha(primaryColor, 0.05), border: `1px solid ${hexAlpha(primaryColor, 0.1)}` }}
+              className="rounded-[2.5rem] p-12 flex flex-col gap-10 shadow-2xl backdrop-blur-md bg-white/50 border border-slate-200/60 hover:shadow-primary-10 transition-all duration-500 hover:-translate-y-1"
             >
               {(contact?.address || order.company_address) && (
-                <div className="flex items-start gap-4">
-                  <MapPin className="mt-1 flex-shrink-0" size={22} style={{ color: primaryColor }} />
+                <div className="flex items-start gap-6 group">
+                  <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <MapPin size={24} style={{ color: primaryColor }} />
+                  </div>
                   <div>
-                    <p className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-1">Adresa</p>
-                    <p className="text-gray-600">{contact?.address || order.company_address}</p>
+                    <p className="font-black text-gray-400 text-[10px] uppercase tracking-[0.2em] mb-2">{t.address}</p>
+                    <p className="text-gray-900 font-bold text-lg">{contact?.address || order.company_address}</p>
                   </div>
                 </div>
               )}
               {(contact?.phone || order.company_phone) && (
-                <div className="flex items-start gap-4">
-                  <Phone className="mt-1 flex-shrink-0" size={22} style={{ color: primaryColor }} />
+                <div className="flex items-start gap-6 group">
+                  <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <Phone size={24} style={{ color: primaryColor }} />
+                  </div>
                   <div>
-                    <p className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-1">Telefon</p>
-                    <p className="text-gray-600">{contact?.phone || order.company_phone}</p>
+                    <p className="font-black text-gray-400 text-[10px] uppercase tracking-[0.2em] mb-2">{t.phone}</p>
+                    <p className="text-gray-900 font-bold text-lg">{contact?.phone || order.company_phone}</p>
                   </div>
                 </div>
               )}
               {order.company_email && (
-                <div className="flex items-start gap-4">
-                  <Mail className="mt-1 flex-shrink-0" size={22} style={{ color: primaryColor }} />
+                <div className="flex items-start gap-6 group">
+                  <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <Mail size={24} style={{ color: primaryColor }} />
+                  </div>
                   <div>
-                    <p className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-1">Email</p>
-                    <p className="text-gray-600">{order.company_email}</p>
+                    <p className="font-black text-gray-400 text-[10px] uppercase tracking-[0.2em] mb-2">{t.email}</p>
+                    <p className="text-gray-900 font-bold text-lg">{order.company_email}</p>
                   </div>
                 </div>
               )}
               {(contact?.hours || order.working_hours) && (
-                <div className="flex items-start gap-4">
-                  <Clock className="mt-1 flex-shrink-0" size={22} style={{ color: primaryColor }} />
+                <div className="flex items-start gap-6 group">
+                  <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <Clock size={24} style={{ color: primaryColor }} />
+                  </div>
                   <div>
-                    <p className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-1">Otevírací doba</p>
-                    <p className="text-gray-600">{contact?.hours || order.working_hours}</p>
+                    <p className="font-black text-gray-400 text-[10px] uppercase tracking-[0.2em] mb-2">{t.hours}</p>
+                    <p className="text-gray-900 font-bold text-lg">{contact?.hours || order.working_hours}</p>
                   </div>
                 </div>
               )}
@@ -219,31 +287,33 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
       {/* ─── MAP ─── */}
       <section
         id="map"
-        className="py-24 px-6"
-        style={{ backgroundColor: '#f8f8f8' }}
+        className="py-32 px-6"
+        style={{ backgroundColor: '#f9fafb' }}
       >
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
             <div
-              className="text-xs font-black uppercase tracking-widest mb-4"
+              className="text-xs font-black uppercase tracking-[0.3em] mb-4 inline-block px-4 py-1.5 rounded-full bg-white shadow-sm"
               style={{ color: primaryColor }}
             >
-              Lokalita
+              {t.location}
             </div>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-gray-900 mb-4">
-              Kde nás najdete
+            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 mb-6">
+              {t.findUs}
             </h2>
           </div>
-          <div className="relative rounded-3xl overflow-hidden shadow-md">
+          <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-white">
             {!isPaid && (
-              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-gray-900/80 backdrop-blur-sm rounded-3xl">
-                <MapPin size={40} className="text-white mb-4 opacity-70" />
-                <p className="text-white font-bold text-lg mb-1">Interaktivní mapa</p>
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-gray-900/40 backdrop-blur-md rounded-[2.5rem]">
+                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl mb-6">
+                  <MapPin size={32} style={{ color: primaryColor }} />
+                </div>
+                <p className="text-white font-black text-2xl mb-4 tracking-tight">{t.demoMap}</p>
                 <span
-                  className="px-4 py-1.5 rounded-full text-white text-xs font-black uppercase tracking-widest"
+                  className="px-6 py-2 rounded-full text-white text-xs font-black uppercase tracking-widest shadow-lg"
                   style={{ backgroundColor: primaryColor }}
                 >
-                  Demo verze
+                  {t.demoBadge}
                 </span>
               </div>
             )}
@@ -255,16 +325,17 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
                 className="block"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Mapa"
+                title={t.findUs}
               />
             ) : (
               <div
-                className="h-80 w-full flex items-center justify-center"
-                style={{ backgroundColor: hexAlpha(primaryColor, 0.08) }}
+                className="h-[500px] w-full flex items-center justify-center bg-slate-100"
               >
                 <div className="text-center">
-                  <MapPin size={48} style={{ color: primaryColor }} className="mx-auto mb-3 opacity-40" />
-                  <p className="text-gray-400 font-medium">{contact?.address || order.company_address}</p>
+                  <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm mx-auto mb-6 opacity-50">
+                    <MapPin size={32} style={{ color: primaryColor }} />
+                  </div>
+                  <p className="text-gray-400 font-black uppercase tracking-widest text-xs">{contact?.address || order.company_address}</p>
                 </div>
               </div>
             )}
@@ -273,31 +344,32 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
       </section>
 
       {/* ─── CONTACT FORM ─── */}
-      <section id="contact" className="py-24 px-6 bg-white">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-12">
+      <section id="contact" className="py-32 px-6 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-16">
             <div
-              className="text-xs font-black uppercase tracking-widest mb-4"
-              style={{ color: primaryColor }}
+              className="text-xs font-black uppercase tracking-[0.3em] mb-4 inline-block px-4 py-1.5 rounded-full"
+              style={{ backgroundColor: hexAlpha(primaryColor, 0.1), color: primaryColor }}
             >
-              Kontakt
+              {t.contact}
             </div>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-gray-900 mb-4">
-              Napište nám
+            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 mb-6">
+              {t.writeToUs}
             </h2>
-            <p className="text-gray-500">Máte dotaz nebo zájem o spolupráci? Ozvěte se nám.</p>
+            <p className="text-gray-500 text-lg font-medium">{t.contactPrompt}</p>
           </div>
 
           {!isPaid && (
             <div
-              className="mb-8 p-4 rounded-2xl flex items-start gap-3"
-              style={{ backgroundColor: '#FEF3C7', border: '1px solid #FCD34D' }}
+              className="mb-12 p-6 rounded-[2rem] flex items-center gap-4 bg-amber-50 border border-amber-100 shadow-sm"
             >
-              <span className="text-2xl flex-shrink-0">🔒</span>
+              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm">
+                <span className="text-xl">🔒</span>
+              </div>
               <div>
-                <p className="font-bold text-amber-900 text-sm mb-0.5">Demo verze</p>
-                <p className="text-amber-800 text-sm">
-                  Formulář bude aktivní po zakoupení webu
+                <p className="font-black text-amber-900 text-sm tracking-tight">{t.demoBadge}</p>
+                <p className="text-amber-800 text-sm font-medium">
+                  {t.demoForm}
                 </p>
               </div>
             </div>
@@ -305,49 +377,51 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
 
           <form
             onSubmit={handleContactSubmit}
-            className={`space-y-5 ${!isPaid ? 'opacity-70 pointer-events-none select-none' : ''}`}
+            className={`space-y-6 ${!isPaid ? 'opacity-70 pointer-events-none select-none' : ''}`}
           >
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Jméno</label>
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-3 ml-1">{t.nameLabel}</label>
               <input
                 type="text"
                 value={contactForm.name}
                 onChange={e => setContactForm({ ...contactForm, name: e.target.value })}
-                placeholder="Vaše jméno"
-                className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 text-gray-900 transition-all"
+                placeholder={t.namePlaceholder}
+                className="w-full px-6 py-5 rounded-[1.5rem] bg-gray-50 border-none focus:bg-white focus:ring-2 text-gray-900 transition-all shadow-inner font-bold placeholder:text-gray-300"
                 style={{ '--tw-ring-color': primaryColor } as React.CSSProperties}
                 disabled={!isPaid}
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Email</label>
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-3 ml-1">{t.email}</label>
               <input
                 type="email"
                 value={contactForm.email}
                 onChange={e => setContactForm({ ...contactForm, email: e.target.value })}
-                placeholder="vas@email.cz"
-                className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 text-gray-900 transition-all"
+                placeholder={t.emailPlaceholder}
+                className="w-full px-6 py-5 rounded-[1.5rem] bg-gray-50 border-none focus:bg-white focus:ring-2 text-gray-900 transition-all shadow-inner font-bold placeholder:text-gray-300"
+                style={{ '--tw-ring-color': primaryColor } as React.CSSProperties}
                 disabled={!isPaid}
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Zpráva</label>
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-3 ml-1">{t.messageLabel}</label>
               <textarea
                 value={contactForm.message}
                 onChange={e => setContactForm({ ...contactForm, message: e.target.value })}
-                placeholder="Jak vám můžeme pomoci?"
+                placeholder={t.messagePlaceholder}
                 rows={5}
-                className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 text-gray-900 transition-all resize-none"
+                className="w-full px-6 py-5 rounded-[1.5rem] bg-gray-50 border-none focus:bg-white focus:ring-2 text-gray-900 transition-all resize-none shadow-inner font-bold placeholder:text-gray-300"
+                style={{ '--tw-ring-color': primaryColor } as React.CSSProperties}
                 disabled={!isPaid}
               />
             </div>
             <button
               type="submit"
-              className="w-full py-4 rounded-2xl text-white font-black text-base tracking-wide transition-all"
+              className="w-full py-6 rounded-[1.5rem] text-white font-black text-lg tracking-tight transition-all shadow-xl hover:shadow-2xl hover:scale-[1.01] active:scale-[0.99]"
               style={{ backgroundColor: primaryColor }}
               disabled={!isPaid}
             >
-              {isPaid ? 'Odeslat zprávu' : 'Demo verze – formulář bude aktivní po zakoupení webu'}
+              {isPaid ? t.sendButton : t.demoBadge}
             </button>
           </form>
         </div>
@@ -355,56 +429,56 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
 
       {/* ─── FOOTER ─── */}
       <footer
-        className="py-12 px-6 text-white"
-        style={{ backgroundColor: '#111' }}
+        className="py-24 px-6 text-white"
+        style={{ backgroundColor: '#000' }}
       >
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <p className="font-black text-xl mb-1">{order.company_name}</p>
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12 mb-16">
+            <div className="text-center md:text-left">
+              <p className="font-black text-3xl mb-3 tracking-tighter uppercase">{order.company_name}</p>
               {contact?.address && (
-                <p className="text-gray-400 text-sm">{contact.address}</p>
+                <p className="text-gray-500 text-sm font-medium uppercase tracking-widest">{contact.address}</p>
               )}
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               {order.facebook_url && (
                 <a
                   href={isPaid ? order.facebook_url : '#'}
                   onClick={e => !isPaid && e.preventDefault()}
-                  className="w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:opacity-80 font-black text-sm"
-                  style={{ backgroundColor: hexAlpha(primaryColor, 0.3), color: primaryColor }}
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all hover:bg-white hover:text-black font-black text-sm border border-white/10 shadow-lg"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.05)' }}
                   aria-label="Facebook"
                 >
-                  f
+                  FB
                 </a>
               )}
               {order.instagram_url && (
                 <a
                   href={isPaid ? order.instagram_url : '#'}
                   onClick={e => !isPaid && e.preventDefault()}
-                  className="w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:opacity-80 font-black text-sm"
-                  style={{ backgroundColor: hexAlpha(primaryColor, 0.3), color: primaryColor }}
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all hover:bg-white hover:text-black font-black text-sm border border-white/10 shadow-lg"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.05)' }}
                   aria-label="Instagram"
                 >
-                  ig
+                  IG
                 </a>
               )}
             </div>
           </div>
           <div
-            className="mt-8 pt-6 text-center text-xs text-gray-600"
-            style={{ borderTop: '1px solid #222' }}
+            className="pt-12 text-center"
+            style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
           >
             {!isPaid && (
               <p
-                className="mb-3 px-4 py-2 rounded-lg inline-block text-xs font-bold uppercase tracking-wider"
-                style={{ backgroundColor: hexAlpha(primaryColor, 0.2), color: primaryColor }}
+                className="mb-8 px-6 py-2 rounded-full inline-block text-[10px] font-black uppercase tracking-[0.2em] shadow-lg"
+                style={{ backgroundColor: hexAlpha(primaryColor, 0.2), color: primaryColor, border: `1px solid ${hexAlpha(primaryColor, 0.3)}` }}
               >
-                Demo verze – pouze náhled
+                {t.demoBadge} – {t.demoSite}
               </p>
             )}
-            <p className="text-gray-600">
-              &copy; {new Date().getFullYear()} {order.company_name}. Všechna práva vyhrazena.
+            <p className="text-gray-600 font-bold uppercase tracking-widest text-[9px]">
+              &copy; {new Date().getFullYear()} {order.company_name}. {t.rights}
             </p>
           </div>
         </div>

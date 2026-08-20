@@ -62,21 +62,26 @@ export async function POST(request: Request) {
           secondaryColor: z.string()
         })
       }),
-      system: `Jsi expert na tvorbu webového obsahu. Vytvoř strukturovaný obsah pro web v českém jazyce. 
-Všechny texty musí být v češtině. Nepoužívej emotikony.`,
-      prompt: `Vytvoř kompletní JSON pro web na základě těchto informací:
-Název firmy: ${order.company_name}
-Obor: ${order.industry}
-Popis: ${order.description}
-Přednosti: ${order.advantage}
-Služby/Ceník: ${order.price_list}
-Pracovní doba: ${order.working_hours}
+      system: `You are an expert web content creator.
+CRITICAL: System MUST generate ALL JSON content strictly in the language specified in the order.
+If language is 'en', all generated text (title, subtitle, services, etc.) MUST be 100% in English.
+If language is 'cs', all generated text MUST be 100% in Czech.
+Never fallback to Czech unless language is explicitly 'cs'. Never use emojis.`,
+      prompt: `Create a complete JSON for a website based on this information:
+Company Name: ${order.company_name}
+Industry: ${order.industry}
+Description: ${order.description}
+Advantages: ${order.advantage}
+Services/Pricing: ${order.price_list}
+Working Hours: ${order.working_hours}
 Email: ${order.company_email}
-Telefon: ${order.company_phone}
-Adresa: ${order.company_address}
-Preferovaná primární barva: ${order.primary_color}
-Preferovaná sekundární barva: ${order.secondary_color}
-Jazyk: ${order.language || 'cs'}`
+Phone: ${order.company_phone}
+Address: ${order.company_address}
+Preferred Primary Color: ${order.primary_color}
+Preferred Secondary Color: ${order.secondary_color}
+Language: ${order.language || 'cs'}
+
+CRITICAL: All generated content MUST be strictly in ${order.language === 'en' ? 'English' : 'Czech'}.`
     });
 
     console.log('Content generated successfully');

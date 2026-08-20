@@ -248,8 +248,8 @@ export default function Home() {
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] as const }}
                 className="relative hidden lg:block order-1 lg:order-2 overflow-hidden"
               >
