@@ -89,7 +89,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden w-full max-w-full ${promoVisible ? "pt-72 sm:pt-80 md:pt-96 lg:pt-[28rem]" : "pt-48 sm:pt-52"}`}>
           {/* Animated Background Glows */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="relative w-full max-w-full overflow-hidden pointer-events-none">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
             <motion.div 
               animate={{ 
@@ -105,7 +105,7 @@ export default function Home() {
                 opacity: [0.2, 0.3, 0.2]
               }}
               transition={{ duration: 12, repeat: Infinity, delay: 1 }}
-              className="absolute bottom-1/4 right-0 translate-x-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-brand-dark/10 rounded-full blur-[80px] md:blur-[150px] pointer-events-none"
+              className="absolute bottom-1/4 -right-20 md:-right-40 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-brand-dark/10 rounded-full blur-[80px] md:blur-[150px] pointer-events-none"
             />
           </div>
           
