@@ -221,7 +221,7 @@ export default function AgenturaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#030303] text-white flex items-center justify-center px-4 w-full max-w-full overflow-x-hidden">
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.06),transparent_60%)] pointer-events-none" />
 
       <div className="w-full max-w-sm relative z-10">

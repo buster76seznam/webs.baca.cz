@@ -350,7 +350,7 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a] text-white py-24 px-6 flex items-center justify-center">
+    <div className="min-h-screen bg-[#1a1a1a] text-white py-24 px-6 flex items-center justify-center w-full max-w-full overflow-x-hidden">
       <LanguageSwitcher currentLanguage={currentLanguage} onLanguageChange={handleLanguageChange} />
       <div className="max-w-4xl mx-auto w-full">
         {/* Progress Bar */}

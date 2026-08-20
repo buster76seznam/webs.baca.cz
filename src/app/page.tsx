@@ -38,7 +38,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-[#030303] text-white selection:bg-brand selection:text-white antialiased w-full max-w-full overflow-x-hidden">
       <ContactLeadModal open={leadOpen} onClose={() => setLeadOpen(false)} />
       {/* Navigation */}
       <nav className={`fixed inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 transition-all duration-700 ${scrolled ? 'h-16 sm:h-20 bg-black/40 backdrop-blur-2xl border-b border-white/5' : 'h-24 sm:h-32 bg-transparent'}`}>
@@ -85,7 +85,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <main className="w-full overflow-x-hidden">
+      <main className="w-full max-w-full overflow-x-hidden">
         {/* Hero Section */}
         <section className={`relative min-h-[110vh] flex items-center justify-center px-8 overflow-hidden w-full ${promoVisible ? "pt-72 sm:pt-80 md:pt-96 lg:pt-[28rem]" : "pt-48 sm:pt-52"}`}>
           {/* Animated Background Glows */}

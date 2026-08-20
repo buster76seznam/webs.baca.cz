@@ -1,6 +1,6 @@
 export default function CareerPage() {
   return (
-    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', width: '100%', overflowX: 'hidden' }}>
       <h1 style={{ fontSize: '32px', fontWeight: 700, marginBottom: '1rem' }}>
         Kariéra
       </h1>

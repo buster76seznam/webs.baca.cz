@@ -87,7 +87,7 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#030303] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#030303] flex items-center justify-center px-4 w-full max-w-full overflow-x-hidden">
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -383,7 +383,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
 
   if (selectedPartnerId) {
     return (
-      <div className="min-h-screen bg-[#030303] px-4 sm:px-6 md:px-8 py-10">
+      <div className="min-h-screen bg-[#030303] px-4 sm:px-6 md:px-8 py-10 w-full max-w-full overflow-x-hidden">
         <div className="max-w-7xl mx-auto">
           <AnimatePresence mode="wait">
             <PartnerDetailView
@@ -398,7 +398,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#030303]">
+    <div className="min-h-screen bg-[#030303] w-full max-w-full overflow-x-hidden">
       {/* Navigace */}
       <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-black/60 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex items-center justify-between min-w-0 overflow-hidden">
@@ -443,7 +443,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-10 w-full max-w-full overflow-x-hidden">
         {/* Nadpis */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

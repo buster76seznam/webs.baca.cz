@@ -1,6 +1,6 @@
 export default function PrivacyPage() {
   return (
-    <div style={{ padding: '3rem 2rem', maxWidth: '860px', margin: '0 auto', fontFamily: 'inherit', color: '#fff', lineHeight: 1.7 }}>
+    <div style={{ padding: '3rem 2rem', maxWidth: '860px', margin: '0 auto', fontFamily: 'inherit', color: '#fff', lineHeight: 1.7, width: '100%', overflowX: 'hidden' }}>
       <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '0.25rem' }}>PRIVACY POLICY</h1>
       <p style={{ color: '#aaa', marginBottom: '2rem' }}>Last Updated: August 5, 2026</p>
 

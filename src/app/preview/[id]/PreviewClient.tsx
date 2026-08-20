@@ -109,8 +109,8 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-50 px-4 py-3 shadow-sm">
+    <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-50 w-full max-w-full overflow-hidden px-4 py-3 shadow-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-lg font-bold text-gray-900 leading-tight">{order.company_name}</h1>

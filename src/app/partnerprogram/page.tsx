@@ -217,7 +217,7 @@ export default function PartnerProgramPage() {
     const progress = getProgressToNextTier(partner.activeClients);
 
     return (
-      <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-white selection:bg-brand selection:text-white antialiased overflow-x-hidden">
+      <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-white selection:bg-brand selection:text-white antialiased w-full max-w-full overflow-x-hidden">
         {/* Header */}
         <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/40 dark:bg-black/40 backdrop-blur-xl border-b border-white/20 dark:border-white/5">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex items-center justify-between min-w-0 overflow-hidden">
@@ -258,7 +258,7 @@ export default function PartnerProgramPage() {
           </div>
         </nav>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 w-full">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 w-full max-w-full overflow-x-hidden">
           {/* Welcome Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -430,7 +430,7 @@ export default function PartnerProgramPage() {
           </div>
         </main>
 
-        <footer className="py-20 px-4 sm:px-6 md:px-8 border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#020202] w-full">
+        <footer className="py-20 px-4 sm:px-6 md:px-8 border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#020202] w-full max-w-full overflow-hidden">
           <div className="max-w-7xl mx-auto text-center text-sm text-gray-600 dark:text-zinc-500 font-bold">
             <p>Questions? Contact us: <a href="mailto:webs.baca@gmail.com" className="text-brand hover:text-brand-dark transition">webs.baca@gmail.com</a></p>
           </div>
@@ -441,7 +441,7 @@ export default function PartnerProgramPage() {
 
   // Main Partner Program Page
   return (
-    <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-gray-900 dark:text-white selection:bg-brand selection:text-white antialiased">
+    <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-gray-900 dark:text-white selection:bg-brand selection:text-white antialiased w-full max-w-full overflow-x-hidden">
       <LoginModal />
 
       {/* Navigation */}
@@ -498,7 +498,7 @@ export default function PartnerProgramPage() {
         </div>
       </nav>
 
-      <main className="w-full">
+      <main className="w-full max-w-full overflow-x-hidden">
         {/* Hero Section */}
         <section className="relative w-full px-4 sm:px-6 md:px-8 py-20 md:py-28 overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(124,58,237,0.08),transparent_60%)]" />
@@ -947,7 +947,7 @@ export default function PartnerProgramPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-16 px-4 sm:px-6 md:px-8 bg-gray-50 dark:bg-[#020202] border-t border-gray-200 dark:border-white/5 overflow-hidden">
+      <footer className="w-full max-w-full py-16 px-4 sm:px-6 md:px-8 bg-gray-50 dark:bg-[#020202] border-t border-gray-200 dark:border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-12 mb-12">
             <div>

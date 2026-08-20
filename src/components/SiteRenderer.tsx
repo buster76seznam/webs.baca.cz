@@ -90,7 +90,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
   } as React.CSSProperties;
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans" style={cssVars}>
+    <div className="min-h-screen bg-white text-gray-900 font-sans w-full max-w-full overflow-x-hidden" style={cssVars}>
       {/* ─── STICKY DEMO BANNER ─── */}
       {!isPaid && (
         <div

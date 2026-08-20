@@ -9,7 +9,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
   const sessionId = params.session_id;
 
   return (
-    <main className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+    <main className="min-h-screen bg-slate-950 flex items-center justify-center p-4 w-full max-w-full overflow-x-hidden">
       <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-6">
 
         {/* Success icon */}
