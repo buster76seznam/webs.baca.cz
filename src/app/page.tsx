@@ -99,13 +99,13 @@ export default function Home() {
               transition={{ duration: 10, repeat: Infinity }}
               className="absolute top-1/4 left-0 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[150px]" 
             />
-            <motion.div 
-              animate={{ 
+            <motion.div
+              animate={{
                 scale: [1, 1.2, 1],
                 opacity: [0.2, 0.3, 0.2]
               }}
               transition={{ duration: 12, repeat: Infinity, delay: 1 }}
-              className="absolute bottom-1/4 right-0 translate-x-1/2 w-[300px] md:w-[800px] h-[300px] md:h-[800px] bg-brand-dark/10 rounded-full blur-[80px] md:blur-[150px] pointer-events-none" 
+              className="absolute bottom-1/4 -right-1/4 w-[300px] md:w-[800px] h-[300px] md:h-[800px] bg-brand-dark/10 rounded-full blur-[80px] md:blur-[150px] pointer-events-none"
             />
           </div>
           
