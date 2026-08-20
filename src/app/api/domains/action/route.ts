@@ -33,23 +33,32 @@ export async function POST(request: NextRequest) {
       if (updateError) throw updateError;
 
       // 2. Automaticky odešle zákazníkovi e-mail v angličtině
-      await sendDomainBoughtEmail(
-        order.company_email,
-        order.company_name,
-        order.domain,
-        order.id
-      );
+      try {
+        await sendDomainBoughtEmail(
+          order.company_email,
+          order.company_name,
+          order.domain,
+          order.id
+        );
+      } catch (emailError) {
+        console.error('Failed to send domain bought email:', emailError);
+        // We don't throw here so the API call still succeeds as the DB was updated
+      }
 
       return NextResponse.json({ success: true });
     } 
     
     if (action === 'unavailable') {
       // Odešle zákazníkovi e-mail v angličtině s informací, že požadovaná doména není k dispozici
-      await sendDomainUnavailableEmail(
-        order.company_email,
-        order.id,
-        order.domain
-      );
+      try {
+        await sendDomainUnavailableEmail(
+          order.company_email,
+          order.id,
+          order.domain
+        );
+      } catch (emailError) {
+        console.error('Failed to send domain unavailable email:', emailError);
+      }
 
       return NextResponse.json({ success: true });
     }

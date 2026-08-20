@@ -26,11 +26,15 @@ export async function POST(request: NextRequest) {
     if (!order) throw new Error('Order not found');
 
     // 2. Pošli notifikační e-mail administrátorovi
-    await sendAdminNewDomainSelectedEmail(
-      orderId,
-      order.company_name,
-      newDomain
-    );
+    try {
+      await sendAdminNewDomainSelectedEmail(
+        orderId,
+        order.company_name,
+        newDomain
+      );
+    } catch (emailError) {
+      console.error('Failed to send admin domain notification email:', emailError);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

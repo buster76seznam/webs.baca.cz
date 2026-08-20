@@ -31,7 +31,7 @@ function thisMonthOrders(orders: Order[]): Order[] {
 
 export default function StatsPanel({ orders, role, userId }: StatsPanelProps) {
   const myOrders = useMemo(() => {
-    if (role === 'Obchodní zástupce') {
+    if (role === 'Obchodni zastupce') {
       return orders.filter(o => o.sales_user_id === userId);
     }
     return orders;
@@ -41,7 +41,7 @@ export default function StatsPanel({ orders, role, userId }: StatsPanelProps) {
   const monthPaid = useMemo(() => monthOrders.filter(o => o.status === 'completed'), [monthOrders]);
   const avgDays = useMemo(() => avgDaysToComplete(myOrders), [myOrders]);
 
-  const statCards = role === 'Vývojář' || role === 'Správce'
+  const statCards = role === 'Vyvojar' || role === 'Spravce'
     ? [
         {
           icon: Package,
