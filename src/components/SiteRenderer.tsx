@@ -54,6 +54,8 @@ const translations = {
   cs: {
     aboutTitle: 'O nás',
     address: 'Adresa',
+    successMessage: 'Zpráva byla úspěšně odeslána!',
+    errorMessage: 'Něco se nepovedlo. Zkuste to prosím znovu.',
     phone: 'Telefon',
     email: 'Email',
     hours: 'Otevírací doba',
@@ -81,6 +83,8 @@ const translations = {
   en: {
     aboutTitle: 'About Us',
     address: 'Address',
+    successMessage: 'Message sent successfully!',
+    errorMessage: 'Something went wrong. Please try again.',
     phone: 'Phone',
     email: 'Email',
     hours: 'Opening Hours',
@@ -108,7 +112,8 @@ const translations = {
 };
 
 export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) {
-  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [contactForm, setContactForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   const lang = order.language === 'en' ? 'en' : 'cs';
   const t = translations[lang];
@@ -137,9 +142,32 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
 
   const { hero, about, services, contact } = data;
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isPaid) return;
+    if (!isPaid || status === 'loading') return;
+
+    setStatus('loading');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...contactForm,
+          to: order.company_email,
+          companyName: order.company_name
+        }),
+      });
+
+      if (res.ok) {
+        setStatus('success');
+        setContactForm({ name: '', email: '', phone: '', message: '' });
+        setTimeout(() => setStatus('idle'), 5000);
+      } else {
+        setStatus('error');
+      }
+    } catch (err) {
+      setStatus('error');
+    }
   };
 
   const handleApproveClick = () => {
@@ -211,9 +239,9 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
       </div>
 
       {/* ─── ABOUT ─── */}
-      <section id="about" className="py-32 px-6 bg-white overflow-hidden w-full max-w-full relative anti-overflow-container">
+      <section id="about" className="py-24 md:py-32 px-6 bg-white overflow-hidden w-full max-w-full relative anti-overflow-container">
         <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className="relative">
               <div
                 className="text-xs font-black uppercase tracking-[0.3em] mb-6 inline-block px-4 py-1.5 rounded-full"
@@ -221,7 +249,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
               >
                 {t.aboutTitle}
               </div>
-              <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-8 text-gray-900 leading-[1.1]">
+              <h2 className="text-3xl md:text-5xl font-black tracking-tighter mb-8 text-gray-900 leading-[1.1]">
                 {about?.title}
               </h2>
               <div className="w-20 h-1.5 bg-gray-100 rounded-full mb-8" />
@@ -230,7 +258,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
               </p>
             </div>
             <div
-              className="rounded-[2.5rem] p-12 flex flex-col gap-10 shadow-2xl backdrop-blur-md bg-white/50 border border-slate-200/60 hover:shadow-primary-10 transition-all duration-500 hover:-translate-y-1"
+              className="rounded-[2rem] md:rounded-[2.5rem] p-8 md:p-12 flex flex-col gap-8 md:gap-10 shadow-2xl backdrop-blur-md bg-white/50 border border-slate-200/60 hover:shadow-primary-10 transition-all duration-500 hover:-translate-y-1"
             >
               {(contact?.address || order.company_address) && (
                 <div className="flex items-start gap-6 group">
@@ -357,11 +385,22 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
             >
               {t.contact}
             </div>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 mb-6">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-gray-900 mb-6">
               {t.writeToUs}
             </h2>
             <p className="text-gray-500 text-lg font-medium">{t.contactPrompt}</p>
           </div>
+
+          {status === 'success' && (
+            <div className="mb-8 p-6 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-800 font-bold text-center">
+              {t.successMessage}
+            </div>
+          )}
+          {status === 'error' && (
+            <div className="mb-8 p-6 rounded-2xl bg-red-50 border border-red-100 text-red-800 font-bold text-center">
+              {t.errorMessage}
+            </div>
+          )}
 
           {!isPaid && (
             <div
@@ -392,7 +431,8 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
                 placeholder={t.namePlaceholder}
                 className="w-full px-6 py-5 rounded-[1.5rem] bg-gray-50 border-none focus:bg-white focus:ring-2 text-gray-900 transition-all shadow-inner font-bold placeholder:text-gray-300"
                 style={{ '--tw-ring-color': primaryColor } as React.CSSProperties}
-                disabled={!isPaid}
+                disabled={!isPaid || status === 'loading'}
+                required
               />
             </div>
             <div>
@@ -404,7 +444,20 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
                 placeholder={t.emailPlaceholder}
                 className="w-full px-6 py-5 rounded-[1.5rem] bg-gray-50 border-none focus:bg-white focus:ring-2 text-gray-900 transition-all shadow-inner font-bold placeholder:text-gray-300"
                 style={{ '--tw-ring-color': primaryColor } as React.CSSProperties}
-                disabled={!isPaid}
+                disabled={!isPaid || status === 'loading'}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-3 ml-1">{t.phone}</label>
+              <input
+                type="tel"
+                value={contactForm.phone}
+                onChange={e => setContactForm({ ...contactForm, phone: e.target.value })}
+                placeholder="+420 123 456 789"
+                className="w-full px-6 py-5 rounded-[1.5rem] bg-gray-50 border-none focus:bg-white focus:ring-2 text-gray-900 transition-all shadow-inner font-bold placeholder:text-gray-300"
+                style={{ '--tw-ring-color': primaryColor } as React.CSSProperties}
+                disabled={!isPaid || status === 'loading'}
               />
             </div>
             <div>
@@ -416,16 +469,17 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
                 rows={5}
                 className="w-full px-6 py-5 rounded-[1.5rem] bg-gray-50 border-none focus:bg-white focus:ring-2 text-gray-900 transition-all resize-none shadow-inner font-bold placeholder:text-gray-300"
                 style={{ '--tw-ring-color': primaryColor } as React.CSSProperties}
-                disabled={!isPaid}
+                disabled={!isPaid || status === 'loading'}
+                required
               />
             </div>
             <button
               type="submit"
-              className="w-full py-6 rounded-[1.5rem] text-white font-black text-lg tracking-tight transition-all shadow-xl hover:shadow-2xl hover:scale-[1.01] active:scale-[0.99]"
+              className="w-full py-6 rounded-[1.5rem] text-white font-black text-lg tracking-tight transition-all shadow-xl hover:shadow-2xl hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
               style={{ backgroundColor: primaryColor }}
-              disabled={!isPaid}
+              disabled={!isPaid || status === 'loading'}
             >
-              {isPaid ? t.sendButton : t.demoBadge}
+              {status === 'loading' ? '...' : (isPaid ? t.sendButton : t.demoBadge)}
             </button>
           </form>
         </div>

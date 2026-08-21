@@ -26,7 +26,7 @@ export default function ServicesVariant2List({ services }: Props) {
           >
             Capabilities
           </div>
-          <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-gray-900 mb-6">
+          <h2 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter text-gray-900 mb-6">
             Core Services
           </h2>
           <p className="text-gray-500 text-lg font-medium max-w-xl mx-auto italic">
@@ -40,7 +40,7 @@ export default function ServicesVariant2List({ services }: Props) {
             return (
               <div
                 key={i}
-                className={`flex flex-col md:flex-row items-center gap-16 p-12 rounded-[3rem] bg-white shadow-xl hover:shadow-2xl transition-all duration-500 border border-slate-100 group ${
+                className={`flex flex-col md:flex-row items-center gap-10 md:gap-16 p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] bg-white shadow-xl hover:shadow-2xl transition-all duration-500 border border-slate-100 group ${
                   isEven ? '' : 'md:flex-row-reverse'
                 }`}
               >
@@ -65,7 +65,7 @@ export default function ServicesVariant2List({ services }: Props) {
                     <div className="h-px w-8 bg-slate-100" />
                   </div>
                   
-                  <h3 className="text-3xl md:text-4xl font-black text-gray-900 mb-6 tracking-tight">
+                  <h3 className="text-2xl md:text-4xl font-black text-gray-900 mb-6 tracking-tight">
                     {service.title}
                   </h3>
                   

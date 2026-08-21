@@ -47,18 +47,18 @@ export default function HeroVariant2Centered({ hero, companyName }: Props) {
             Verified Business: {companyName}
           </div>
           
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-10 leading-[0.85] text-white uppercase italic">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-10 leading-[0.9] md:leading-[0.85] text-white uppercase italic">
             {hero?.title || companyName}
           </h1>
           
-          <p className="text-xl md:text-3xl mb-16 max-w-3xl mx-auto leading-relaxed text-slate-400 font-medium">
+          <p className="text-lg md:text-3xl mb-16 max-w-3xl mx-auto leading-relaxed text-slate-400 font-medium px-4 md:px-0">
             {hero?.subtitle}
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full max-w-md mx-auto sm:max-w-none px-6 sm:px-0">
             <a
               href="#contact"
-              className="relative group inline-flex items-center gap-3 px-12 py-6 rounded-full text-white font-black text-xl transition-all shadow-[0_20px_50px_-10px_rgba(0,0,0,0.5)] hover:scale-105 active:scale-95 overflow-hidden"
+              className="relative group inline-flex items-center justify-center gap-3 px-12 py-6 rounded-full text-white font-black text-xl transition-all shadow-[0_20px_50px_-10px_rgba(0,0,0,0.5)] hover:scale-105 active:scale-95 overflow-hidden w-full sm:w-auto"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />

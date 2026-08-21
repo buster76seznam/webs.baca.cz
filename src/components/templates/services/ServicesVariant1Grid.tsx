@@ -27,17 +27,17 @@ export default function ServicesVariant1Grid({ services }: Props) {
           >
             Services
           </div>
-          <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-gray-900 mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tighter text-gray-900 mb-6">
             Our Expertise
           </h2>
           <div className="w-24 h-1.5 bg-slate-100 mx-auto rounded-full" />
         </div>
         
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {services.map((service, i) => (
             <div
               key={i}
-              className="group relative bg-white/50 rounded-[2rem] p-10 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 backdrop-blur-md border border-slate-200/60 overflow-hidden"
+              className="group relative bg-white/50 rounded-[2rem] p-8 md:p-10 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 backdrop-blur-md border border-slate-200/60 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary-06)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               

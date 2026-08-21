@@ -20,29 +20,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'orderId and prompt are required' }, { status: 400 });
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    // Fetch order from Supabase using supabaseAdmin
+    const { data: order, error: fetchError } = await supabaseAdmin
+      .from('orders')
+      .select('*')
+      .eq('id', orderId)
+      .single();
 
-    // Fetch order from Supabase using direct fetch
-    const fetchResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}&select=*`, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`
-      }
-    });
-
-    if (!fetchResponse.ok) {
-      const errorText = await fetchResponse.text();
-      console.error('Error fetching order (direct fetch):', errorText);
-      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
-    }
-
-    const orders = await fetchResponse.json();
-    const order = orders[0];
-
-    if (!order) {
+    if (fetchError || !order) {
+      console.error('Error fetching order:', fetchError);
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
@@ -63,7 +49,6 @@ If order.language is 'cs', all text MUST be 100% in Czech.
 Never fallback to Czech unless language is explicitly 'cs'. Do NOT use emoji. Do NOT use Czech characters š, č, and ř (use s, c, r instead) ONLY IF it is necessary for headers (but preferably use standard UTF-8 if the client supports it, however here we follow the previous constraint for safety).`;
     
     const userPrompt = `
-Update the JSON to reflect the user's feedback while maintaining the structure. Output the full updated JSON.
 Update the JSON to reflect the user's feedback while maintaining the structure. Output the full updated JSON.
 CRITICAL: All generated content MUST be strictly in ${order.language === 'en' ? 'English' : 'Czech'}.
 Current Website JSON:
@@ -88,12 +73,9 @@ Structure must be exactly:
 }`;
 
     // Call Anthropic Claude API
-    console.log("Key check:", process.env.ANTHROPIC_API_KEY ? "EXISTS (starts with " + process.env.ANTHROPIC_API_KEY.slice(0, 7) + ")" : "MISSING!");
-
-    console.log("🤖 CLAUDE MODEL SENT:", "claude-sonnet-4-5-20250929");
+    console.log("🤖 CLAUDE MODEL SENT: claude-sonnet-4-5-20250929");
     let anthropicResponse;
     try {
-      // PŘÍSNĚ STŘEŽENÉ STANDARDNÍ HLAVIČKY
       const cleanHeaders = new Headers();
       cleanHeaders.set('content-type', 'application/json');
       cleanHeaders.set('x-api-key', (ANTHROPIC_API_KEY || '').trim());
@@ -115,8 +97,7 @@ Structure must be exactly:
         }),
       });
     } catch (claudeErr: any) {
-      console.error("❌ ANTHROPIC API ERROR FULL:", JSON.stringify(claudeErr, null, 2));
-      console.error("❌ ANTHROPIC MESSAGE:", claudeErr?.message);
+      console.error("❌ ANTHROPIC API ERROR:", claudeErr?.message);
       return NextResponse.json(
         { error: 'Claude API call failed', details: claudeErr?.message },
         { status: 502 }
@@ -149,36 +130,50 @@ Structure must be exactly:
       return NextResponse.json({ error: 'Invalid JSON returned by AI' }, { status: 502 });
     }
 
-    // Save updated JSON and increment revision count using direct fetch
-    const updatePayload: any = {
+    // Save updated JSON and increment revision count using supabaseAdmin
+    // Dynamically handle feedback_history if it doesn't exist in DB
+    const updateData: any = {
       generated_site_json: updatedJson,
       status: 'preview_ready',
       revision_count: (order.revision_count || 0) + 1,
-      feedback_history: newHistory,
     };
 
-    const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
-      method: 'PATCH',
-      headers: {
-        'content-type': 'application/json',
-        'apikey': supabaseKey.trim(),
-        'Authorization': `Bearer ${supabaseKey.trim()}`,
-        'Prefer': 'return=representation'
-      },
-      body: JSON.stringify(updatePayload)
-    });
-
-    if (!updateResponse.ok) {
-      const errorData = await updateResponse.json().catch(() => ({}));
-      console.error('Error updating order after revision (direct fetch):', errorData);
-      return NextResponse.json({ error: 'Failed to update order', details: errorData }, { status: 500 });
+    // Only add feedback_history if it exists in the order object (which means it's in the DB)
+    if ('feedback_history' in order) {
+      updateData.feedback_history = newHistory;
     }
 
-    const updatedOrders = await updateResponse.json();
-    const updatedOrder = updatedOrders[0];
+    const { data: updatedOrder, error: updateError } = await supabaseAdmin
+      .from('orders')
+      .update(updateData)
+      .eq('id', orderId)
+      .select()
+      .single();
 
-    if (!updatedOrder) {
-      throw new Error('Failed to update order');
+    if (updateError || !updatedOrder) {
+      console.error('Error updating order after revision:', updateError);
+      // Fallback for cases where column might still be missing despite 'in' check
+      if (updateError?.message?.includes('feedback_history')) {
+        delete updateData.feedback_history;
+        const { data: retryOrder, error: retryError } = await supabaseAdmin
+          .from('orders')
+          .update(updateData)
+          .eq('id', orderId)
+          .select()
+          .single();
+        
+        if (retryError || !retryOrder) {
+          return NextResponse.json({ error: 'Failed to update order on retry', details: retryError }, { status: 500 });
+        }
+        return NextResponse.json({
+          success: true,
+          generated_site_json: updatedJson,
+          revision_count: retryOrder.revision_count,
+          revisions_remaining: 3 - retryOrder.revision_count,
+          warning: 'feedback_history column missing in DB'
+        });
+      }
+      return NextResponse.json({ error: 'Failed to update order', details: updateError }, { status: 500 });
     }
 
     // Trigger instant live update (revalidate preview page)
@@ -191,7 +186,7 @@ Structure must be exactly:
 
     // Send revision complete email
     if (order.company_email) {
-      const previewUrl = order.preview_url || `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL}/preview/${orderId}`;
+      const previewUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL}/preview/${orderId}`;
       sendRevisionCompleteEmail(order.company_email, previewUrl, orderId).catch((err) =>
         console.error('Failed to send revision complete email:', err)
       );

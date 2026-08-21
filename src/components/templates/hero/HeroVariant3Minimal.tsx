@@ -45,12 +45,12 @@ export default function HeroVariant3Minimal({ hero, companyName }: Props) {
             </div>
 
             {/* Giant typographic title */}
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.9] text-gray-900 mb-12">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.95] md:leading-[0.9] text-gray-900 mb-12">
               {hero?.title || companyName}
             </h1>
 
             <div className="flex flex-col md:flex-row md:items-center gap-10 mb-16">
-              <p className="text-xl text-gray-500 max-w-md leading-relaxed font-medium border-l-4 border-slate-100 pl-8">
+              <p className="text-lg md:text-xl text-gray-500 max-w-md leading-relaxed font-medium border-l-4 border-slate-100 pl-6 md:pl-8">
                 {hero?.subtitle}
               </p>
               
@@ -66,7 +66,7 @@ export default function HeroVariant3Minimal({ hero, companyName }: Props) {
 
             <a
               href="#contact"
-              className="inline-flex items-center gap-4 px-10 py-6 rounded-2xl text-white font-black text-xl transition-all shadow-2xl hover:-translate-y-1 active:scale-95 group"
+              className="inline-flex items-center justify-center gap-4 px-10 py-6 rounded-2xl text-white font-black text-xl transition-all shadow-2xl hover:-translate-y-1 active:scale-95 group w-full sm:w-auto"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
               {hero?.ctaText || 'Get Started'}

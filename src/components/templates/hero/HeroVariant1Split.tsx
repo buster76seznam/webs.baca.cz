@@ -25,7 +25,7 @@ export default function HeroVariant1Split({ hero, companyName }: Props) {
       />
 
       <div className="max-w-7xl mx-auto w-full relative z-10">
-        <div className="grid lg:grid-cols-2 gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left: Text */}
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-8">
@@ -39,7 +39,7 @@ export default function HeroVariant1Split({ hero, companyName }: Props) {
               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Premium Choice</div>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-[0.95] text-gray-900">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-8 leading-[0.95] text-gray-900">
               {hero?.title || companyName}
             </h1>
             
@@ -74,10 +74,10 @@ export default function HeroVariant1Split({ hero, companyName }: Props) {
           </div>
 
           {/* Right: Graphic */}
-          <div className="relative lg:h-[600px] flex items-center justify-center overflow-hidden">
+          <div className="relative lg:h-[600px] flex items-center justify-center overflow-hidden mt-12 lg:mt-0">
             <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-primary)] to-[var(--color-secondary)] opacity-10 blur-3xl rounded-full scale-75 animate-pulse" />
             <div
-              className="relative w-full aspect-[4/5] max-w-[450px] rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] border-[8px] border-white group"
+              className="relative w-full aspect-[4/5] max-w-[400px] lg:max-w-[450px] rounded-[2rem] lg:rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] border-[6px] lg:border-[8px] border-white group"
             >
               <img 
                 src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop" 
