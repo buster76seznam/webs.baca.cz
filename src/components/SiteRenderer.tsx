@@ -351,7 +351,7 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
             )}
             {order.company_address && isPaid ? (
               <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(order.company_address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(order.company_address)}&t=&z=14&ie=UTF8&iwloc=B&output=embed`}
                 width="100%"
                 height="400"
                 className="block border-0"
