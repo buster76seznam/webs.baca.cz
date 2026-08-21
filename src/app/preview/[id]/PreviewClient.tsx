@@ -78,10 +78,10 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
       if (url) {
         window.location.href = url;
       } else {
-        setSuccessMsg('Děkujeme, web byl úspěšně schválen! Přesměrování na platbu se nezdařilo, prosím kontaktujte nás.');
+        setSuccessMsg('Thank you, the website has been successfully approved! Redirect to payment failed, please contact us.');
       }
     } catch (err) {
-      setError('Nepodařilo se schválit návrh.');
+      setError('Failed to approve the design.');
     } finally {
       setLoading(false);
     }
@@ -103,7 +103,7 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? 'Nastala chyba při zpracování revize.');
+        setError(data.error ?? 'An error occurred while processing the revision.');
         return;
       }
 
@@ -113,10 +113,10 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
       
       setCurrentRevisionCount(prev => prev + 1);
       setCurrentStatus('revision_requested');
-      setSuccessMsg('Vaše připomínky byly odeslány. Claude právě upravuje váš web.');
+      setSuccessMsg('Your feedback has been submitted. AI is now updating your website.');
       setPrompt('');
     } catch {
-      setError('Nastala neočekávaná chyba při odesílání revize.');
+      setError('An unexpected error occurred while submitting the revision.');
     } finally {
       setLoading(false);
     }
@@ -141,7 +141,7 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-lg font-bold text-gray-900 leading-tight">{order.company_name}</h1>
-            <p className="text-sm text-gray-500">Náhled webu — {isApproved ? 'Schváleno' : `Revize: ${currentRevisionCount}/${MAX_REVISIONS}`}</p>
+            <p className="text-sm text-gray-500">Website Preview — {isApproved ? 'Approved' : `Revision: ${currentRevisionCount}/${MAX_REVISIONS}`}</p>
           </div>
 
           <div className="flex items-center gap-3">
@@ -152,7 +152,7 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
                   disabled={loading}
                   className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors shadow-sm disabled:opacity-50"
                 >
-                  {loading && currentStatus !== 'revision_requested' ? 'Zpracovávám...' : 'Schválit návrh'}
+                  {loading && currentStatus !== 'revision_requested' ? 'Processing...' : 'Approve Design'}
                 </button>
               </>
             )}
@@ -162,13 +162,13 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
                 disabled={loading}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors shadow-sm disabled:opacity-50 flex items-center gap-2"
               >
-                {loading ? 'Zpracovávám...' : 'Dokončit platbu'}
+                {loading ? 'Processing...' : 'Complete Payment'}
                 <ArrowRight size={16} />
               </button>
             )}
             {isPaid && (
               <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-semibold flex items-center gap-2">
-                <span className="text-xl">✅</span> Zaplaceno
+                <span className="text-xl">✅</span> Paid
               </div>
             )}
           </div>
@@ -189,24 +189,24 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
 
         {!isApproved && (
           <div className="w-full lg:w-80 bg-white border-l border-gray-200 p-6 overflow-y-auto">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Chci úpravu</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Request Revision</h2>
             
             {revisionsRemaining > 0 ? (
               <div className="space-y-4">
                 <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
                   <p className="text-sm text-blue-800">
-                    Zbývají vám <strong>{revisionsRemaining}</strong> ze 3 bezplatných úprav.
+                    You have <strong>{revisionsRemaining}</strong> of {MAX_REVISIONS} free revisions remaining.
                   </p>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Vaše připomínky
+                    Your Feedback
                   </label>
                   <textarea
                     className="w-full border border-gray-300 rounded-lg p-3 text-sm text-slate-900 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     rows={6}
-                    placeholder="Např. Změňte barvu na modrou, přidejte fotku týmu a upravte text v sekci O nás..."
+                    placeholder="e.g. Change the color to blue, add a team photo and update the text in the About Us section..."
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     disabled={loading}
@@ -221,17 +221,17 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
                   disabled={loading || !prompt.trim()}
                   className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-50"
                 >
-                  {loading ? 'Odesílám...' : 'Odeslat připomínky'}
+                  {loading ? 'Submitting...' : 'Submit Revision'}
                 </button>
               </div>
             ) : (
               <div className="space-y-4">
                 <div className="bg-amber-50 border border-amber-100 rounded-lg p-4">
                   <p className="text-sm text-amber-800 font-medium">
-                    Vyčerpali jste maximální počet 3 bezplatných úprav.
+                    You have exhausted the maximum number of {MAX_REVISIONS} free revisions.
                   </p>
                   <p className="text-xs text-amber-700 mt-2">
-                    Pro další změny schvalte návrh a pokračujte k dokončení objednávky.
+                    For further changes, please approve the design and proceed to complete your order.
                   </p>
                 </div>
                 
@@ -239,17 +239,17 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
                   disabled
                   className="w-full bg-gray-200 text-gray-500 font-semibold py-3 rounded-lg cursor-not-allowed"
                 >
-                  Úpravy zablokovány
+                  Revisions Locked
                 </button>
               </div>
             )}
 
             <div className="mt-8 pt-6 border-t border-gray-100">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Jak to funguje?</h3>
+              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">How It Works</h3>
               <ul className="text-xs text-gray-500 space-y-2">
-                <li>1. Napíšete, co chcete změnit.</li>
-                <li>2. Claude během chvilky web upraví.</li>
-                <li>3. Dostanete e-mail s novou verzí.</li>
+                <li>1. Describe what you want to change.</li>
+                <li>2. AI updates your website in just a few moments.</li>
+                <li>3. Receive an email with your new version.</li>
               </ul>
             </div>
           </div>
