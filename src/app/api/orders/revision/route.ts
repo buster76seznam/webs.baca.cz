@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase-admin';
-import { sendPreviewEmail } from '@/lib/emails';
+import { sendRevisionCompleteEmail } from '@/lib/emails';
+import { revalidatePath } from 'next/cache';
 
 export const runtime = 'nodejs';
 
@@ -151,12 +152,12 @@ Structure must be exactly:
     // Save updated JSON and increment revision count using direct fetch
     const updatePayload: any = {
       generated_site_json: updatedJson,
-      status: 'revision_requested',
+      status: 'preview_ready',
       revision_count: (order.revision_count || 0) + 1,
       feedback_history: newHistory,
     };
 
-    let updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
+    const updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
       method: 'PATCH',
       headers: {
         'content-type': 'application/json',
@@ -170,31 +171,7 @@ Structure must be exactly:
     if (!updateResponse.ok) {
       const errorData = await updateResponse.json().catch(() => ({}));
       console.error('Error updating order after revision (direct fetch):', errorData);
-
-      // PGRST204: Column not found. Fallback: try updating without feedback_history
-      if (errorData.code === 'PGRST204' || (typeof errorData.message === 'string' && errorData.message.includes('feedback_history'))) {
-        console.log('Column feedback_history missing, retrying without it...');
-        delete updatePayload.feedback_history;
-        
-        updateResponse = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
-          method: 'PATCH',
-          headers: {
-            'content-type': 'application/json',
-            'apikey': supabaseKey.trim(),
-            'Authorization': `Bearer ${supabaseKey.trim()}`,
-            'Prefer': 'return=representation'
-          },
-          body: JSON.stringify(updatePayload)
-        });
-
-        if (!updateResponse.ok) {
-          const secondError = await updateResponse.text();
-          console.error('Error on second update attempt:', secondError);
-          return NextResponse.json({ error: 'Failed to update order after fallback' }, { status: 500 });
-        }
-      } else {
-        return NextResponse.json({ error: 'Failed to update order', details: errorData }, { status: 500 });
-      }
+      return NextResponse.json({ error: 'Failed to update order', details: errorData }, { status: 500 });
     }
 
     const updatedOrders = await updateResponse.json();
@@ -204,11 +181,19 @@ Structure must be exactly:
       throw new Error('Failed to update order');
     }
 
-    // Send new preview email
+    // Trigger instant live update (revalidate preview page)
+    try {
+      revalidatePath(`/preview/${orderId}`);
+      revalidatePath(`/preview/${orderId}/page`);
+    } catch (revalidateErr) {
+      console.error('Revalidation error:', revalidateErr);
+    }
+
+    // Send revision complete email
     if (order.company_email) {
-      const previewUrl = order.preview_url || `${process.env.NEXT_PUBLIC_BASE_URL}/preview/${orderId}`;
-      sendPreviewEmail(order.company_email, previewUrl, orderId).catch((err) =>
-        console.error('Failed to send revision preview email:', err)
+      const previewUrl = order.preview_url || `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL}/preview/${orderId}`;
+      sendRevisionCompleteEmail(order.company_email, previewUrl, orderId).catch((err) =>
+        console.error('Failed to send revision complete email:', err)
       );
     }
 

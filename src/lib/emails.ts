@@ -49,6 +49,50 @@ export async function sendPreviewEmail(
   }
 }
 
+export async function sendRevisionCompleteEmail(
+  clientEmail: string,
+  previewUrl: string,
+  orderId: string
+) {
+  console.log(`Sending revision complete email for order ${orderId} to ${clientEmail}`);
+  try {
+    const data = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: clientEmail,
+      subject: 'Your website design has been updated! 🚀',
+      html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
+        <h1 style="color: #111; font-size: 24px; margin-bottom: 16px;">Your website has been updated! 🚀</h1>
+        <p style="color: #444; font-size: 16px; line-height: 1.6;">
+          Great news! We have successfully incorporated your feedback and updated your website design.
+        </p>
+        <p style="color: #444; font-size: 16px; line-height: 1.6;">
+          You can view the updated version by clicking the button below.
+        </p>
+        <div style="margin: 32px 0;">
+          <a href="${previewUrl}" style="background-color: #2563eb; color: #fff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 600; display: inline-block;">
+            View updated website
+          </a>
+        </div>
+        <p style="color: #888; font-size: 14px;">
+          Or copy this link into your browser:<br>
+          <a href="${previewUrl}" style="color: #2563eb;">${previewUrl}</a>
+        </p>
+        <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
+        <p style="color: #aaa; font-size: 12px;">
+          Order No. ${orderId} · <a href="${BASE_URL}" style="color: #aaa;">websbaca.cz</a>
+        </p>
+      </div>
+    `,
+    });
+    console.log(`Revision complete email sent successfully for order ${orderId}:`, data);
+    return data;
+  } catch (error) {
+    console.error(`FAILED TO SEND REVISION COMPLETE EMAIL for order ${orderId}:`, error);
+    throw error;
+  }
+}
+
 export async function sendDomainUnavailableEmail(
   clientEmail: string,
   orderId: string,
