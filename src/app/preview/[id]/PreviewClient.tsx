@@ -204,7 +204,7 @@ export default function PreviewClient({ order, siteJson, isPaid, revisionCount }
                     Vaše připomínky
                   </label>
                   <textarea
-                    className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-gray-300 rounded-lg p-3 text-sm text-slate-900 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     rows={6}
                     placeholder="Např. Změňte barvu na modrou, přidejte fotku týmu a upravte text v sekci O nás..."
                     value={prompt}

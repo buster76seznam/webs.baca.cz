@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 const siteTitle = "Webs Bača – tvorba webů, hosting a SEO";
 const siteDescription =
-  "Profesionální weby s návrhem do 60 minut a spuštěním do 24 hodin. Hosting, SSL, správa obsahu a servis za 1 700 Kč měsíčně bez vstupního poplatku.";
+  "Profesionální weby s návrhem do 10 minut a spuštěním do 24 hodin. Hosting, SSL, správa obsahu a servis za 1 700 Kč měsíčně bez vstupního poplatku.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     "autoservis web",
     "SEO",
     "rychlý web",
-    "návrh webu do hodiny",
+    "návrh webu do 10 minut",
     "Česko",
   ],
   alternates: { canonical: "/" },

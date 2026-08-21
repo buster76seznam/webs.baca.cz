@@ -408,7 +408,7 @@ export default function OrdersPage() {
             {isEnglish ? 'Website Order' : 'Objednavka webu'}
           </h1>
           <p className="text-zinc-400 text-lg">
-            {isEnglish ? 'Fill out the form and we will contact you within 60 minutes.' : 'Vyplnte formular a my se vam ozveme do 60 minut.'}
+            {isEnglish ? 'Fill out the form and we will contact you within 10 minutes.' : 'Vyplnte formular a my se vam ozveme do 10 minut.'}
           </p>
         </motion.div>
 

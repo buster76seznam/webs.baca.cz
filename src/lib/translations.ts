@@ -4,8 +4,8 @@ export const translations = {
     heroTitle: "YOUR WEBSITE",
     heroSubtitle: "WITHOUT LIMITS",
     heroSubtitle2: "WITHOUT WAITING.",
-    heroDescription: "Design in 60 minutes. Live website in 24 hours. Everything for $150/month – no setup fee.",
-    heroCTA: "I want a design in an hour",
+    heroDescription: "Design in 10 minutes. Live website in 24 hours. Everything for $150/month – no setup fee.",
+    heroCTA: "I want a design in 10 minutes",
     heroHowItWorks: "How it works?",
     
     // Stats
@@ -46,10 +46,10 @@ export const translations = {
     // Process
     processTitle: "HOW WE",
     processSubtitle: "DOMINATE.",
-    step1Title: "BRIEFING",
-    step1Desc: "10 minutes is all we need to understand your vision and goals. No unnecessary meetings.",
+    step1Title: "A FEW QUESTIONS",
+    step1Desc: "5 minutes is all we need to understand your vision and goals. No unnecessary meetings.",
     step2Title: "DESIGN",
-    step2Desc: "Within 60 minutes you have a real design in your email. You see exactly what you'll get.",
+    step2Desc: "Within 10 minutes you have a real design in your email. You see exactly what you'll get.",
     step3Title: "LAUNCH",
     step3Desc: "We fine-tune details and within 24 hours your website is live on your domain. Done.",
     
