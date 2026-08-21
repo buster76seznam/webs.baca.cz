@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, X, Search, Palette } from 'lucide-react';
+import { ArrowUpRight, X, Search, Palette, ShieldAlert } from 'lucide-react';
 import { useCountry } from '@/contexts/CountryContext';
 import { translations } from '@/lib/translations';
 import dynamic from 'next/dynamic';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { Turnstile } from '@marsidev/react-turnstile';
+import { isIncognito, getFingerprint, getPersistentToken } from '@/lib/security';
 
 const PhoneInput = dynamic(() => import('react-phone-number-input'), {
   ssr: false,
@@ -56,9 +57,10 @@ export default function OrdersPage() {
     refCode: '',
   });
 
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'incognito'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [languageSearch, setLanguageSearch] = useState('');
+  const [honeyPot, setHoneyPot] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const [expandedSections, setExpandedSections] = useState<{ owner: boolean }>({ owner: false });
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -101,6 +103,15 @@ export default function OrdersPage() {
   const [progressStep, setProgressStep] = useState(0);
 
   useEffect(() => {
+    // Check for incognito mode
+    const checkIncognito = async () => {
+      const incognito = await isIncognito();
+      if (incognito) {
+        setStatus('incognito');
+      }
+    };
+    checkIncognito();
+
     // Capture referral code from URL
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref') || params.get('affiliate') || params.get('referral');
@@ -228,14 +239,26 @@ export default function OrdersPage() {
       return;
     }
 
+    if (honeyPot) {
+      // Quietly fail for bots
+      console.log('Bot detected via honeypot');
+      setStatus('success');
+      return;
+    }
+
     setStatus('loading');
     setErrorMsg('');
 
     try {
+      const fingerprint = await getFingerprint();
+      const token = getPersistentToken();
+
       const payload = {
         ...formData,
         workingHours: formattedWorkingHours,
-        turnstileToken: turnstileToken || ''
+        turnstileToken: turnstileToken || '',
+        fingerprint,
+        token
       };
 
       // Remove local UI state fields before sending
@@ -279,6 +302,37 @@ export default function OrdersPage() {
 
   const inputClass = `w-full bg-white/[0.03] border border-white/8 rounded-2xl px-5 py-4 text-white placeholder-zinc-700 outline-none focus:border-[#7C3AED]/60 focus:shadow-[0_0_20px_-8px_rgba(124,58,237,0.5)] transition-all duration-300 text-sm [&_option]:text-black`;
   const labelClass = 'text-[10px] font-black uppercase tracking-widest text-white mb-2 block';
+
+  if (status === 'incognito') {
+    return (
+      <div className="min-h-screen bg-[#1a1a1a] text-white flex items-center justify-center px-6 py-20">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }} 
+          animate={{ opacity: 1, scale: 1 }} 
+          className="bg-red-500/10 border border-red-500/20 rounded-3xl p-8 md:p-16 text-center max-w-2xl w-full"
+        >
+          <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-8">
+            <ShieldAlert size={40} className="text-red-500" />
+          </div>
+          
+          <h3 className="text-2xl md:text-3xl font-black mb-4 tracking-tight uppercase">
+            Incognito Mode Detected
+          </h3>
+          
+          <p className="text-zinc-400 font-medium mb-8 text-lg">
+            Private/Incognito mode is not supported for design generation. Please open this page in a standard browser window to continue.
+          </p>
+
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-8 py-4 bg-white text-black rounded-xl font-black text-xs uppercase tracking-widest hover:bg-zinc-200 transition-all shadow-xl"
+          >
+            Try Again
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
 
   if (status === 'success') {
     return (
@@ -413,6 +467,18 @@ export default function OrdersPage() {
         </motion.div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Honeypot field - hidden from users */}
+          <div className="hidden" aria-hidden="true">
+            <input 
+              type="text" 
+              name="website_url_verification" 
+              value={honeyPot} 
+              onChange={(e) => setHoneyPot(e.target.value)} 
+              tabIndex={-1} 
+              autoComplete="off" 
+            />
+          </div>
+
           {/* STEP 1: Company */}
           {currentStep === 1 && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12">

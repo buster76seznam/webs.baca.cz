@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse, after } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL || '',
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || '',
+});
 
 export const maxDuration = 60;
 
@@ -74,8 +80,59 @@ export async function POST(request: Request) {
       instagramUrl,
       googleMapsUrl,
       turnstileToken,
-      refCode
+      refCode,
+      fingerprint,
+      token
     } = body;
+
+    // --- RATE LIMITING & ANTI-SPAM (Upstash Redis) ---
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || request.headers.get('x-real-ip') || 'unknown';
+    const fp = fingerprint || 'unknown';
+    const tk = token || 'unknown';
+    
+    console.log(`Checking rate limit for IP: ${ip}, Fingerprint: ${fp}, Token: ${tk}`);
+
+    const limitKeyIP = `gen_limit:ip:${ip}`;
+    const limitKeyFP = `gen_limit:fp:${fp}`;
+    const limitKeyTK = `gen_limit:tk:${tk}`;
+
+    // Check all three identifiers
+    const [ipLimit, fpLimit, tkLimit] = await Promise.all([
+      ip !== 'unknown' ? redis.get<number>(limitKeyIP) : Promise.resolve(null),
+      fp !== 'unknown' ? redis.get<number>(limitKeyFP) : Promise.resolve(null),
+      tk !== 'unknown' ? redis.get<number>(limitKeyTK) : Promise.resolve(null)
+    ]);
+
+    const lastGen = ipLimit || fpLimit || tkLimit;
+
+    if (lastGen) {
+      const windowMs = 96 * 60 * 60 * 1000;
+      const remainingMs = lastGen + windowMs - Date.now();
+      
+      if (remainingMs > 0) {
+        const hours = Math.floor(remainingMs / 3600000);
+        const minutes = Math.floor((remainingMs % 3600000) / 60000);
+        const remainingMsg = `Limit reached. Please try again in ${hours}h ${minutes}m.`;
+        
+        console.warn(`Rate limit exceeded for user. Remaining: ${remainingMs}ms`);
+        return NextResponse.json({ 
+          success: false, 
+          error: remainingMsg,
+          remainingSeconds: Math.floor(remainingMs / 1000)
+        }, { status: 429 });
+      }
+    }
+
+    // Record the current attempt before proceeding (Atomic-ish)
+    const now = Date.now();
+    const expiry = 96 * 60 * 60; // 96 hours in seconds
+    
+    await Promise.all([
+      ip !== 'unknown' ? redis.set(limitKeyIP, now, { ex: expiry }) : Promise.resolve(),
+      fp !== 'unknown' ? redis.set(limitKeyFP, now, { ex: expiry }) : Promise.resolve(),
+      tk !== 'unknown' ? redis.set(limitKeyTK, now, { ex: expiry }) : Promise.resolve()
+    ]);
+    // ------------------------------------------------
 
     // Turnstile validace (volitelná, ale ponecháme ji pokud tam byla)
     if (turnstileToken) {
