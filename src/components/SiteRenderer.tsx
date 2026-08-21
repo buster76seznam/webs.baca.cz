@@ -351,10 +351,10 @@ export default function SiteRenderer({ data, order, isPaid, onApprove }: Props) 
             )}
             {order.company_address && isPaid ? (
               <iframe
-                src={`https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${encodeURIComponent(order.company_address)}`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(order.company_address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
                 width="100%"
                 height="400"
-                className="block"
+                className="block border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title={t.findUs}

@@ -71,6 +71,7 @@ export async function POST(request: Request) {
   const email = typeof b.email === "string" ? b.email.trim() : "";
   const phone = typeof b.phone === "string" ? b.phone.trim() : "";
   const message = typeof b.message === "string" ? b.message.trim() : "";
+  const to = typeof b.to === "string" && isValidEmail(b.to.trim()) ? b.to.trim() : CONTACT_TO;
 
   if (!name || name.length > 120) {
     return NextResponse.json({ error: "Vyplňte jméno", code: "VALIDATION_NAME" }, { status: 400 });
@@ -102,7 +103,7 @@ export async function POST(request: Request) {
 
   const { data, error } = await resend.emails.send({
     from,
-    to: CONTACT_TO,
+    to: to,
     replyTo: email,
     subject: `Website Contact: ${name}`,
     html: [
@@ -127,7 +128,7 @@ export async function POST(request: Request) {
     console.error("[contact] Resend send failed", {
       resendMessage,
       from,
-      to: CONTACT_TO,
+      to: to,
       note,
       resendError: error,
     });
@@ -147,7 +148,7 @@ export async function POST(request: Request) {
     );
   }
 
-  console.info("[contact] Email sent", { id: data?.id, from, to: CONTACT_TO });
+  console.info("[contact] Email sent", { id: data?.id, from, to: to });
 
   return NextResponse.json({ ok: true, id: data?.id });
 }
