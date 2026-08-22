@@ -40,9 +40,20 @@ export default function PartnerSuccessPage() {
             </Link>
           </div>
         ) : (
-          <p className="text-lg text-gray-600 dark:text-zinc-400 font-bold">
-            Please log in to view your dashboard and referral link.
-          </p>
+          <div className="space-y-6">
+            <div className="bg-green-50 dark:bg-green-500/10 border-2 border-green-200 dark:border-green-500/20 text-green-700 dark:text-green-400 rounded-xl p-5 font-bold text-center">
+              ✓ Please check your email - we've sent you your referral code, referral link and QR code.
+            </div>
+            <p className="text-lg text-gray-600 dark:text-zinc-400 font-bold">
+              Use the Partner ID from the email to log in and view your dashboard.
+            </p>
+            <Link
+              href="/partnerprogram"
+              className="inline-block bg-brand text-white px-8 py-4 rounded-xl font-black hover:bg-brand-dark transition-all duration-300 uppercase tracking-tighter"
+            >
+              Back to Partner Login
+            </Link>
+          </div>
         )}
       </motion.div>
     </div>

@@ -126,91 +126,6 @@ export default function PartnerProgramPage() {
     transition: { duration: 0.8, ease: [0.23, 1, 0.32, 1] as const }
   };
 
-  // Login Modal
-  const LoginModal = () => (
-    <AnimatePresence>
-      {showLoginModal && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
-          onClick={(e) => { if (e.target === e.currentTarget) setShowLoginModal(false); }}
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="bg-white dark:bg-[#111] border-2 border-gray-200 dark:border-white/10 rounded-3xl p-8 w-full max-w-md relative"
-          >
-            <button
-              onClick={() => setShowLoginModal(false)}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-600 dark:text-zinc-400 transition"
-            >
-              <X size={16} />
-            </button>
-
-            <h2 className="text-2xl font-black text-gray-900 dark:text-white mb-2">Partner Login</h2>
-            <p className="text-sm text-gray-600 dark:text-zinc-400 font-bold mb-6">
-              Enter your Partner ID to access your dashboard.
-            </p>
-
-            <form onSubmit={handleLoginSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-2">
-                  Partner ID
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={loginPartnerId}
-                  onChange={(e) => setLoginPartnerId(e.target.value)}
-                  placeholder="ref_xxxxxx"
-                  className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 focus:outline-none focus:border-brand transition font-mono font-bold"
-                />
-              </div>
-
-              {loginError && (
-                <motion.p
-                  initial={{ opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-sm text-red-600 dark:text-red-400 font-bold bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-lg px-3 py-2"
-                >
-                  {loginError}
-                </motion.p>
-              )}
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                disabled={loginLoading}
-                className="w-full bg-brand hover:bg-brand-dark text-white py-3 rounded-xl font-black uppercase tracking-tighter transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {loginLoading ? 'Logging in...' : 'Login'}
-              </motion.button>
-
-              <p className="text-center text-sm text-gray-500 dark:text-zinc-500 font-bold">
-                Don't have an ID?{' '}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowLoginModal(false);
-                    setTimeout(() => document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' }), 100);
-                  }}
-                  className="text-brand hover:text-brand-dark font-black underline transition"
-                >
-                  Register below
-                </button>
-              </p>
-            </form>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-
   // If logged in, show dashboard
   if (showDashboard && isLoggedIn && partner) {
     const tier = TIER_STRUCTURE[partner.tier];
@@ -442,9 +357,87 @@ export default function PartnerProgramPage() {
   // Main Partner Program Page
   return (
     <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#030303] text-gray-900 dark:text-white selection:bg-brand selection:text-white antialiased w-full max-w-full overflow-x-hidden">
-      <LoginModal />
+      <AnimatePresence>
+        {showLoginModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
+            onClick={(e) => { if (e.target === e.currentTarget) setShowLoginModal(false); }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+              className="bg-white dark:bg-[#111] border-2 border-gray-200 dark:border-white/10 rounded-3xl p-8 w-full max-w-md relative"
+            >
+              <button
+                onClick={() => setShowLoginModal(false)}
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-600 dark:text-zinc-400 transition"
+              >
+                <X size={16} />
+              </button>
 
-      {/* Navigation */}
+              <h2 className="text-2xl font-black text-gray-900 dark:text-white mb-2">Partner Login</h2>
+              <p className="text-sm text-gray-600 dark:text-zinc-400 font-bold mb-6">
+                Enter your Partner ID to access your dashboard.
+              </p>
+
+              <form onSubmit={handleLoginSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-widest text-gray-700 dark:text-zinc-300 mb-2">
+                    Partner ID
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={loginPartnerId}
+                    onChange={(e) => setLoginPartnerId(e.target.value)}
+                    placeholder="ref_xxxxxx"
+                    className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 focus:outline-none focus:border-brand transition font-mono font-bold"
+                  />
+                </div>
+
+                {loginError && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-sm text-red-600 dark:text-red-400 font-bold bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-lg px-3 py-2"
+                  >
+                    {loginError}
+                  </motion.p>
+                )}
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={loginLoading}
+                  className="w-full bg-brand hover:bg-brand-dark text-white py-3 rounded-xl font-black uppercase tracking-tighter transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {loginLoading ? 'Logging in...' : 'Login'}
+                </motion.button>
+
+                <p className="text-center text-sm text-gray-500 dark:text-zinc-500 font-bold">
+                  Don't have an ID?{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowLoginModal(false);
+                      setTimeout(() => document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' }), 100);
+                    }}
+                    className="text-brand hover:text-brand-dark font-black underline transition"
+                  >
+                    Register below
+                  </button>
+                </p>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <nav className="sticky inset-x-0 top-0 w-full max-w-full overflow-hidden box-border z-50 bg-white/60 dark:bg-black/40 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 transition-all duration-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 h-20 flex items-center justify-between gap-3 min-w-0 overflow-hidden">
           <div className="flex items-center gap-4 group cursor-pointer" onClick={() => window.location.href = '/'}>

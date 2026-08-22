@@ -128,6 +128,7 @@ export async function POST(request: NextRequest) {
           const commissionAmount = tierInfo.usdCommission;
 
           // Zapsat provizi do partner_referrals
+          // Klient právě zaplatil -> provize je aktivní a počítá se do dashboardu
           await supabaseAdmin
             .from('partner_referrals')
             .insert([{
@@ -135,7 +136,7 @@ export async function POST(request: NextRequest) {
               client_email: order.company_email,
               client_name: order.company_name,
               amount: commissionAmount,
-              status: 'pending' // Provize je na začátku pending
+              status: 'active'
             }]);
 
           // Zapsat konverzi pro přehled

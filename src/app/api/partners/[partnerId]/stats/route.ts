@@ -41,9 +41,10 @@ export async function GET(
     const tier = getTier(clientCount);
     const tierInfo = TIER_STRUCTURE[tier];
 
-    const BASE_PRICE_CZK = 3500;
-    const monthlyRevenue = clientCount * BASE_PRICE_CZK;
-    const monthlyPayout = clientCount * (tierInfo.commissionPercent / 100) * BASE_PRICE_CZK;
+    // Základní cena předplatného v USD (konzistentní s provizními tiery)
+    const BASE_PRICE_USD = 150;
+    const monthlyRevenue = clientCount * BASE_PRICE_USD;
+    const monthlyPayout = clientCount * tierInfo.usdCommission;
 
     return NextResponse.json({
       partnerId,
