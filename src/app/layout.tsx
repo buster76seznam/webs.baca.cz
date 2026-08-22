@@ -16,9 +16,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteTitle = "Webs Bača – tvorba webů, hosting a SEO";
-const siteDescription =
-  "Profesionální weby s návrhem do 10 minut a spuštěním do 24 hodin. Hosting, SSL, správa obsahu a servis za 1 700 Kč měsíčně bez vstupního poplatku.";
+const siteTitle = "Webs Bača – Custom Websites & Web Design in 10 Minutes";
+const siteDescription = "Professional Websites for $150/month";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -31,21 +30,20 @@ export const metadata: Metadata = {
   authors: [{ name: "Webs Bača", url: SITE_URL }],
   creator: "Webs Bača",
   keywords: [
-    "tvorba webů",
-    "webové stránky",
-    "hosting",
+    "custom websites",
+    "web design",
+    "web hosting",
     "Webs Bača",
-    "autoservis web",
-    "SEO",
-    "rychlý web",
-    "návrh webu do 10 minut",
-    "Česko",
+    "fast websites",
+    "website design in 10 minutes",
+    "professional websites",
+    "USA",
   ],
   alternates: { canonical: "/" },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   openGraph: {
     type: "website",
-    locale: "cs_CZ",
+    locale: "en_US",
     url: SITE_URL,
     siteName: "Webs Bača",
     title: siteTitle,
@@ -83,7 +81,7 @@ const jsonLd = {
       url: SITE_URL,
       name: "Webs Bača",
       description: siteDescription,
-      inLanguage: "cs-CZ",
+      inLanguage: "en-US",
       publisher: { "@id": `${SITE_URL}/#organization` },
     },
     {
@@ -96,10 +94,10 @@ const jsonLd = {
     },
     {
       "@type": "ProfessionalService",
-      name: "Webs Bača – webdesign a hosting",
+      name: "Webs Bača – Custom Websites & Web Design",
       url: SITE_URL,
       image: `${SITE_URL}/Logo.png`,
-      areaServed: { "@type": "Country", name: "Czech Republic" },
+      areaServed: { "@type": "Country", name: "United States" },
     },
   ],
 };
@@ -110,7 +108,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="cs" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased w-full max-w-full overflow-x-hidden`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased w-full max-w-full overflow-x-hidden`}>
       <head>
         <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
         <link rel="icon" href="/icon.png?v=2" type="image/png" sizes="32x32" />

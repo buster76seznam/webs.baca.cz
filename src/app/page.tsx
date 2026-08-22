@@ -144,6 +144,9 @@ export default function Home() {
                   <ArrowUpRight size={22} className="sm:w-6 sm:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500 shrink-0" />
                 </button>
               </div>
+              <p className="mt-4 text-xs sm:text-sm text-gray-400 font-medium tracking-wide text-center">
+                For now it’s only available in USA
+              </p>
             </motion.div>
           </div>
         </section>
